@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    .text-fertimads {
+        color: #11BA9E !important;
+    }
+
+    .text-fertimads-2 {
+        color: #4FD1C5 !important;
+    }
+
+    .bg-fertimads-2 {
+        background-color: #4FD1C5 !important;
+    }
+
+    .menu-icon {
+        @apply w-6 flex-grow-0 flex-shrink-0 p-2 mr-4 text-base text-fertimads-2 rounded-xl;
+    }
+
+    .active-icon {
+        @apply text-white bg-fertimads-2;
+    }
+}
