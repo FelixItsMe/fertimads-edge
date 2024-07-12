@@ -3,16 +3,54 @@
 @tailwind utilities;
 
 @layer base {
+    table {
+        caption-side: bottom;
+        border-collapse: collapse;
+    }
+
+    thead, tbody, tfoot, tr, td, th {
+        border-color: inherit;
+        border-style: solid;
+        border-width: 0;
+    }
+
     .text-fertimads {
         color: #11BA9E !important;
+    }
+
+    .text-primary {
+        color: #4FD1C5 !important;
     }
 
     .text-fertimads-2 {
         color: #4FD1C5 !important;
     }
 
+    .text-warning {
+        color: #1449EF !important;
+    }
+    .text-info {
+        color: #39CF87 !important;
+    }
+    .text-danger {
+        color: #DD5656 !important;
+    }
+
+    .bg-primary {
+        background-color: #4FD1C5 !important;
+    }
     .bg-fertimads-2 {
         background-color: #4FD1C5 !important;
+    }
+    .bg-warning {
+        background-color: #1449EF !important;
+    }
+
+    .menu-item {
+        @apply my-0.5 w-64 basis-auto flex-col m-0 p-0 list-none items-start justify-start;
+    }
+    .menu-link {
+        @apply rounded-md font-semibold mx-4 text-sm px-4 py-2.5 relative flex items-center flex-shrink basis-auto m-0 hover:bg-slate-200 hover:bg-opacity-25;
     }
 
     .menu-icon {
@@ -21,5 +59,30 @@
 
     .active-icon {
         @apply text-white bg-fertimads-2;
+    }
+
+    .table > :not(caption) > * > * {
+        @apply border-b py-2.5 px-5;
+    }
+
+    .table-border-bottom-0 tr:last-child td, .table-border-bottom-0 tr:last-child th {
+        border-bottom-width: 0;
+    }
+
+    .breadcrumb {
+        @apply flex flex-wrap p-0 mb-4 list-none bg-transparent mt-0;
+    }
+    .breadcrumb-item, .breadcrumb-item a {
+        @apply text-slate-400;
+    }
+    .breadcrumb-active {
+        @apply font-semibold text-slate-600;
+    }
+    .breadcrumb-item + .breadcrumb-item {
+        @apply pl-2;
+    }
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "/";
+        @apply float-left pr-2 text-slate-400;
     }
 }

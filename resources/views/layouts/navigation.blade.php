@@ -52,10 +52,19 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <div :class="{'block': open, 'hidden': ! open}" class="block sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('land.index')" :active="request()->routeIs('land.*')">
+                {{ __('Manajemen Lahan') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('garden.index')" :active="request()->routeIs('garden.*')">
+                {{ __('Manajemen Kebun') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('commodity.index')" :active="request()->routeIs('commodity.*')">
+                {{ __('Manajemen Komoditi') }}
             </x-responsive-nav-link>
         </div>
 

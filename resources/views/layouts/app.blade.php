@@ -14,6 +14,9 @@
         <!-- Icons. Uncomment required icon fonts -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+        <!-- Page CSS -->
+        @stack('styles')
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -21,7 +24,7 @@
         <div id="layout-wrapper" class="w-full flex flex-auto items-stretch">
             <div class="min-h-screen w-full flex flex-auto bg-gray-100 items-stretch">
                 @include('layouts.sidebar')
-                <div class="pl-64 pt-0 basis-full flex-col w-0 min-w-0 max-w-full">
+                <div class="lg:pl-64 pt-0 basis-full flex-col w-0 min-w-0 max-w-full">
                     @include('layouts.navigation')
 
                     <!-- Page Heading -->
@@ -42,5 +45,6 @@
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        @stack('scripts')
     </body>
 </html>

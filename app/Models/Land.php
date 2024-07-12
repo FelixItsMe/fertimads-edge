@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Land extends Model
 {
@@ -19,6 +20,7 @@ class Land extends Model
         'address',
         'latitude',
         'longitude',
+        'altitude',
         'polygon',
         'area',
     ];
@@ -31,4 +33,14 @@ class Land extends Model
     protected $casts = [
         'polygon' => 'array',
     ];
+
+    /**
+     * Get all of the gardens for the Land
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function gardens(): HasMany
+    {
+        return $this->hasMany(Garden::class);
+    }
 }

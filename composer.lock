@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8dff50cd87971b67202b5d2f8cc95408",
+    "content-hash": "eba1cb1ef22ed5a7687eae1d3ee0abb4",
     "packages": [
         {
             "name": "brick/math",
@@ -1051,6 +1051,219 @@
             "time": "2023-12-03T19:50:20+00:00"
         },
         {
+            "name": "intervention/gif",
+            "version": "4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Intervention/gif.git",
+                "reference": "3a2b5f8a8856e8877cdab5c47e51aab2d4cb23a3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Intervention/gif/zipball/3a2b5f8a8856e8877cdab5c47e51aab2d4cb23a3",
+                "reference": "3a2b5f8a8856e8877cdab5c47e51aab2d4cb23a3",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1",
+                "phpunit/phpunit": "^10.0",
+                "slevomat/coding-standard": "~8.0",
+                "squizlabs/php_codesniffer": "^3.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Intervention\\Gif\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Vogel",
+                    "email": "oliver@intervention.io",
+                    "homepage": "https://intervention.io/"
+                }
+            ],
+            "description": "Native PHP GIF Encoder/Decoder",
+            "homepage": "https://github.com/intervention/gif",
+            "keywords": [
+                "animation",
+                "gd",
+                "gif",
+                "image"
+            ],
+            "support": {
+                "issues": "https://github.com/Intervention/gif/issues",
+                "source": "https://github.com/Intervention/gif/tree/4.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/interventionio",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/Intervention",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-26T17:23:47+00:00"
+        },
+        {
+            "name": "intervention/image",
+            "version": "3.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Intervention/image.git",
+                "reference": "137bdb356aacc01409d22aee3f0904497616cf3c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/137bdb356aacc01409d22aee3f0904497616cf3c",
+                "reference": "137bdb356aacc01409d22aee3f0904497616cf3c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "intervention/gif": "^4.1",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6",
+                "phpstan/phpstan": "^1",
+                "phpunit/phpunit": "^10.0",
+                "slevomat/coding-standard": "~8.0",
+                "squizlabs/php_codesniffer": "^3.8"
+            },
+            "suggest": {
+                "ext-exif": "Recommended to be able to read EXIF data properly."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Intervention\\Image\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Vogel",
+                    "email": "oliver@intervention.io",
+                    "homepage": "https://intervention.io/"
+                }
+            ],
+            "description": "PHP image manipulation",
+            "homepage": "https://image.intervention.io/",
+            "keywords": [
+                "gd",
+                "image",
+                "imagick",
+                "resize",
+                "thumbnail",
+                "watermark"
+            ],
+            "support": {
+                "issues": "https://github.com/Intervention/image/issues",
+                "source": "https://github.com/Intervention/image/tree/3.7.1"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/interventionio",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/Intervention",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-06-29T07:51:20+00:00"
+        },
+        {
+            "name": "intervention/image-laravel",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Intervention/image-laravel.git",
+                "reference": "24738a017d42a6fa8d9adabdbd69a2c19c5b0d30"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Intervention/image-laravel/zipball/24738a017d42a6fa8d9adabdbd69a2c19c5b0d30",
+                "reference": "24738a017d42a6fa8d9adabdbd69a2c19c5b0d30",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^8|^9|^10|^11",
+                "intervention/image": "^3.7",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^8.18",
+                "phpunit/phpunit": "^10.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Intervention\\Image\\Laravel\\ServiceProvider"
+                    ],
+                    "aliases": {
+                        "Image": "Intervention\\Image\\Laravel\\Facades\\Image"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Intervention\\Image\\Laravel\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Vogel",
+                    "email": "oliver@intervention.io",
+                    "homepage": "https://intervention.io/"
+                }
+            ],
+            "description": "Laravel Integration of Intervention Image",
+            "homepage": "https://image.intervention.io/",
+            "keywords": [
+                "gd",
+                "image",
+                "imagick",
+                "laravel",
+                "resize",
+                "thumbnail",
+                "watermark"
+            ],
+            "support": {
+                "issues": "https://github.com/Intervention/image-laravel/issues",
+                "source": "https://github.com/Intervention/image-laravel/tree/1.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/interventionio",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/Intervention",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-06-15T08:20:20+00:00"
+        },
+        {
             "name": "laravel/framework",
             "version": "v11.12.0",
             "source": {
@@ -1312,6 +1525,70 @@
                 "source": "https://github.com/laravel/prompts/tree/v0.1.24"
             },
             "time": "2024-06-17T13:58:22+00:00"
+        },
+        {
+            "name": "laravel/sanctum",
+            "version": "v4.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/sanctum.git",
+                "reference": "9cfc0ce80cabad5334efff73ec856339e8ec1ac1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/sanctum/zipball/9cfc0ce80cabad5334efff73ec856339e8ec1ac1",
+                "reference": "9cfc0ce80cabad5334efff73ec856339e8ec1ac1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/console": "^11.0",
+                "illuminate/contracts": "^11.0",
+                "illuminate/database": "^11.0",
+                "illuminate/support": "^11.0",
+                "php": "^8.2",
+                "symfony/console": "^7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6",
+                "orchestra/testbench": "^9.0",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Sanctum\\SanctumServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Sanctum\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Laravel Sanctum provides a featherweight authentication system for SPAs and simple APIs.",
+            "keywords": [
+                "auth",
+                "laravel",
+                "sanctum"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/sanctum/issues",
+                "source": "https://github.com/laravel/sanctum"
+            },
+            "time": "2024-04-10T19:39:58+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -1917,6 +2194,69 @@
             "time": "2024-04-12T21:02:21+00:00"
         },
         {
+            "name": "myclabs/php-enum",
+            "version": "1.8.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/php-enum.git",
+                "reference": "a867478eae49c9f59ece437ae7f9506bfaa27483"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/a867478eae49c9f59ece437ae7f9506bfaa27483",
+                "reference": "a867478eae49c9f59ece437ae7f9506bfaa27483",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "1.*",
+                "vimeo/psalm": "^4.6.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MyCLabs\\Enum\\": "src/"
+                },
+                "classmap": [
+                    "stubs/Stringable.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP Enum contributors",
+                    "homepage": "https://github.com/myclabs/php-enum/graphs/contributors"
+                }
+            ],
+            "description": "PHP Enum implementation",
+            "homepage": "http://github.com/myclabs/php-enum",
+            "keywords": [
+                "enum"
+            ],
+            "support": {
+                "issues": "https://github.com/myclabs/php-enum/issues",
+                "source": "https://github.com/myclabs/php-enum/tree/1.8.4"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/mnapoli",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/myclabs/php-enum",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-08-04T09:53:51+00:00"
+        },
+        {
             "name": "nesbot/carbon",
             "version": "3.6.0",
             "source": {
@@ -2315,6 +2655,128 @@
                 }
             ],
             "time": "2024-03-06T16:17:14+00:00"
+        },
+        {
+            "name": "php-mqtt/client",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-mqtt/client.git",
+                "reference": "82581417df4fa63a95c7584866a8fd2fdef53105"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-mqtt/client/zipball/82581417df4fa63a95c7584866a8fd2fdef53105",
+                "reference": "82581417df4fa63a95c7584866a8fd2fdef53105",
+                "shasum": ""
+            },
+            "require": {
+                "myclabs/php-enum": "^1.7",
+                "php": "^8.0",
+                "psr/log": "^1.1|^2.0|^3.0"
+            },
+            "require-dev": {
+                "phpunit/php-invoker": "^3.0",
+                "phpunit/phpunit": "^9.0",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "suggest": {
+                "ext-redis": "Required for the RedisRepository"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpMqtt\\Client\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marvin Mall",
+                    "email": "marvin-mall@msn.com",
+                    "role": "developer"
+                }
+            ],
+            "description": "An MQTT client written in and for PHP.",
+            "keywords": [
+                "client",
+                "mqtt",
+                "publish",
+                "subscribe"
+            ],
+            "support": {
+                "issues": "https://github.com/php-mqtt/client/issues",
+                "source": "https://github.com/php-mqtt/client/tree/v2.1.0"
+            },
+            "time": "2024-04-24T16:24:36+00:00"
+        },
+        {
+            "name": "php-mqtt/laravel-client",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-mqtt/laravel-client.git",
+                "reference": "54b2fc0cf3aedfb9ddf50429ece670ee7343bd37"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-mqtt/laravel-client/zipball/54b2fc0cf3aedfb9ddf50429ece670ee7343bd37",
+                "reference": "54b2fc0cf3aedfb9ddf50429ece670ee7343bd37",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/config": "^7.0|^8.0|^9.0|^10.0|^11.0",
+                "illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0",
+                "php": "^7.4|^8.0",
+                "php-mqtt/client": "^1.3.0|^2.0"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PhpMqtt\\Client\\MqttClientServiceProvider"
+                    ],
+                    "aliases": {
+                        "MQTT": "PhpMqtt\\Client\\Facades\\MQTT"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PhpMqtt\\Client\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marvin Mall",
+                    "email": "marvin-mall@msn.com",
+                    "role": "developer"
+                }
+            ],
+            "description": "A wrapper for the php-mqtt/client library for Laravel.",
+            "homepage": "https://github.com/php-mqtt/laravel-client",
+            "keywords": [
+                "client",
+                "laravel",
+                "mqtt",
+                "publish",
+                "subscribe"
+            ],
+            "support": {
+                "issues": "https://github.com/php-mqtt/laravel-client/issues",
+                "source": "https://github.com/php-mqtt/laravel-client/tree/v1.5.0"
+            },
+            "time": "2024-02-27T18:41:04+00:00"
         },
         {
             "name": "phpoption/phpoption",
