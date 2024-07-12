@@ -17,39 +17,47 @@ use App\Models\DeviceSensor;
 use App\Models\Garden;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use PhpMqtt\Client\Facades\MQTT;
 
 class DeviceControlController extends Controller
 {
-    public function index(Device $device): JsonResponse
+    public function index(Request $request, Device $device): JsonResponse
     {
-        $device->load([
-            'deviceSelenoids',
-        ]);
-
-        $schedules = DeviceSchedule::query()
-            ->with(['deviceSelenoid:id,device_id,garden_id'])
-            ->whereHas('deviceSelenoid', function(Builder $query)use($device){
-                $query->where('device_id', $device->id)
-                    ->whereNotNull('garden_id');
+        $gardenId = $request->query('garden_id');
+        $selenoid = DeviceSelenoid::query()
+            ->where([
+                ['device_id', $device->id],
+                ['garden_id', $gardenId],
+            ])
+            ->first();
+        $schedule = DeviceSchedule::query()
+            ->with(['deviceSelenoid:id,device_id,garden_id,selenoid'])
+            ->whereHas('deviceSelenoid', function(Builder $query)use($device, $gardenId){
+                $query->where([
+                        ['device_id', $device->id],
+                        ['garden_id', $gardenId],
+                    ]);
             })
-            ->get();
+            ->first();
 
-        $sensors = DeviceSensor::query()
-            ->with(['deviceSelenoid:id,device_id,garden_id'])
-            ->whereHas('deviceSelenoid', function(Builder $query)use($device){
-                $query->where('device_id', $device->id)
-                    ->whereNotNull('garden_id');
+        $sensor = DeviceSensor::query()
+            ->with(['deviceSelenoid:id,device_id,garden_id,selenoid'])
+            ->whereHas('deviceSelenoid', function(Builder $query)use($device, $gardenId){
+                $query->where([
+                        ['device_id', $device->id],
+                        ['garden_id', $gardenId],
+                    ]);
             })
-            ->get();
+            ->first();
 
         return response()->json([
             'message'   => 'Controll Data',
-            'schedule'  => $schedules,
-            'auto'      => $sensors,
-            'selenoids' => $device->deviceSelenoids,
+            'selenoid' => $selenoid,
+            'schedule'  => $schedule,
+            'auto'      => $sensor,
         ]);
     }
 
