@@ -107,9 +107,7 @@ class DeviceController extends Controller
         if ($request->safe()->image) {
             $image = $this->imageService->image_intervention($request->safe()->image, 'fertimads/images/device/', 1/1);
 
-            if (File::exists($device->image)) {
-                File::delete($device->image);
-            }
+            $this->imageService->deleteImage($device->image);
         }
 
         $device->update(
@@ -126,9 +124,7 @@ class DeviceController extends Controller
      */
     public function destroy(Device $device): JsonResponse
     {
-        if ($device->image && File::exists($device->image)) {
-            File::delete($device->image);
-        }
+        $this->imageService->deleteImage($device->image);
 
         $device->delete();
 

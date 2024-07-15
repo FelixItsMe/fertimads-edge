@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Services;
+
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
 
@@ -14,7 +16,7 @@ class ImageService
         //
     }
 
-    function image_intervention($image, $path, $ratio = false): string
+    public function image_intervention($image, $path, $ratio = false): string
     {
         $clientExtension = ($image->extension() == null && $image->hashName() == '') ? 'png' : $image->extension();
         $name = strtoupper(Str::random(5)) . '-' . time() . '.' . $clientExtension;
@@ -41,12 +43,25 @@ class ImageService
             $imageResize = $imageResize->crop($width, $height, $x, $y);
         }
 
-        if (!file_exists($path)) {
-            mkdir($path, 755, true);
+        if (!File::exists($path)) {
+            File::makeDirectory($path, 0755, true, true);
         }
+
         // $final_path = public_path($path . $name);
         $imageResize->save(public_path($path . $name));
 
         return $path . $name;
+    }
+
+    public function deleteImage(?string $path) : bool {
+        if(!$path) return false;
+
+        if (!File::exists(public_path($path))) {
+            return false;
+        }
+
+        File::delete(public_path($path));
+
+        return true;
     }
 }

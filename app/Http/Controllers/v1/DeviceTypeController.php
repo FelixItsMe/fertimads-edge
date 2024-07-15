@@ -85,9 +85,7 @@ class DeviceTypeController extends Controller
         if ($request->safe()->image) {
             $image = $this->imageService->image_intervention($request->safe()->image, 'fertimads/images/device-types/', 1/1);
 
-            if (File::exists($deviceType->image)) {
-                File::delete($deviceType->image);
-            }
+            $this->imageService->deleteImage($deviceType->image);
         }
 
         $description = $this->deviceTypeService->sanitizeDescription($request->safe()->description);
@@ -107,9 +105,7 @@ class DeviceTypeController extends Controller
      */
     public function destroy(DeviceType $deviceType)
     {
-        if (File::exists($deviceType->image)) {
-            File::delete($deviceType->image);
-        }
+        $this->imageService->deleteImage($deviceType->image);
 
         $deviceType->delete();
 

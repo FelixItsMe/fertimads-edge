@@ -82,9 +82,7 @@ class CommodityController extends Controller
         if ($request->safe()->image) {
             $image = $this->imageService->image_intervention($request->safe()->image, 'fertimads/images/commodities/', 1/1);
 
-            if (File::exists($commodity->image)) {
-                File::delete($commodity->image);
-            }
+            $this->imageService->deleteImage($commodity->image);
         }
 
         $commodity->update(
@@ -101,9 +99,7 @@ class CommodityController extends Controller
      */
     public function destroy(Commodity $commodity)
     {
-        if (File::exists($commodity->image)) {
-            File::delete($commodity->image);
-        }
+        $this->imageService->deleteImage($commodity->image);
 
         $commodity->delete();
 
