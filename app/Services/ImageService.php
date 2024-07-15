@@ -43,8 +43,8 @@ class ImageService
             $imageResize = $imageResize->crop($width, $height, $x, $y);
         }
 
-        if (!File::exists($path)) {
-            File::makeDirectory($path, 0755, true, true);
+        if (!File::exists(public_path($path))) {
+            File::makeDirectory(public_path($path), 0755, true, true);
         }
 
         // $final_path = public_path($path . $name);
