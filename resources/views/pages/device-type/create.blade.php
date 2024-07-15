@@ -66,8 +66,7 @@
                         <div class="flex flex-col">
                             <div class="w-full">
                                 <x-input-label for="description">{{ __('Deskripsi') }}</x-input-label>
-                                <x-textarea id="description" class="block mt-1 w-full rounded-xl" name="description" required autofocus
-                                    autocomplete="description">{{ old('description') }}</x-textarea>
+                                <x-textarea id="description" class="block mt-1 w-full rounded-xl" name="description">{{ old('description') }}</x-textarea>
                                 <x-input-error :messages="$errors->get('description')" class="mt-2" />
                             </div>
                         </div>
