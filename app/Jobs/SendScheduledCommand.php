@@ -86,7 +86,7 @@ class SendScheduledCommand implements ShouldQueue
                         $formatedMessages->push([
                             'idLahan' => $value->deviceSelenoid->garden->deviceSelenoid->selenoid,
                             'tipe' => $this->formatedType($value->type),
-                            'vol' => 1 // $irigasi
+                            'vol' => $irigasi
                         ]);
                     }
                 }
