@@ -23,7 +23,7 @@ class StoreDeviceManualRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type'      => 'required|string|in:penyiraman,pemupukan',
+            'type'      => 'required|string|in:penyiraman,pemupukanN,pemupukanP,pemupukanK',
             'garden_id' => ['required', new GardenInDevice($this->route('device')->id)],
             'status'    => 'required|integer|in:0,1',
         ];

@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\DeviceSchedule;
+use App\Models\DeviceScheduleRun;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -38,6 +39,8 @@ class SendScheduledCommand implements ShouldQueue
             })
             ->unique('id')
             ->all();
+
+            $deviceScheduleRuns = collect();
 
             $newLands = collect();
 
@@ -84,9 +87,15 @@ class SendScheduledCommand implements ShouldQueue
                         $etDay = $et0 * $currentPhase->kc;
                         $irigasi = $etDay * $value->deviceSelenoid->garden->area;
                         $formatedMessages->push([
-                            'idLahan' => $value->deviceSelenoid->garden->deviceSelenoid->selenoid,
+                            'idLahan' => $value->deviceSelenoid->selenoid,
                             'tipe' => $this->formatedType($value->type),
                             'vol' => $irigasi
+                        ]);
+                        $deviceScheduleRuns->push([
+                            'device_schedule_id' => $value->id,
+                            'start_time' => $now->copy(),
+                            'total_volume' => $irigasi,
+                            'created_at' => $now->copy(),
                         ]);
                     }
                 }
@@ -103,6 +112,8 @@ class SendScheduledCommand implements ShouldQueue
                     $mqtt->disconnect();
                 }
             }
+
+            DeviceScheduleRun::insert($deviceScheduleRuns->all());
         }
     }
 

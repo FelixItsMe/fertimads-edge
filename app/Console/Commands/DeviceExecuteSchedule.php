@@ -50,8 +50,8 @@ class DeviceExecuteSchedule extends Command
             ->whereTime('execute_time', '=', $formatedTime)
             ->get();
 
-        $this->info(count($deviceSchedules));
         if (count($deviceSchedules) > 0) {
+            $this->info(count($deviceSchedules));
             SendScheduledCommand::dispatch($now, $deviceSchedules)
                 ->onQueue('executeScheduled');
         }
