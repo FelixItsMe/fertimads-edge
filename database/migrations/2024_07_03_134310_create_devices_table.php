@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('series');
             $table->string('image')->nullable();
             $table->string('note')->nullable();
+            $table->json('pumps');
             $table->timestamps();
         });
     }

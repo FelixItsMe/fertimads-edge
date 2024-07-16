@@ -23,6 +23,16 @@ class Device extends Model
         'series',
         'image',
         'note',
+        'pumps',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'pumps' => 'object',
     ];
 
     /**

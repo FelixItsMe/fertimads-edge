@@ -59,7 +59,14 @@ class DeviceController extends Controller
 
         $device = Device::create(
             $request->safe()->except('image') + [
-                'image' => $image
+                'image' => $image,
+                'pumps' => (object) [
+                    'main' => 0,
+                    'water' => 0,
+                    'fertilizer_n' => 0,
+                    'fertilizer_p' => 0,
+                    'fertilizer_k' => 0,
+                ]
             ]
         );
 

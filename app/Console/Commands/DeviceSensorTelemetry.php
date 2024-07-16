@@ -70,6 +70,18 @@ class DeviceSensorTelemetry extends Command
     private function proccessOutput(Device $device, $output) : bool {
         if(!isset($output)) return false;
 
+        $pumps = (object) [
+            'main' => $this->formatStatus($output->PU),
+            'water' => $this->formatStatus($output->VA),
+            'fertilizer_n' => $this->formatStatus($output->VPN),
+            'fertilizer_p' => $this->formatStatus($output->VPP),
+            'fertilizer_k' => $this->formatStatus($output->VPK),
+        ];
+
+        // $this->info(json_encode($pumps));
+
+        $device->pumps = $pumps;
+
         foreach ($output as $key => $status) {
             switch ($key) {
                 case 'VL1':
