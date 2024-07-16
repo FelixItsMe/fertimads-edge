@@ -35,6 +35,7 @@ class GardenService
         if ($isNewGarden && $idDevice) {
             $deviceSelenoid = DeviceSelenoid::query()
                 ->where('device_id', $idDevice)
+                ->whereNull('garden_id')
                 ->orderBy('selenoid')
                 ->first();
 
