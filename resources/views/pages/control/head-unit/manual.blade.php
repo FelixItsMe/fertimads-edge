@@ -12,106 +12,98 @@
         <h2 class="leading-tight">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="{{ route('garden.index') }}">Manajemen Kebun</a>
+                    <a href="#">Pages</a>
                 </li>
-                <li class="breadcrumb-item breadcrumb-active">{{ __('Tambah Kebun Baru') }}</li>
+                <li class="breadcrumb-item breadcrumb-active">{{ __('Kendali Head Unit') }}</li>
             </ol>
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <form action="{{ route('garden.store') }}" method="POST">
-                @csrf
-                <div class="flex flex-col sm:flex-row max-sm:gap-2 sm:space-x-2">
-                    <div class="w-full sm:h-3/4">
-                        <div id="map" class="rounded-md"></div>
-                        <input type="hidden" name="polygon" id="polygon">
+            <div class="grid grid-flow-row grid-cols-1 gap-2">
+                <div>
+                    <div id="map" class="rounded-md"></div>
+                </div>
+                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-5 gap-2">
+                    <div class="flex flex-col gap-2 pr-12">
+                        <div class="font-bold py-2">Opsi Kendali</div>
+                        @include('pages.control.head-unit.links')
                     </div>
-                    <div class="w-full sm:w-1/4">
-                        <div class="p-6 bg-white overflow-hidden shadow-sm sm:rounded-lg flex flex-col gap-y-4">
-                            <div class="w-full">
-                                <x-input-label for="name">{{ __('Nama Lahan') }}</x-input-label>
-                                <x-text-input id="name" class="block mt-1 w-full rounded-xl" type="text"
-                                    name="name" :value="old('name')" required autofocus autocomplete="name" />
-                                <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                    <div class="col-span-4 flex flex-col gap-2">
+                        <div class="py-2"><span class="font-bold">Kendali Perangkat</span></div>
+                        <div class="grid grid-flow-row grid-cols-2 gap-8">
+                            <div class="flex flex-col gap-2">
+                                <div class="grid grid-flow-row grid-cols-4">
+                                    <div>Pilih Lahan</div>
+                                    <div class="col-span-3 grid grid-flow-row grid-cols-2 gap-2">
+                                        @foreach ($lands as $id => $landName)
+                                            <div>
+                                                <input type="radio" id="land-{{ $id }}" name="land_id"
+                                                    onchange="pickLand({{ $id }})"
+                                                    value="{{ $id }}" class="hidden output-type peer/penyiraman" />
+                                                <label for="land-{{ $id }}" class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/penyiraman:text-blue-500 peer-checked/penyiraman:bg-primary peer-checked/penyiraman:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                    {{ $landName }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="grid grid-flow-row grid-cols-4">
+                                    <div>Pilih Kebun</div>
+                                    <div class="col-span-3 grid grid-flow-row grid-cols-2 gap-2" id="list-gardens">
+                                        <button type="button"
+                                            class="bg-white rounded-md px-4 py-2 text-xs text-left"
+                                            disabled
+                                            >Pilih Lahan</button>
+                                    </div>
+                                </div>
+                                <div class="grid grid-flow-row grid-cols-4">
+                                    <div>Pilih Output</div>
+                                    <div class="col-span-3 grid grid-flow-row grid-cols-2 gap-2">
+                                        <div>
+                                            <input type="radio" id="type-penyiraman" name="type"
+                                                value="penyiraman" class="hidden output-type peer/penyiraman" />
+                                            <label for="type-penyiraman" class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/penyiraman:text-blue-500 peer-checked/penyiraman:bg-primary peer-checked/penyiraman:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                Penyiraman
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" id="type-pemupukan-n" name="type"
+                                                value="pemupukanN" class="hidden output-type peer/pemupukann" />
+                                            <label for="type-pemupukan-n" class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/pemupukann:text-blue-500 peer-checked/pemupukann:bg-primary peer-checked/pemupukann:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                Pemupukan N
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" id="type-pemupukan-p" name="type"
+                                                value="pemupukanP" class="hidden output-type peer/pemupukanp" />
+                                            <label for="type-pemupukan-p" class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/pemupukanp:text-blue-500 peer-checked/pemupukanp:bg-primary peer-checked/pemupukanp:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                Pemupukan P
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" id="type-pemupukan-k" name="type"
+                                                value="pemupukanK" class="hidden output-type peer/pemupukank" />
+                                            <label for="type-pemupukan-k" class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/pemupukank:text-blue-500 peer-checked/pemupukank:bg-primary peer-checked/pemupukank:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                Pemupukan K
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="w-full">
-                                <x-input-label for="area">{{ __('Luas Lahan') }}</x-input-label>
-                                <x-text-input id="area" class="block mt-1 w-full rounded-xl" type="number"
-                                    min="0" step=".01" name="area" :value="old('area')" required
-                                    autofocus autocomplete="area" />
-                                <x-input-error :messages="$errors->get('area')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="commodity_id">{{ __('Pilih Komoditi') }}</x-input-label>
-                                <x-select-input id="commodity_id" class="block mt-1 w-full rounded-xl"
-                                    name="commodity_id">
-                                    <option value="">Pilih Komoditi</option>
-                                    @foreach ($commodities as $id => $commodity)
-                                        <option value="{{ $id }}">{{ $commodity }}</option>
-                                    @endforeach
-                                </x-select-input>
-                                <x-input-error :messages="$errors->get('commodity_id')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="land_id">{{ __('Pilih Lahan') }}</x-input-label>
-                                <x-select-input id="land_id" class="block mt-1 w-full rounded-xl" name="land_id">
-                                    <option value="">Pilih Lahan</option>
-                                    @foreach ($lands as $id => $land)
-                                        <option value="{{ $id }}">{{ $land }}</option>
-                                    @endforeach
-                                </x-select-input>
-                                <x-input-error :messages="$errors->get('land_id')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="device_id">{{ __('Pilih Perangkat') }}</x-input-label>
-                                <x-select-input id="device_id" class="block mt-1 w-full rounded-xl" name="device_id">
-                                    <option value="">Pilih Perangkat</option>
-                                    @foreach ($devices as $id => $device)
-                                        <option value="{{ $id }}">{{ $device }}</option>
-                                    @endforeach
-                                </x-select-input>
-                                <x-input-error :messages="$errors->get('device_id')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="latitude">{{ __('Latitude') }}</x-input-label>
-                                <x-text-input id="latitude" class="block mt-1 w-full rounded-xl" type="text"
-                                    name="latitude" :value="old('latitude')" required autofocus autocomplete="latitude" />
-                                <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="longitude">{{ __('longitude') }}</x-input-label>
-                                <x-text-input id="longitude" class="block mt-1 w-full rounded-xl" type="text"
-                                    name="longitude" :value="old('longitude')" required autofocus
-                                    autocomplete="longitude" />
-                                <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="altitude">{{ __('altitude') }}</x-input-label>
-                                <x-text-input id="altitude" class="block mt-1 w-full rounded-xl" type="number"
-                                    step=".01" name="altitude" :value="old('altitude')" required autofocus
-                                    autocomplete="altitude" />
-                                <x-input-error :messages="$errors->get('altitude')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="color">{{ __('Warna') }}</x-input-label>
-                                <x-text-input id="color" class="block mt-1 w-full p-1" type="color"
-                                    name="color" :value="old('color')" required autofocus
-                                    autocomplete="color" />
-                                <x-input-error :messages="$errors->get('altitude')" class="mt-2" />
-                            </div>
-                            <div class="flex flex-col">
-                                <div class="w-full flex justify-end">
-                                    <x-primary-button>
-                                        {{ __('Simpan') }}
-                                    </x-primary-button>
+                            <div>
+                                <div class="flex flex-row space-x-2">
+                                    <button type="button" onclick="storeManual('on')"
+                                        class="bg-primary text-white font-bold rounded-md px-4 py-2">ON</button>
+                                    <button type="button" onclick="storeManual('off')"
+                                        class="bg-white text-primary font-bold rounded-md px-4 py-2">OFF</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -294,6 +286,31 @@
                 stateData.layerPolygon = null
             });
 
+            const storeManual = async (status) => {
+                console.dir(document.querySelector('input[name="type"]:checked'))
+                const type = document.querySelector('input[name="type"]:checked')?.value
+                const gardenId = document.querySelector('input[name="garden_id"]:checked')?.value
+                const data = await fetchData(
+                    "{{ route('head-unit.manual.store') }}",
+                    {
+                        method: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'test': true,
+                            'type': type,
+                            'garden_id': gardenId,
+                            'status': status
+                        })
+                    }
+                );
+
+                return data
+            }
+
             const getLand = async id => {
                 const data = await fetchData(
                     "{{ route('extra.land.get-land-polygon', 'ID') }}".replace('ID', id),
@@ -310,6 +327,11 @@
             }
 
             const initLandPolygon = async (id, map) => {
+                document.querySelector('#list-gardens').innerHTML = `<button type="button"
+                    class="bg-white rounded-md px-4 py-2 text-xs text-left"
+                    disabled
+                    >Loading</button>`
+
                 const land = await getLand(id)
 
                 if (currentLand.polygonLayer) {
@@ -317,6 +339,10 @@
                 }
 
                 if (!land) {
+                    document.querySelector('#list-gardens').innerHTML = `<button type="button"
+                        class="bg-red-500 text-white rounded-md px-4 py-2 text-xs text-left"
+                        disabled
+                        >Failed</button>`
                     return false
                 }
 
@@ -330,31 +356,36 @@
 
                 currentGroupGarden.clearLayers()
 
+                let eGardens = ``
+
                 land.gardens.forEach(garden => {
                     currentGroupGarden.addLayer(L.polygon(garden.polygon, {
                         dashArray: '10, 10',
                         dashOffset: '20',
                         color: '#' + garden.color + "55",
                     }))
+
+                    eGardens += `<div>
+                            <input type="radio" id="garden-${garden.id}" name="garden_id" value="${garden.id}" class="hidden peer/garden" />
+                            <label for="garden-${garden.id}" class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/garden:text-blue-500 peer-checked/garden:bg-primary peer-checked/garden:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                ${garden.name}
+                            </label>
+                        </div>`
                 })
+
+                document.querySelector('#list-gardens').innerHTML = eGardens
 
                 currentGroupGarden.addTo(map)
 
                 return true
             }
 
+            const pickLand = landId => {
+                initLandPolygon(landId, map)
+            }
+
             window.onload = () => {
                 console.log('Hello world');
-
-                document.querySelector('#land_id').addEventListener('change', async e => {
-                    initLandPolygon(e.target.value, map)
-                })
-
-                document.querySelector('#color').addEventListener('change', e => {
-                    currentPolygonLayer.setStyle({
-                        color: e.target.value
-                    })
-                })
             }
         </script>
     @endpush

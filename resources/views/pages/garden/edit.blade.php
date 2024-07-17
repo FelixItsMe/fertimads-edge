@@ -298,7 +298,7 @@
 
             const getLand = async id => {
                 const data = await fetchData(
-                    "{{ route('land.get-land-polygon', 'ID') }}".replace('ID', id),
+                    "{{ route('extra.land.get-land-polygon', 'ID') }}".replace('ID', id),
                     {
                         method: "GET",
                         headers: {

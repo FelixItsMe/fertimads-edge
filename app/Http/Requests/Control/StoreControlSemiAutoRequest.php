@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\v1\DeviceControl;
+namespace App\Http\Requests\Control;
 
-use App\Rules\GardenInDevice;
+use App\Rules\GardenHasSelenoid;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDeviceSemiAutoRequest extends FormRequest
+class StoreControlSemiAutoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,8 @@ class StoreDeviceSemiAutoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'garden_id' => ['required', new GardenInDevice($this->route('device')->id)],
-            'type'      => 'required|string|in:pemupukanN,pemupukanP,pemupukanK,penyiraman',
+            'garden_id' => ['required', new GardenHasSelenoid],
+            'type'      => 'required|string|in:penyiraman,pemupukanN,pemupukanP,pemupukanK',
             'volume'    => 'required|numeric|min:0',
         ];
     }

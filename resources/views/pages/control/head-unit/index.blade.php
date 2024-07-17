@@ -12,106 +12,37 @@
         <h2 class="leading-tight">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="{{ route('garden.index') }}">Manajemen Kebun</a>
+                    <a href="#">Pages</a>
                 </li>
-                <li class="breadcrumb-item breadcrumb-active">{{ __('Tambah Kebun Baru') }}</li>
+                <li class="breadcrumb-item breadcrumb-active">{{ __('Kendali Head Unit') }}</li>
             </ol>
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <form action="{{ route('garden.store') }}" method="POST">
-                @csrf
-                <div class="flex flex-col sm:flex-row max-sm:gap-2 sm:space-x-2">
-                    <div class="w-full sm:h-3/4">
-                        <div id="map" class="rounded-md"></div>
-                        <input type="hidden" name="polygon" id="polygon">
+            <div class="grid grid-flow-row grid-cols-1 gap-2">
+                <div>
+                    <div id="map" class="rounded-md"></div>
+                </div>
+                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-5 gap-2">
+                    <div class="flex flex-col gap-2 pr-12">
+                        <div class="font-bold py-2">Opsi Kendali</div>
+                        <div class="bg-white rounded-md px-4 py-2">Manual</div>
+                        <div class="bg-white rounded-md px-4 py-2">Auto</div>
+                        <div class="bg-white rounded-md px-4 py-2">Schedule</div>
                     </div>
-                    <div class="w-full sm:w-1/4">
-                        <div class="p-6 bg-white overflow-hidden shadow-sm sm:rounded-lg flex flex-col gap-y-4">
-                            <div class="w-full">
-                                <x-input-label for="name">{{ __('Nama Lahan') }}</x-input-label>
-                                <x-text-input id="name" class="block mt-1 w-full rounded-xl" type="text"
-                                    name="name" :value="old('name')" required autofocus autocomplete="name" />
-                                <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="area">{{ __('Luas Lahan') }}</x-input-label>
-                                <x-text-input id="area" class="block mt-1 w-full rounded-xl" type="number"
-                                    min="0" step=".01" name="area" :value="old('area')" required
-                                    autofocus autocomplete="area" />
-                                <x-input-error :messages="$errors->get('area')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="commodity_id">{{ __('Pilih Komoditi') }}</x-input-label>
-                                <x-select-input id="commodity_id" class="block mt-1 w-full rounded-xl"
-                                    name="commodity_id">
-                                    <option value="">Pilih Komoditi</option>
-                                    @foreach ($commodities as $id => $commodity)
-                                        <option value="{{ $id }}">{{ $commodity }}</option>
-                                    @endforeach
-                                </x-select-input>
-                                <x-input-error :messages="$errors->get('commodity_id')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="land_id">{{ __('Pilih Lahan') }}</x-input-label>
-                                <x-select-input id="land_id" class="block mt-1 w-full rounded-xl" name="land_id">
-                                    <option value="">Pilih Lahan</option>
-                                    @foreach ($lands as $id => $land)
-                                        <option value="{{ $id }}">{{ $land }}</option>
-                                    @endforeach
-                                </x-select-input>
-                                <x-input-error :messages="$errors->get('land_id')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="device_id">{{ __('Pilih Perangkat') }}</x-input-label>
-                                <x-select-input id="device_id" class="block mt-1 w-full rounded-xl" name="device_id">
-                                    <option value="">Pilih Perangkat</option>
-                                    @foreach ($devices as $id => $device)
-                                        <option value="{{ $id }}">{{ $device }}</option>
-                                    @endforeach
-                                </x-select-input>
-                                <x-input-error :messages="$errors->get('device_id')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="latitude">{{ __('Latitude') }}</x-input-label>
-                                <x-text-input id="latitude" class="block mt-1 w-full rounded-xl" type="text"
-                                    name="latitude" :value="old('latitude')" required autofocus autocomplete="latitude" />
-                                <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="longitude">{{ __('longitude') }}</x-input-label>
-                                <x-text-input id="longitude" class="block mt-1 w-full rounded-xl" type="text"
-                                    name="longitude" :value="old('longitude')" required autofocus
-                                    autocomplete="longitude" />
-                                <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="altitude">{{ __('altitude') }}</x-input-label>
-                                <x-text-input id="altitude" class="block mt-1 w-full rounded-xl" type="number"
-                                    step=".01" name="altitude" :value="old('altitude')" required autofocus
-                                    autocomplete="altitude" />
-                                <x-input-error :messages="$errors->get('altitude')" class="mt-2" />
-                            </div>
-                            <div class="w-full">
-                                <x-input-label for="color">{{ __('Warna') }}</x-input-label>
-                                <x-text-input id="color" class="block mt-1 w-full p-1" type="color"
-                                    name="color" :value="old('color')" required autofocus
-                                    autocomplete="color" />
-                                <x-input-error :messages="$errors->get('altitude')" class="mt-2" />
-                            </div>
-                            <div class="flex flex-col">
-                                <div class="w-full flex justify-end">
-                                    <x-primary-button>
-                                        {{ __('Simpan') }}
-                                    </x-primary-button>
-                                </div>
+                    <div class="col-span-4 flex flex-col gap-2">
+                        <div class="py-2"><span class="font-bold">Kendali Perangkat</span></div>
+                        <div>
+                            <div class="grid grid-flow-row grid-cols-3">
+                                <div>Pilih Lahan</div>
+
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -348,12 +279,6 @@
 
                 document.querySelector('#land_id').addEventListener('change', async e => {
                     initLandPolygon(e.target.value, map)
-                })
-
-                document.querySelector('#color').addEventListener('change', e => {
-                    currentPolygonLayer.setStyle({
-                        color: e.target.value
-                    })
                 })
             }
         </script>

@@ -88,7 +88,8 @@ class GardenController extends Controller
         $garden->load([
             'land:id,name,polygon',
             'commodity:id,name',
-            'device:id,series',
+            'deviceSelenoid:id,garden_id,device_id,selenoid',
+            'deviceSelenoid.device:id,series',
         ]);
 
         return view('pages.garden.show', compact('garden'));
@@ -145,6 +146,15 @@ class GardenController extends Controller
 
         return response()->json([
             'message' => 'Berhasil dihapus'
+        ]);
+    }
+
+    public function listGardensName() : JsonResponse {
+        return response()->json([
+            'message' => 'Gardens data for list',
+            'gardens' => Garden::query()
+                ->orderBy('name')
+                ->get(['id', 'name'])
         ]);
     }
 }

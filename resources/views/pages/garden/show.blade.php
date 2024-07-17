@@ -52,7 +52,7 @@
                             </div>
                             <div class="w-full">
                                 <x-input-label class="text-slate-400" for="name">{{ __('Perangkat IoT') }}</x-input-label>
-                                <span>{{ $garden->device?->series ?? '-' }}</span>
+                                <span>{{ $garden->deviceSelenoid?->device->series ?? '-' }}</span>
                             </div>
                         </div>
                     </div>

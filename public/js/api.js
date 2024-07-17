@@ -4,6 +4,10 @@ const fetchData = async (url, setting = {}) => {
 
         // Check for successful response
         if (!response.ok) {
+            if (response.status >= 400 && response.status < 500) {
+                const data = await response.json()
+                errorMessage(data.message);
+            }
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
@@ -17,4 +21,14 @@ const fetchData = async (url, setting = {}) => {
         // Handle the error here, like displaying an error message to the user
         return null; // Or return any default value to indicate error
     }
+}
+
+const errorMessage = (message) => {
+    console.log(message);
+    document.querySelector('#error-body').classList.remove('hidden')
+    document.querySelector('#error-message').textContent = message
+
+    setTimeout(() => {
+        document.querySelector('#error-body').classList.add('hidden')
+    }, 5000);
 }

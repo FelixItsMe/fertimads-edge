@@ -51,6 +51,28 @@ class GardenController extends Controller
             ]);
     }
 
+    public function gardenListTelemetries(Garden $garden) : JsonResponse {
+        $garden->load('deviceSelenoid');
+
+        if (!$garden->deviceSelenoid) {
+            return response()->json([
+                'message' => 'Latest telemetry',
+                'telemetries' => []
+            ]);
+        }
+
+        $telemetries = DeviceTelemetry::query()
+            ->where('device_id', $garden->deviceSelenoid->device_id)
+            ->orderByDesc('created_at')
+            ->paginate(10);
+
+        return response()
+            ->json([
+                'message'   => 'Latest Telemetry Data',
+                'telemetry'  => $telemetries
+            ]);
+    }
+
     public function calendarSchedules(Request $request, Garden $garden) : JsonResponse {
         $deviceSchedule = DeviceSchedule::query()
             ->whereHas('deviceSelenoid', fn($query) => $query->where('garden_id', $garden->id))

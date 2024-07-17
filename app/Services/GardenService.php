@@ -69,8 +69,10 @@ class GardenService
             ->orderBy('selenoid')
             ->first();
 
-        $deviceSelenoid2->garden_id = $idGarden;
-        $deviceSelenoid2->save();
+        if ($deviceSelenoid2) {
+            $deviceSelenoid2->garden_id = $idGarden;
+            $deviceSelenoid2->save();
+        }
 
         return true;
     }

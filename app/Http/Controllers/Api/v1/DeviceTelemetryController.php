@@ -10,6 +10,28 @@ use Illuminate\Http\Request;
 
 class DeviceTelemetryController extends Controller
 {
+    public function gardenTelemetries(Garden $garden) : JsonResponse {
+        $garden->load('deviceSelenoid');
+
+        if (!$garden->deviceSelenoid) {
+            return response()->json([
+                'message' => 'Latest telemetry',
+                'telemetries' => []
+            ]);
+        }
+
+        $telemetries = DeviceTelemetry::query()
+            ->where('device_id', $garden->deviceSelenoid->device_id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return response()
+            ->json([
+                'message' => 'Telemetry Data',
+                'telemetries' => $telemetries
+            ]);
+    }
+
     public function gardenLatestTelemetry(Garden $garden) : JsonResponse {
         $garden->load('deviceSelenoid');
 

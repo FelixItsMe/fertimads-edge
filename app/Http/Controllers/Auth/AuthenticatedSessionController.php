@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\UserRoleEnums;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -28,7 +29,20 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        switch (auth()->user()->role) {
+            case UserRoleEnums::MANAGEMENT->value:
+                $routeName = 'dashboard';
+                break;
+            case UserRoleEnums::CONTROL->value:
+                $routeName = 'head-unit.manual.index';
+                break;
+
+            default:
+            $routeName = 'dashboard';
+                break;
+        }
+
+        return redirect()->intended(route($routeName, absolute: false));
     }
 
     /**
