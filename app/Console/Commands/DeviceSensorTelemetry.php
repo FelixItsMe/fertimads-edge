@@ -132,7 +132,8 @@ class DeviceSensorTelemetry extends Command
             ]);
 
             if (!isset(collect($validator->errors())->all()['date'])) {
-                $date = now()->parse($statusPerangkat->dateTime->date)->format('Y-m-d');
+                [$day, $month, $year] = explode('/', $statusPerangkat->dateTime->date);
+                $date = $year . "-". $month . "-" . $day;
             }
             if (!isset(collect($validator->errors())->all()['time'])) {
                 $time = now()->parse($statusPerangkat->dateTime->time)->format('H:i:s');
