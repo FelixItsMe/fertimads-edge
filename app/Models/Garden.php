@@ -6,6 +6,7 @@ use App\Enums\GardenSelenoidModeEnums;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Garden extends Model
@@ -67,5 +68,10 @@ class Garden extends Model
     public function deviceSelenoid(): HasOne
     {
         return $this->hasOne(DeviceSelenoid::class);
+    }
+
+    public function pests(): HasMany
+    {
+        return $this->hasMany(Pest::class);
     }
 }
