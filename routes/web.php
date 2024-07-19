@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('user', \App\Http\Controllers\v1\UserController::class);
 
         Route::resource('tool', \App\Http\Controllers\v1\Management\ToolController::class);
+        Route::resource('infrastructure', \App\Http\Controllers\v1\Management\InfrastructureController::class);
     });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CONTROL->value])

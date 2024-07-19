@@ -81,3 +81,14 @@
         <div class="text-slate-400">Manajemen Anggota</div>
     </a>
 </li>
+<li class="menu-item">
+    <a href="{{ route('infrastructure.index') }}" class="menu-link">
+        <i @class([
+            'menu-icon',
+            'active-icon' => request()->routeIs('infrastructure.*'),
+            'fa-solid',
+            'fa-city',
+            ]) ></i>
+        <div class="text-slate-400">Manajemen Infrastruktur</div>
+    </a>
+</li>
