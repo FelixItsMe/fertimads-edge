@@ -3,12 +3,38 @@
 @tailwind utilities;
 
 @layer base {
+    /* scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 0px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 15px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #4FD1C5;
+      border-radius: 15px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #42aea3;
+    }
+
+
     table {
         caption-side: bottom;
         border-collapse: collapse;
     }
 
-    thead, tbody, tfoot, tr, td, th {
+    thead,
+    tbody,
+    tfoot,
+    tr,
+    td,
+    th {
         border-color: inherit;
         border-style: solid;
         border-width: 0;
@@ -29,9 +55,11 @@
     .text-warning {
         color: #1449EF !important;
     }
+
     .text-info {
         color: #39CF87 !important;
     }
+
     .text-danger {
         color: #DD5656 !important;
     }
@@ -39,9 +67,11 @@
     .bg-primary {
         background-color: #4FD1C5 !important;
     }
+
     .bg-fertimads-2 {
         background-color: #4FD1C5 !important;
     }
+
     .bg-warning {
         background-color: #1449EF !important;
     }
@@ -49,6 +79,7 @@
     .menu-item {
         @apply my-0.5 w-64 basis-auto flex-col m-0 p-0 list-none items-start justify-start;
     }
+
     .menu-link {
         @apply rounded-md font-semibold mx-4 text-sm px-4 py-2.5 relative flex items-center flex-shrink basis-auto m-0 hover:bg-slate-200 hover:bg-opacity-25;
     }
@@ -61,27 +92,33 @@
         @apply text-white bg-fertimads-2;
     }
 
-    .table > :not(caption) > * > * {
+    .table> :not(caption)>*>* {
         @apply border-b py-2.5 px-5;
     }
 
-    .table-border-bottom-0 tr:last-child td, .table-border-bottom-0 tr:last-child th {
+    .table-border-bottom-0 tr:last-child td,
+    .table-border-bottom-0 tr:last-child th {
         border-bottom-width: 0;
     }
 
     .breadcrumb {
         @apply flex flex-wrap p-0 mb-4 list-none bg-transparent mt-0;
     }
-    .breadcrumb-item, .breadcrumb-item a {
+
+    .breadcrumb-item,
+    .breadcrumb-item a {
         @apply text-slate-400;
     }
+
     .breadcrumb-active {
         @apply font-semibold text-slate-600;
     }
-    .breadcrumb-item + .breadcrumb-item {
+
+    .breadcrumb-item+.breadcrumb-item {
         @apply pl-2;
     }
-    .breadcrumb-item + .breadcrumb-item::before {
+
+    .breadcrumb-item+.breadcrumb-item::before {
         content: "/";
         @apply float-left pr-2 text-slate-400;
     }
