@@ -23,6 +23,7 @@ class Device extends Model
         'series',
         'image',
         'note',
+        'debit',
         'pumps',
     ];
 

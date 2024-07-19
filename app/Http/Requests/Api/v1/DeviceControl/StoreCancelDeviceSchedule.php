@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Device;
+namespace App\Http\Requests\Api\v1\DeviceControl;
 
+use App\Rules\GardenInDevice;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDeviceRequest extends FormRequest
+class StoreCancelDeviceSchedule extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +23,7 @@ class StoreDeviceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'device_type_id'    => 'required|string|exists:device_types,id',
-            'series'            => 'required|alpha_num:ascii|max:255|unique:devices,series',
-            'debit'             => 'required|numeric|min:0',
-            'image'             => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
-            'note'              => 'nullable|string|max:255',
+            'garden_id'     => ['required', new GardenInDevice($this->route('device')->id)],
         ];
     }
 }

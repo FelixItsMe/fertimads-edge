@@ -31,9 +31,9 @@
     ])>Auto/Sensor</a>
 <a href="{{ route('head-unit.schedule-water.index') }}"
     @class([
-        'bg-white' => !request()->routeIs('head-unit.schedule-water.index'),
-        'bg-primary' => request()->routeIs('head-unit.schedule-water.index'),
-        'text-white' => request()->routeIs('head-unit.schedule-water.index'),
+        'bg-white' => !request()->routeIs('head-unit.schedule-water.index') && !request()->routeIs('head-unit.schedule-fertilizer.index'),
+        'bg-primary' => request()->routeIs('head-unit.schedule-water.index') || request()->routeIs('head-unit.schedule-fertilizer.index'),
+        'text-white' => request()->routeIs('head-unit.schedule-water.index') || request()->routeIs('head-unit.schedule-fertilizer.index'),
         'rounded-md',
         'px-4',
         'py-2',

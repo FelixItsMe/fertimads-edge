@@ -24,6 +24,7 @@ class UpdateDeviceRequest extends FormRequest
         return [
             'device_type_id'    => 'required|string|exists:device_types,id',
             'series'            => 'required|alpha_num:ascii|max:255|unique:devices,series,' . $this->route('device')->id,
+            'debit'             => 'required|numeric|min:0',
             'image'             => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'note'              => 'nullable|string|max:255',
         ];

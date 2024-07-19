@@ -5,16 +5,19 @@ namespace App\Http\Controllers\v1\Control;
 use App\Enums\GardenSelenoidStatusEnums;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Control\StoreControlManualRequest;
+use App\Http\Requests\Control\StoreControlScheduleFertilizerRequest;
 use App\Http\Requests\Control\StoreControlScheduleWaterRequest;
 use App\Http\Requests\Control\StoreControlSemiAutoRequest;
 use App\Http\Requests\Control\StoreControlSensorRequest;
 use App\Models\Commodity;
+use App\Models\DeviceFertilizerSchedule;
 use App\Models\DeviceSchedule;
 use App\Models\DeviceSelenoid;
 use App\Models\DeviceSensor;
 use App\Models\Garden;
 use App\Models\Land;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use PhpMqtt\Client\Facades\MQTT;
@@ -258,6 +261,61 @@ class ControlHeadUnitController extends Controller
                 'endDate'     => $endDate->format('Y-m-d'),
                 'executeTime'     => $request->safe()->execute_time,
             ]
+        ]);
+    }
+
+    public function indexControlScheduleFertilizer() : View {
+        $lands = Land::query()
+            ->has('gardens.deviceSelenoid')
+            ->orderBy('name')
+            ->pluck('name', 'id');
+
+        return view('pages.control.head-unit.schedule-fertilizer', compact('lands'));
+    }
+
+    public function storeControlScheduleFertilizer(StoreControlScheduleFertilizerRequest $request) : JsonResponse {
+        $garden = Garden::query()
+            ->with([
+                'deviceSelenoid.device:id,series,debit'
+            ])
+            ->has('deviceSelenoid')
+            ->find($request->safe()->garden_id);
+
+        $start = now()->parse($request->safe()->execute_date . " " . $request->safe()->execute_time)->startOfMinute();
+        $volume = $request->safe()->volume;
+        $calcMinutes = (!$garden->deviceSelenoid->device->debit)
+            ? 60
+            : ($volume / $garden->deviceSelenoid->device->debit);
+        $end = $start->copy()->addMinutes($calcMinutes);
+
+        $activeFertilizeDevice = DeviceFertilizerSchedule::query()
+            ->where(function(Builder $query)use($start){
+                $query->where('execute_start', '>=', $start->format('Y-m-d H:i:s'))
+                    ->orWhere('execute_end', '<=', $start->format('Y-m-d H:i:s'));
+            })
+            ->orWhere(function(Builder $query)use($end){
+                $query->where('execute_start', '>=', $end->format('Y-m-d H:i:s'))
+                    ->orWhere('execute_end', '<=', $end->format('Y-m-d H:i:s'));
+            })
+            ->count();
+
+        if ($activeFertilizeDevice > 0) {
+            return response()->json([
+                'message' => 'Clash in schedule'
+            ], 400);
+        }
+
+        DeviceFertilizerSchedule::create([
+            'device_selenoid_id' => $garden->deviceSelenoid->id,
+            'type' => $request->safe()->type,
+            'execute_start' => $start,
+            'execute_end' => $end,
+            'total_volume' => $volume,
+        ]);
+
+        return response()->json([
+            'message' => 'Berhasil menyimpan jadwal',
+            'request' => $request->validated()
         ]);
     }
 }
