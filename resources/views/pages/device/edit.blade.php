@@ -55,6 +55,15 @@
                         </div>
                         <div class="flex flex-col">
                             <div class="w-full">
+                                <x-input-label for="debit">{{ __('Debit (Liter)') }}</x-input-label>
+                                <x-text-input id="debit" class="block mt-1 w-full rounded-xl" type="number"
+                                    min="0" step=".01"
+                                    name="debit" :value="$device->debit" required autofocus autocomplete="debit" />
+                                <x-input-error :messages="$errors->get('debit')" class="mt-2" />
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="w-full">
                                 <x-input-label for="note">{{ __('Note') }}</x-input-label>
                                 <x-textarea id="note" class="block mt-1 w-full rounded-xl" name="note">{{ $device->note }}</x-textarea>
                                 <x-input-error :messages="$errors->get('note')" class="mt-2" />
