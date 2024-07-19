@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Enums\GardenSelenoidModeEnums;
 use App\Enums\GardenSelenoidStatusEnums;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\v1\DeviceControl\StoreCancelDeviceSchedule;
 use App\Http\Requests\Api\v1\DeviceControl\StoreDeviceManualRequest;
 use App\Http\Requests\Api\v1\DeviceControl\StoreDeviceScheduleRequest;
 use App\Http\Requests\Api\v1\DeviceControl\StoreDeviceSemiAutoRequest;
@@ -41,6 +42,7 @@ class DeviceControlController extends Controller
                         ['garden_id', $gardenId],
                     ]);
             })
+            ->active()
             ->first();
 
         $sensor = DeviceSensor::query()
@@ -218,7 +220,7 @@ class DeviceControlController extends Controller
             ])
             ->find($request->safe()->garden_id);
 
-        if ($garden->activeDeviceSchedule) {
+        if ($garden->deviceSelenoid->activeDeviceSchedule) {
             return response()->json([
                 'message' => 'Kebun sudah memiliki penjadwalan yang sedang berjalan! Hapus jadwal sebelumnya sebelum membuat yang baru!'
             ], 400);
@@ -264,6 +266,28 @@ class DeviceControlController extends Controller
                 'endDate'     => $endDate->format('Y-m-d'),
                 'executeTime'     => $request->safe()->execute_time,
             ]
+        ]);
+    }
+
+    public function updateCancelDeviceSchedule(StoreCancelDeviceSchedule $request, Device $device) : JsonResponse {
+        $garden = Garden::query()
+            ->with([
+                'deviceSelenoid' => function($query)use($device){
+                    $query->where('device_id', $device->id);
+                },
+            ])
+            ->has('deviceSelenoid')
+            ->find($request->safe()->garden_id);
+
+        DeviceSchedule::query()
+            ->where('device_selenoid_id', $garden->deviceSelenoid->id)
+            ->active()
+            ->update([
+                'is_finished' => 1
+            ]);
+
+        return response()->json([
+            'message' => 'Schedule canceled'
         ]);
     }
 

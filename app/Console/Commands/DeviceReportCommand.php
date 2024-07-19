@@ -51,6 +51,8 @@ class DeviceReportCommand extends Command
                     $this->info('Yes');
                 }
 
+                $utcSeven = 7;
+
                 DeviceReport::insert([
                     'device_selenoid_id' => $selenoids['id'],
                     'mode' => $report->mode,
@@ -58,12 +60,12 @@ class DeviceReportCommand extends Command
                     'by_sensor' => $report->bySensor,
                     'total_time' => $report->totalTime,
                     'total_volume' => $report->totalVolume,
-                    'start_time' => now()->parse($report->beginTime)->addHours(7),
-                    'end_time' => now()->parse($report->endTime)->addHours(7),
+                    'start_time' => now()->parse($report->beginTime)->addHours($utcSeven),
+                    'end_time' => now()->parse($report->endTime)->addHours($utcSeven),
                     'created_at' => now(),
                 ]);
 
-                if ($data->Reports->mode == 'schedule/semi-auto' && $selenoids['activeDeviceSchedule']) {
+                if ($selenoids['activeDeviceSchedule']) {
                     $deviceScheduleRun = DeviceScheduleRun::query()
                         ->where('device_schedule_id', $selenoids['activeDeviceSchedule']['id'])
                         ->whereNull('end_time')

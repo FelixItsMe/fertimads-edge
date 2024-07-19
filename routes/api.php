@@ -19,6 +19,7 @@ Route::prefix('mobile/v1')->group(function(){
         Route::post('device/{device}/control/semi-auto/store', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'storeDeviceSemiAuto']);
         Route::post('device/{device}/control/manual/store', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'storeDeviceManual']);
         Route::post('device/{device}/control/schedule/store', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'storeDeviceSchedule']);
+        Route::put('device/{device}/control/schedule/cancel', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'updateCancelDeviceSchedule']);
         Route::get('test-schedule', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'testSchedule']);
 
         Route::get('get-lands-polygon', [App\Http\Controllers\Api\v1\LandController::class, 'getLandsPolygon']);

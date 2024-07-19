@@ -51,6 +51,8 @@ Route::middleware('auth')->group(function () {
         Route::post('head-unit/sensor', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlSensor'])->name('head-unit.sensor.store');
         Route::get('head-unit/schedule-water', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlScheduleWater'])->name('head-unit.schedule-water.index');
         Route::post('head-unit/schedule-water', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleWater'])->name('head-unit.schedule-water.store');
+        Route::get('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.index');
+        Route::post('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.store');
     });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CARE->value])->prefix('care')->group(function () {
