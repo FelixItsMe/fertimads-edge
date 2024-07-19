@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/commodity/{commodity}/phase/update', [\App\Http\Controllers\v1\CommodityPhaseController::class, 'update'])->name('commodity.phase.update');
 
         Route::resource('user', \App\Http\Controllers\v1\UserController::class);
+
+        Route::resource('tool', \App\Http\Controllers\v1\Management\ToolController::class);
     });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CONTROL->value])

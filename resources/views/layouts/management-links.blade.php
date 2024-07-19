@@ -38,6 +38,17 @@
     </a>
 </li>
 <li class="menu-item">
+    <a href="{{ route('tool.index') }}" class="menu-link">
+        <i @class([
+            'menu-icon',
+            'active-icon' => request()->routeIs('tool.*'),
+            'fa-solid',
+            'fa-motorcycle',
+            ]) ></i>
+        <div class="text-slate-400">Manajemen Peralatan</div>
+    </a>
+</li>
+<li class="menu-item">
     <a href="{{ route('device-type.index') }}" class="menu-link">
         <i @class([
             'menu-icon',
