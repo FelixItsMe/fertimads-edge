@@ -23,6 +23,7 @@ class PestController extends Controller
     {
         $pests = Pest::query()
             ->with(['garden', 'commodity'])
+            ->latest()
             ->paginate(10);
 
         return view('pages.care.pest.index', compact('pests'));
