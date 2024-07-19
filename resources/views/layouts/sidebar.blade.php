@@ -17,6 +17,7 @@
     <ul id="menu-inner" class="flex flex-col flex-auto items-center justify-start m-0 p-0 pt-6 relative overflow-hidden touch-auto pb-6">
         @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::MANAGEMENT->value || Auth::user()->role == 'su', 'layouts.management-links')
         @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::CONTROL->value || Auth::user()->role == 'su', 'layouts.control-links')
+        @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::CARE->value || Auth::user()->role == 'su', 'layouts.care-links')
     </ul>
     <div class="px-8 font-bold">
         Pengaturan Akun

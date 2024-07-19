@@ -51,4 +51,9 @@ class Commodity extends Model
     {
         return $this->hasOne(CommodityPhase::class)->ofMany('phase', 'max');
     }
+
+    public function pests(): HasMany
+    {
+        return $this->hasMany(Pest::class);
+    }
 }

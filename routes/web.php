@@ -2,6 +2,7 @@
 
 use App\Enums\UserRoleEnums;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\v1\Care\PestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -49,6 +50,10 @@ Route::middleware('auth')->group(function () {
         Route::post('head-unit/sensor', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlSensor'])->name('head-unit.sensor.store');
         Route::get('head-unit/schedule-water', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlScheduleWater'])->name('head-unit.schedule-water.index');
         Route::post('head-unit/schedule-water', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleWater'])->name('head-unit.schedule-water.store');
+    });
+
+    Route::middleware(['roleAccess:' . UserRoleEnums::CARE->value])->prefix('care')->group(function () {
+        Route::resource('pest', PestController::class);
     });
 
     // extra to get data
