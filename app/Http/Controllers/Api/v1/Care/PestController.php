@@ -39,17 +39,17 @@ class PestController extends Controller
     {
         $image = $this->imageService->image_intervention($request->safe()->file, 'fertimads/images/pest/', 1/1);
 
-        [$geminiResponse, $diseaseName, $pestName] = $service->generate('image/jpeg', $image, $request->gemini_prompt);
+        [$geminiPrompt, $geminiResponse, $diseaseName, $pestName] = $service->generate('image/jpeg', $image, $request->gemini_prompt);
 
         $pest = Pest::query()
             ->create([
                 'disease_name' => $diseaseName,
                 'pest_name' => $pestName,
                 'file' => $image,
-                'garden_id' => 1,
+                'garden_id' => $request->garden_id,
                 'commodity_Id' => $request->commodity_id,
                 'infected_count' => $request->infected_count,
-                'gemini_prompt' => $request->gemini_prompt,
+                'gemini_prompt' => $geminiPrompt,
                 'gemini_response' => $geminiResponse
             ]);
 
