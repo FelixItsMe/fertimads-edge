@@ -5,7 +5,7 @@
   </a>
 </li>
 <li class="menu-item">
-  <a href="{{ route('land.index') }}" class="menu-link">
+  <a href="{{ route('fertilization-report.index') }}" class="menu-link">
     <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('land.*'),
       'fa-solid',
       'fa-mountain',
@@ -14,7 +14,7 @@
   </a>
 </li>
 <li class="menu-item">
-  <a href="{{ route('garden.index') }}" class="menu-link">
+  <a href="{{ route('fertilization-report.index') }}" class="menu-link">
     <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('garden.*'),
       'fa-solid',
       'fa-table-cells',
