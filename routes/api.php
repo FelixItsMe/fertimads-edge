@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Care\PestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,11 @@ Route::prefix('mobile/v1')->group(function(){
         Route::get('garden/{garden}/list-telemetry', [App\Http\Controllers\Api\v1\GardenController::class, 'gardenListTelemetries']);
         Route::get('garden/{garden}/latest-telemetry', [App\Http\Controllers\Api\v1\GardenController::class, 'gardenLatestTelemetry']);
         Route::get('garden/{garden}/calendar-schedule', [App\Http\Controllers\Api\v1\GardenController::class, 'calendarSchedules']);
+
+        Route::get('pest', [PestController::class, 'index']);
+        Route::post('pest', [PestController::class, 'store']);
+        Route::get('pest/{pest}', [PestController::class, 'show']);
+        Route::post('pest/{pest}/delete', [PestController::class, 'destroy']);
     });
 
     Route::get('/user', function (Request $request) {

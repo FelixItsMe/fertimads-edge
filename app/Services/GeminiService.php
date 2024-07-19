@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
-use GeminiAPI\Laravel\Facades\Gemini;
+use Gemini\Data\Blob;
+use Gemini\Enums\MimeType;
+use Gemini\Laravel\Facades\Gemini;
 use Illuminate\Http\UploadedFile;
 
 class GeminiService
@@ -10,33 +12,39 @@ class GeminiService
     public function generate($imageFormat = 'image/jpeg', $file, $prompt)
     {
         $template = "
-            Jelaskan secara mendetail berdasarkan informasi berikut dan buatkan dalam format JSON:
+            Jelaskan secara mendetail berdasarkan foto dan informasi berikut dan buatkan dalam format JSON:
 
             {$prompt}
 
-            Berikan informasi dalam format JSON dengan struktur sebagai berikut:
+            Berikan informasi dalam format JSON dengan struktur sebagai berikut, hanya json saja, tanpa tambahan apapun lagi, tanpa menambahkan tulisan json lagi di jawabanmu, hanya hasil json nya saja:
 
             {
-            \"nama_penyakit\": \"<Nama penyakit>\",
-            \"nama_hama\": \"<Nama hama>\",
-            \"gejala\": \"<gejalan>\",
-            \"penyebab\": \"<Penyebab>\",
-            \"pengendalian\": \"<Pengendalian>\"
+            \"nama_penyakit\": \"<Nama penyakit<string>> {jika terdapat namanya tolong berikan nama lengkapnya}\",
+            \"nama_hama\": \"<Nama hama<string>> {jika terdapat namanya tolong berikan nama lengkapnya}\",
+            \"gejala\": \"<gejalan<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
+            \"penyebab\": \"<Penyebab<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
+            \"pengendalian\": \"<pengendalian<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\"
             }
         ";
 
-        $geminiResponse = Gemini::generateTextUsingImageFile(
-            $imageFormat,
-            $file,
-            $template
-        );
+        $geminiResponse = Gemini::generativeModel('gemini-1.5-flash')->generateContent([
+            $template,
+            new Blob(
+                mimeType: MimeType::IMAGE_JPEG,
+                data: base64_encode(
+                    file_get_contents($file)
+                )
+            )
+        ]);
 
-        $response = json_decode($geminiResponse);
+        $response = json_decode($geminiResponse->text());
 
-        $diseaseName = $response->nama_penyakit;
-        $pestName = $response->nama_hama;
+        // dd($response);
 
-        return [$geminiResponse, $diseaseName, $pestName];
+        $diseaseName = $response?->nama_penyakit ?? '-';
+        $pestName = $response?->nama_hama ?? '-';
+
+        return [$template, $geminiResponse->text(), $diseaseName, $pestName];
     }
 
     public function convertResponseToHTML($text)

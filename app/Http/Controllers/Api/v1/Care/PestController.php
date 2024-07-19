@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\v1\Care;
+namespace App\Http\Controllers\Api\v1\Care;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Care\StorePestRequest;
@@ -9,8 +9,7 @@ use App\Models\Garden;
 use App\Models\Pest;
 use App\Services\GeminiService;
 use App\Services\ImageService;
-use GeminiAPI\Laravel\Facades\Gemini;
-use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request;
 
 class PestController extends Controller
 {
@@ -23,10 +22,9 @@ class PestController extends Controller
     {
         $pests = Pest::query()
             ->with(['garden', 'commodity'])
-            ->latest()
             ->paginate(10);
 
-        return view('pages.care.pest.index', compact('pests'));
+        return response()->json($pests);
     }
 
     public function create()
@@ -34,35 +32,35 @@ class PestController extends Controller
         $gardens = Garden::all();
         $commodities = Commodity::all();
 
-        return view('pages.care.pest.create', compact('gardens', 'commodities'));
+        return response()->json(['gardens' => $gardens, 'commodities' => $commodities]);
     }
 
     public function store(StorePestRequest $request, GeminiService $service)
     {
         $image = $this->imageService->image_intervention($request->safe()->file, 'fertimads/images/pest/', 1/1);
 
-        [$geminiResponse, $diseaseName, $pestName] = $service->generate('image/jpeg', $image, $request->gemini_prompt);
+        [$geminiPrompt, $geminiResponse, $diseaseName, $pestName] = $service->generate('image/jpeg', $image, $request->gemini_prompt);
 
-        Pest::query()
+        $pest = Pest::query()
             ->create([
                 'disease_name' => $diseaseName,
                 'pest_name' => $pestName,
                 'file' => $image,
-                'garden_id' => 1,
+                'garden_id' => $request->garden_id,
                 'commodity_Id' => $request->commodity_id,
                 'infected_count' => $request->infected_count,
-                'gemini_prompt' => $request->gemini_prompt,
+                'gemini_prompt' => $geminiPrompt,
                 'gemini_response' => $geminiResponse
             ]);
 
-        return redirect()->route('pest.index');
+        return response()->json($pest);
     }
 
-    public function show(Pest $pest, GeminiService $service)
+    public function show(Pest $pest)
     {
         $response = json_decode($pest->gemini_response);
 
-        return view('pages.care.pest.show', compact('pest', 'response'));
+        return response()->json(['pest' => $pest, 'gemini_response' => $response]);
     }
 
     /**

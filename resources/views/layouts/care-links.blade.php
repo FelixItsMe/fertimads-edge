@@ -1,12 +1,6 @@
 <li class="menu-item">
-  <a href="#" class="menu-link">
-    <i class="menu-icon fa-solid fa-house"></i>
-    <div class="text-slate-400">Dashboard</div>
-  </a>
-</li>
-<li class="menu-item">
-  <a href="{{ route('land.index') }}" class="menu-link">
-    <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('land.*'),
+  <a href="{{ route('fertilization-report.index') }}" class="menu-link">
+    <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('fertilization-report.*'),
       'fa-solid',
       'fa-mountain',
       ]) ></i>
@@ -14,7 +8,7 @@
   </a>
 </li>
 <li class="menu-item">
-  <a href="{{ route('garden.index') }}" class="menu-link">
+  <a href="{{ route('fertilization-report.index') }}" class="menu-link">
     <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('garden.*'),
       'fa-solid',
       'fa-table-cells',
@@ -24,7 +18,7 @@
 </li>
 <li class="menu-item">
   <a href="{{ route('pest.index') }}" class="menu-link">
-    <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('commodity.*'),
+    <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('pest.*'),
       'fa-solid',
       'fa-apple-whole',
       ]) ></i>

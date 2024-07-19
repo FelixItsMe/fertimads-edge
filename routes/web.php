@@ -2,6 +2,7 @@
 
 use App\Enums\UserRoleEnums;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\v1\Care\FeritilizerReportController;
 use App\Http\Controllers\v1\Care\PestController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +60,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CARE->value])->prefix('care')->group(function () {
         Route::resource('pest', PestController::class);
+        Route::get('fertilization-report', [FeritilizerReportController::class, 'index'])->name('fertilization-report.index');
     });
 
     // extra to get data
