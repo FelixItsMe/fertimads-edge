@@ -85,6 +85,16 @@
           @else
           <p>{!! $response->penyebab !!}</p>
           @endif
+          <h2 class="gemini-subhead">Pengobatan</h2>
+          @if (gettype($response->pengobatan) === 'array')
+          <ul class="gemini-list">
+            @foreach ($response->pengobatan as $pengobatan)
+            <li class="gemini-list-item">{!! $pengobatan !!}</li>
+            @endforeach
+          </ul>
+          @else
+          <p>{!! $response->pengobatan !!}</p>
+          @endif
           <h2 class="gemini-subhead">Pengendalian</h2>
           @if (gettype($response->pengendalian) === 'array')
           <ul class="gemini-list">
