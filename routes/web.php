@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['roleAccess:' . UserRoleEnums::CARE->value])->prefix('care')->group(function () {
         Route::resource('pest', PestController::class);
         Route::get('fertilization-report', [FeritilizerReportController::class, 'index'])->name('fertilization-report.index');
+        Route::get('fertilization-report/export', [FeritilizerReportController::class, 'export'])->name('fertilization-report.export');
     });
 
     // extra to get data

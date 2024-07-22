@@ -21,7 +21,7 @@
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 flex justify-between">
           <h1 class="text-3xl font-extrabold">Tabel Laporan Pemupukan</h1>
-          <a href="{{ route('pest.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Export Data</a>
+          <a href="{{ route('fertilization-report.export') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Export Data</a>
         </div>
         <table class="w-full border-slate-400 table mb-0 text-left">
           <thead>
@@ -33,28 +33,18 @@
               <th>Jumlah Pupuk Dasar</th>
               <th>Jenis Pupuk Susulan</th>
               <th>Jumlah Pupuk Susulan</th>
-              <th>Aksi</th>
             </tr>
           </thead>
           <tbody class="table-border-bottom-0">
-            @forelse ([] as $pest)
+            @forelse ($reports as $report)
             <tr>
-              <td>{{ $pest->created_at->format('d M Y H:i:s') }}</td>
-              <td>{{ $pest->disease_name }}</td>
-              <td>{{ $pest->pest_name }}</td>
-              <td>{{ $pest->garden->name }}</td>
-              <td>{{ $pest->commodity->name }}</td>
-              <td>{{ $pest->infected_count }}</td>
-              <td>
-                <div class="flex flex-row space-x-2">
-                  <a href="{{ route('pest.show', $pest->id) }}" title="Lihat Hama" class="text-sm text-warning">
-                    <i class="fa-solid fa-circle-info"></i>
-                  </a>
-                  <a href="#" onclick="deleteData({{ $pest->id }})" title="Hapus Hama" class="text-sm text-danger">
-                    <i class="fa-solid fa-trash-can"></i>
-                  </a>
-                </div>
-              </td>
+              <td>{{ $report->created_at->format('d M Y H:i:s') }}</td>
+              <td>{{ '-' }}</td>
+              <td>{{ $report->deviceSelenoid->garden->name }}</td>
+              <td>{{ $report->pemupukan_type }}</td>
+              <td>{{ '-' }}</td>
+              <td>{{ '-' }}</td>
+              <td>{{ '-' }}</td>
             </tr>
             @empty
             <tr>
@@ -63,6 +53,11 @@
             @endforelse
           </tbody>
         </table>
+        @if ($reports->hasPages())
+        <div class="p-6">
+          {{ $reports->links() }}
+        </div>
+        @endif
       </div>
     </div>
   </div>
