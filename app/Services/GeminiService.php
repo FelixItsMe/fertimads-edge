@@ -23,11 +23,12 @@ class GeminiService
             \"nama_hama\": \"<Nama hama<string>> {jika terdapat namanya tolong berikan nama lengkapnya}\",
             \"gejala\": \"<gejalan<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
             \"penyebab\": \"<Penyebab<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
+            \"pengobatan\": \"<Pengobatan<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
             \"pengendalian\": \"<pengendalian<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\"
             }
         ";
 
-        $geminiResponse = Gemini::generativeModel('gemini-1.5-flash')->generateContent([
+        $geminiResponse = Gemini::generativeModel('gemini-1.5-pro')->generateContent([
             $template,
             new Blob(
                 mimeType: MimeType::IMAGE_JPEG,
