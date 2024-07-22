@@ -4,7 +4,7 @@ const fetchData = async (url, setting = {}) => {
 
         // Check for successful response
         if (!response.ok) {
-            if (response.status >= 400 && response.status < 500) {
+            if (response.status >= 400 && response.status <= 500) {
                 const data = await response.json()
                 errorMessage(data.message);
             }

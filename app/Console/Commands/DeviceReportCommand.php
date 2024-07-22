@@ -60,8 +60,8 @@ class DeviceReportCommand extends Command
                     'by_sensor' => $report->bySensor,
                     'total_time' => $report->totalTime,
                     'total_volume' => $report->totalVolume,
-                    'start_time' => now()->parse($report->beginTime)->addHours($utcSeven),
-                    'end_time' => now()->parse($report->endTime)->addHours($utcSeven),
+                    'start_time' => now()->parse($report->beginTime),
+                    'end_time' => now()->parse($report->endTime),
                     'created_at' => now(),
                 ]);
 

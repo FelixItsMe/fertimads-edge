@@ -5,6 +5,17 @@
     </a>
 </li>
 <li class="menu-item">
+    <a href="{{ route('activity-schedule.index') }}" class="menu-link">
+        <i @class([
+            'menu-icon',
+            'active-icon' => request()->routeIs('activity-schedule.*'),
+            'fa-solid',
+            'fa-calendar-days',
+            ]) ></i>
+        <div class="text-slate-400">Jadwal Kegiatan</div>
+    </a>
+</li>
+<li class="menu-item">
     <a href="{{ route('land.index') }}" class="menu-link">
         <i @class([
             'menu-icon',
