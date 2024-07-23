@@ -44,12 +44,17 @@ class ToolController extends Controller
     public function store(StoreToolRequest $request): RedirectResponse
     {
         $image = $this->imageService->image_intervention($request->safe()->image, 'fertimads/images/tools/', 1/1);
-        Tool::create(
+        $tool = Tool::create(
             $request->safe()->except('image') +
             [
                 'image' => $image
             ]
         );
+
+        activity()
+            ->performedOn($tool)
+            ->event('create')
+            ->log('Peralatan Baru ditambahkan');
 
         return redirect()->route('tool.index')->with('tool-success', 'Berhasil disimpan');
     }
@@ -89,6 +94,11 @@ class ToolController extends Controller
             ]
         );
 
+        activity()
+            ->performedOn($tool)
+            ->event('edit')
+            ->log('Peralatan diupdate');
+
         return redirect()->route('tool.index')->with('tool-success', 'Berhasil disimpan');
     }
 
@@ -108,6 +118,11 @@ class ToolController extends Controller
                 'message' => 'Berhasil dihapus'
             ]);
         }
+
+        activity()
+            ->performedOn($tool)
+            ->event('delete')
+            ->log('Peralatan dihapus');
 
         return redirect()->route('tool.index');
     }

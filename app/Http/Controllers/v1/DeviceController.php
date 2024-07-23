@@ -82,6 +82,11 @@ class DeviceController extends Controller
 
         DeviceSelenoid::insert($selenoids);
 
+        activity()
+            ->performedOn($device)
+            ->event('create')
+            ->log('Perangkat baru ditambahkan');
+
         return redirect()->route('device.index')->with('device-success', 'Berhasil disimpan!');
     }
 
@@ -123,6 +128,11 @@ class DeviceController extends Controller
             ]
         );
 
+        activity()
+            ->performedOn($device)
+            ->event('edit')
+            ->log('Perangkat ' . $device->series . ' diupdate');
+
         return redirect()->route('device.index')->with('device-success', 'Berhasil disimpan!');
     }
 
@@ -136,6 +146,11 @@ class DeviceController extends Controller
         $device->delete();
 
         session()->flash('device-success', 'Berhasil dihapus');
+
+        activity()
+            ->performedOn($device)
+            ->event('delete')
+            ->log('Perangkat ' . $device->series . ' dihapus');
 
         return response()->json([
             'message' => 'Berhasil dihapus'

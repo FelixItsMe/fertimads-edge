@@ -374,8 +374,6 @@
             }
 
             const selectDate = (e) => {
-                console.log(e.dataset.date);
-
                 const classes = ['bg-primary', 'text-white', 'active']
 
                 document.querySelector('#calendar td.active')?.classList.remove(...classes)

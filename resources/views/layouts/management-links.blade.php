@@ -1,7 +1,23 @@
 <li class="menu-item">
-    <a href="#" class="menu-link">
-        <i class="menu-icon fa-solid fa-house"></i>
+    <a href="{{ route('dashboard.index') }}" class="menu-link">
+        <i @class([
+            'menu-icon',
+            'active-icon' => request()->routeIs('dashboard.index'),
+            'fa-solid',
+            'fa-house',
+            ]) ></i>
         <div class="text-slate-400">Dashboard</div>
+    </a>
+</li>
+<li class="menu-item">
+    <a href="{{ route('activity-schedule.index') }}" class="menu-link">
+        <i @class([
+            'menu-icon',
+            'active-icon' => request()->routeIs('activity-schedule.*'),
+            'fa-solid',
+            'fa-calendar-days',
+            ]) ></i>
+        <div class="text-slate-400">Jadwal Kegiatan</div>
     </a>
 </li>
 <li class="menu-item">
@@ -90,5 +106,16 @@
             'fa-city',
             ]) ></i>
         <div class="text-slate-400">Manajemen Infrastruktur</div>
+    </a>
+</li>
+<li class="menu-item">
+    <a href="{{ route('activity-log.index') }}" class="menu-link">
+        <i @class([
+            'menu-icon',
+            'active-icon' => request()->routeIs('activity-log.*'),
+            'fa-solid',
+            'fa-clock-rotate-left',
+            ]) ></i>
+        <div class="text-slate-400">Log Aktivitas</div>
     </a>
 </li>
