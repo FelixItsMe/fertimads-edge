@@ -17,16 +17,26 @@ use Spatie\Activitylog\Models\Activity;
 class DashboardController extends Controller
 {
     public function index() : View {
-        $fertilizeSchedules = DeviceFertilizerSchedule::query()
-            ->with('deviceSelenoid.garden:id,name')
-            ->has('deviceSelenoid.garden')
-            ->finished()
-            ->get();
+        $scheduleCategory = request()->query('category', null);
 
-        $waterSchedules = DeviceScheduleRun::query()
-            ->with('deviceSchedule.deviceSelenoid.garden:id,name')
-            ->has('deviceSchedule.deviceSelenoid.garden')
-            ->get();
+        $fertilizeSchedules = [];
+
+        if (!$scheduleCategory || $scheduleCategory == 'fertilizer') {
+            $fertilizeSchedules = DeviceFertilizerSchedule::query()
+                ->with('deviceSelenoid.garden:id,name')
+                ->has('deviceSelenoid.garden')
+                ->finished()
+                ->get();
+        }
+
+        $waterSchedules = [];
+
+        if (!$scheduleCategory || $scheduleCategory == 'water') {
+            $waterSchedules = DeviceScheduleRun::query()
+                ->with('deviceSchedule.deviceSelenoid.garden:id,name')
+                ->has('deviceSchedule.deviceSelenoid.garden')
+                ->get();
+        }
 
         $gardens = Garden::query()
             ->select(['id', 'name', 'area', 'commodity_id'])
