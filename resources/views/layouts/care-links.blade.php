@@ -25,3 +25,13 @@
     <div class="text-slate-400">Laporan Hama</div>
   </a>
 </li>
+
+<li class="menu-item">
+  <a href="{{ route('rsc.index') }}" class="menu-link">
+    <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('rsc.*'),
+      'fa-solid',
+      'fa-map',
+      ]) ></i>
+    <div class="text-slate-400">RSC Data</div>
+  </a>
+</li>
