@@ -27,8 +27,10 @@
             <div class="grid grid-flow-row grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 @forelse ($devices as $device)
                     <div class="flex flex-col gap-y-2 bg-white rounded-md overflow-hidden p-4">
-                        <img src="{{ asset($device->image ?? $device->deviceType->image) }}" alt="Device Img"
-                            class="w-full aspect-square object-cover rounded-md">
+                        <a href="{{ route('device.show', $device->id) }}">
+                          <img src="{{ asset($device->image ?? $device->deviceType->image) }}" alt="Device Img"
+                              class="w-full aspect-square object-cover rounded-md">
+                        </a>
                         <div class="h-full flex flex-col justify-between">
                             <div>
                                 <span class="text-base mb-2">{{ $device->series }}</span>
