@@ -43,7 +43,12 @@ class LandController extends Controller
     {
         $validated = $request->validated();
 
-        Land::create($validated);
+        $land = Land::create($validated);
+
+        activity()
+            ->performedOn($land)
+            ->event('create')
+            ->log('Lahan baru ditambahkan');
 
         return redirect()->route('land.index')->with('land-success', 'Berhasil disimpan!');
     }
@@ -73,6 +78,11 @@ class LandController extends Controller
 
         $land->update($validated);
 
+        activity()
+            ->performedOn($land)
+            ->event('edit')
+            ->log('Lahan ' . $land->name . ' diupdate');
+
         return redirect()->route('land.index')->with('land-success', 'Berhasil disimpan!');
     }
 
@@ -81,16 +91,29 @@ class LandController extends Controller
      */
     public function destroy(Land $land)
     {
-        //
+        $land->delete();
+
+        session()->flash('land-success', 'Berhasil dihapus!');
+
+        activity()
+            ->performedOn($land)
+            ->event('delete')
+            ->log('Lahan ' . $land->name . ' dihapus');
+
+        return response()->json([
+            'message' => 'Berhasil dihapus'
+        ]);
     }
 
-    public function getLand(Land $land) : JsonResponse {
+    public function getLand(Land $land): JsonResponse
+    {
         return response()->json([
             'land' => $land
         ]);
     }
 
-    public function getLandPolygonWithGardens($id) : JsonResponse {
+    public function getLandPolygonWithGardens($id): JsonResponse
+    {
         $land = Land::query()
             ->select(['id', 'name', 'area', 'polygon', 'latitude', 'longitude'])
             ->with([
@@ -101,6 +124,21 @@ class LandController extends Controller
 
         return response()->json([
             'land' => $land
+        ]);
+    }
+
+    public function landsPolyWithGardensPoly(): JsonResponse
+    {
+        $lands = Land::query()
+            ->select(['id', 'name', 'latitude', 'longitude', 'polygon'])
+            ->with([
+                'gardens:id,land_id,name,polygon,latitude,longitude,color'
+            ])
+            ->get();
+
+        return response()->json([
+            'message' => 'Data Polygon lahan dan kebun',
+            'lands' => $lands,
         ]);
     }
 }

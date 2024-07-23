@@ -77,6 +77,11 @@ class GardenController extends Controller
 
         $this->gardenService->updateSelenoidGardenId($garden->id, $request->safe()->device_id, true);
 
+        activity()
+            ->performedOn($garden)
+            ->event('create')
+            ->log('Kebun baru ditambahkan');
+
         return redirect()->route('garden.index')->with('garden-success', 'Berhasil disimpan');
     }
 
@@ -132,6 +137,11 @@ class GardenController extends Controller
 
         $this->gardenService->updateSelenoidGardenId($garden->id, $request->safe()->device_id);
 
+        activity()
+            ->performedOn($garden)
+            ->event('edit')
+            ->log('Kebun '. $garden->name .' diupdate');
+
         return redirect()->route('garden.index')->with('garden-success', 'Berhasil disimpan');
     }
 
@@ -143,6 +153,11 @@ class GardenController extends Controller
         $garden->delete();
 
         session()->flash('garden-success', 'Berhasil dihapus!');
+
+        activity()
+            ->performedOn($garden)
+            ->event('delete')
+            ->log('Kebun '. $garden->name .' dihapus');
 
         return response()->json([
             'message' => 'Berhasil dihapus'

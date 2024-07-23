@@ -40,12 +40,17 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        User::create([
+        $user = User::create([
             'name'      => $request->safe()->name,
             'email'     => $request->safe()->email,
             'role'      => $request->safe()->role,
             'password'  => Hash::make($request->safe()->password),
         ]);
+
+        activity()
+            ->performedOn($user)
+            ->event('create')
+            ->log('User baru ditambahkan');
 
         return redirect()->route('user.index')->with('user-success', 'Berhasil disimpan');
     }
@@ -80,6 +85,11 @@ class UserController extends Controller
         $user->role     = $request->safe()->role;
         $user->save();
 
+        activity()
+            ->performedOn($user)
+            ->event('edit')
+            ->log('User ' . $user->name . ' diupdate');
+
         return redirect()->route('user.index')->with('user-success', 'Berhasil disimpan');
     }
 
@@ -88,6 +98,11 @@ class UserController extends Controller
      */
     public function destroy(User $user): JsonResponse|RedirectResponse
     {
+        activity()
+            ->performedOn($user)
+            ->event('delete')
+            ->log('User ' . $user->name . ' dihapus');
+
         $user->delete();
 
         session()->flash('user-success', 'Berhasil dihapus');

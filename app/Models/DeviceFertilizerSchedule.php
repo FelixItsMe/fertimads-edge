@@ -46,6 +46,17 @@ class DeviceFertilizerSchedule extends Model
     }
 
     /**
+     * Scope a query to only include finished schedule
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFinished($query)
+    {
+        return $query->where('is_finished', 1);
+    }
+
+    /**
      * Get the deviceSelenoid that owns the DeviceFertilizerSchedule
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
