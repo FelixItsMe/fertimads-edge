@@ -46,11 +46,16 @@ class CommodityController extends Controller
     {
         $image = $this->imageService->image_intervention($request->safe()->image, 'fertimads/images/commodities/', 1/1);
 
-        Commodity::create(
+        $commodity = Commodity::create(
             $request->safe()->except('image') + [
                 'image' => $image
             ]
         );
+
+        activity()
+            ->performedOn($commodity)
+            ->event('create')
+            ->log('Komoditi baru ditambahkan');
 
         return redirect()->route('commodity.index')->with('commodity-success', 'Berhasil disimpan');
     }
@@ -91,6 +96,11 @@ class CommodityController extends Controller
             ]
         );
 
+        activity()
+            ->performedOn($commodity)
+            ->event('edit')
+            ->log('Komoditi ' . $commodity->name . ' dihapus');
+
         return redirect()->route('commodity.index')->with('commodity-success', 'Berhasil disimpan');
     }
 
@@ -104,6 +114,11 @@ class CommodityController extends Controller
         $commodity->delete();
 
         session()->flash('commodity-success', 'Berhasil dihapus!');
+
+        activity()
+            ->performedOn($commodity)
+            ->event('delete')
+            ->log('Komoditi ' . $commodity->name . ' dihapus');
 
         return response()->json([
             'message' => 'Berhasil dihapus!'

@@ -22,44 +22,52 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['roleAccess:' . UserRoleEnums::MANAGEMENT->value])
         ->prefix('management')
         ->group(function(){
-        // Land Route
-        Route::resource('land', \App\Http\Controllers\v1\LandController::class);
+            Route::group([
+                'prefix' => 'dashboard',
+            ], function () {
+                Route::get('/', [\App\Http\Controllers\v1\Management\DashboardController::class, 'index'])->name('dashboard.index');
+            });
 
-        Route::resource('garden', \App\Http\Controllers\v1\GardenController::class);
+            // Land Route
+            Route::resource('land', \App\Http\Controllers\v1\LandController::class);
 
-        Route::resource('commodity', \App\Http\Controllers\v1\CommodityController::class);
+            Route::resource('garden', \App\Http\Controllers\v1\GardenController::class);
 
-        Route::resource('device-type', \App\Http\Controllers\v1\DeviceTypeController::class);
+            Route::resource('commodity', \App\Http\Controllers\v1\CommodityController::class);
 
-        Route::resource('device', \App\Http\Controllers\v1\DeviceController::class);
+            Route::resource('device-type', \App\Http\Controllers\v1\DeviceTypeController::class);
 
-        Route::resource('commodity.phase', \App\Http\Controllers\v1\CommodityPhaseController::class)->only(['create', 'store']);
-        Route::get('/commodity/{commodity}/phase/edit', [\App\Http\Controllers\v1\CommodityPhaseController::class, 'edit'])->name('commodity.phase.edit');
-        Route::put('/commodity/{commodity}/phase/update', [\App\Http\Controllers\v1\CommodityPhaseController::class, 'update'])->name('commodity.phase.update');
+            Route::resource('device', \App\Http\Controllers\v1\DeviceController::class);
 
-        Route::resource('user', \App\Http\Controllers\v1\UserController::class);
+            Route::resource('commodity.phase', \App\Http\Controllers\v1\CommodityPhaseController::class)->only(['create', 'store']);
+            Route::get('/commodity/{commodity}/phase/edit', [\App\Http\Controllers\v1\CommodityPhaseController::class, 'edit'])->name('commodity.phase.edit');
+            Route::put('/commodity/{commodity}/phase/update', [\App\Http\Controllers\v1\CommodityPhaseController::class, 'update'])->name('commodity.phase.update');
 
-        Route::resource('tool', \App\Http\Controllers\v1\Management\ToolController::class);
-        Route::resource('infrastructure', \App\Http\Controllers\v1\Management\InfrastructureController::class);
+            Route::resource('user', \App\Http\Controllers\v1\UserController::class);
 
-        Route::get('activity-schedule', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'index'])->name('activity-schedule.index');
-        Route::get('activity-schedule/year/{year}/month/{month}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'scheduleInMonth'])->name('activity-schedule.schedule-in-month');
-        Route::get('activity-schedule/date/{date}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'detailScheduleDay'])->name('activity-schedule.date');
+            Route::resource('tool', \App\Http\Controllers\v1\Management\ToolController::class);
+            Route::resource('infrastructure', \App\Http\Controllers\v1\Management\InfrastructureController::class);
+
+            Route::get('activity-schedule', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'index'])->name('activity-schedule.index');
+            Route::get('activity-schedule/year/{year}/month/{month}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'scheduleInMonth'])->name('activity-schedule.schedule-in-month');
+            Route::get('activity-schedule/date/{date}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'detailScheduleDay'])->name('activity-schedule.date');
+
+            Route::get('activity-log', [\App\Http\Controllers\v1\Management\ActivityLogController::class, 'index'])->name('activity-log.index');
     });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CONTROL->value])
         ->prefix('control')
         ->group(function(){
-        Route::get('head-unit/manual', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlManual'])->name('head-unit.manual.index');
-        Route::post('head-unit/manual', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlManual'])->name('head-unit.manual.store');
-        Route::get('head-unit/semi-auto', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlSemiAuto'])->name('head-unit.semi-auto.index');
-        Route::post('head-unit/semi-auto', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlSemiAuto'])->name('head-unit.semi-auto.store');
-        Route::get('head-unit/sensor', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlSensor'])->name('head-unit.sensor.index');
-        Route::post('head-unit/sensor', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlSensor'])->name('head-unit.sensor.store');
-        Route::get('head-unit/schedule-water', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlScheduleWater'])->name('head-unit.schedule-water.index');
-        Route::post('head-unit/schedule-water', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleWater'])->name('head-unit.schedule-water.store');
-        Route::get('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.index');
-        Route::post('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.store');
+            Route::get('head-unit/manual', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlManual'])->name('head-unit.manual.index');
+            Route::post('head-unit/manual', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlManual'])->name('head-unit.manual.store');
+            Route::get('head-unit/semi-auto', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlSemiAuto'])->name('head-unit.semi-auto.index');
+            Route::post('head-unit/semi-auto', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlSemiAuto'])->name('head-unit.semi-auto.store');
+            Route::get('head-unit/sensor', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlSensor'])->name('head-unit.sensor.index');
+            Route::post('head-unit/sensor', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlSensor'])->name('head-unit.sensor.store');
+            Route::get('head-unit/schedule-water', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlScheduleWater'])->name('head-unit.schedule-water.index');
+            Route::post('head-unit/schedule-water', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleWater'])->name('head-unit.schedule-water.store');
+            Route::get('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.index');
+            Route::post('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.store');
     });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CARE->value])->prefix('care')->group(function () {
@@ -77,6 +85,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('get-land/{land}', [\App\Http\Controllers\v1\LandController::class, 'getLand'])->name('land.get-land');
         Route::get('get-land-polygon-with-garden/{land}', [\App\Http\Controllers\v1\LandController::class, 'getLandPolygonWithGardens'])->name('land.get-land-polygon');
+        Route::get('land/polygon/garden', [\App\Http\Controllers\v1\LandController::class, 'landsPolyWithGardensPoly'])->name('land.polygon.garden');
     });
 });
 

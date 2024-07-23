@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Enums\UserRoleEnums;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,16 +32,21 @@ class AuthenticatedSessionController extends Controller
 
         switch (auth()->user()->role) {
             case UserRoleEnums::MANAGEMENT->value:
-                $routeName = 'dashboard';
+                $routeName = 'dashboard.index';
                 break;
             case UserRoleEnums::CONTROL->value:
                 $routeName = 'head-unit.manual.index';
                 break;
 
             default:
-            $routeName = 'dashboard';
+            $routeName = 'dashboard.index';
                 break;
         }
+
+        activity()
+            ->performedOn(User::find($request->user()->id))
+            ->event('login')
+            ->log('login web');
 
         return redirect()->intended(route($routeName, absolute: false));
     }
@@ -50,6 +56,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        activity()
+            ->performedOn(User::find($request->user()->id))
+            ->event('logout')
+            ->log('logout web');
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
