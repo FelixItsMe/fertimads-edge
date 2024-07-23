@@ -23,7 +23,7 @@
           <h1 class="text-3xl font-extrabold">Tabel Laporan Pemupukan</h1>
           <div class="flex space-x-3">
             <a href="{{ route('fertilization-report.export') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-excel"></i> Excel</a>
-            <a href="{{ route('fertilization-report.export') }}" class="bg-red-500 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-pdf"></i> PDF</a>
+            <a href="{{ route('fertilization-report.export-pdf') }}" target="_blank" class="bg-red-500 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-pdf"></i> PDF</a>
           </div>
         </div>
         <table class="w-full border-slate-400 table mb-0 text-left">

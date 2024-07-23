@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('pest', PestController::class);
         Route::get('fertilization-report', [FeritilizerReportController::class, 'index'])->name('fertilization-report.index');
         Route::get('fertilization-report/export', [FeritilizerReportController::class, 'export'])->name('fertilization-report.export');
+        Route::get('fertilization-report/export-pdf', [FeritilizerReportController::class, 'pdf'])->name('fertilization-report.export-pdf');
 
         Route::resource('rsc', RSCDataController::class);
     });
