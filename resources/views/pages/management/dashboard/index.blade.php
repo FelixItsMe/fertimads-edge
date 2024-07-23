@@ -45,10 +45,10 @@
             <div class="grid grid-flow-row grid-cols-1 md:grid-cols-3 max-sm:gap-y-4 md:gap-4">
                 <div class="col-span-2">
                     <div class="flex flex-col gap-2">
-                        <ul class="flex flex-row space-x-4">
-                            <li>Semua Jadwal</li>
-                            <li>Penyiraman</li>
-                            <li>Pemupukan</li>
+                        <ul class="flex flex-row space-x-4 font-semibold text-slate-400">
+                            <li @class(['text-slate-600' => !request()->query('category', null)])><a href="?category">Semua Jadwal</a></li>
+                            <li @class(['text-slate-600' => request()->query('category', null) == 'water'])><a href="?category=water">Penyiraman</a></li>
+                            <li @class(['text-slate-600' => request()->query('category', null) == 'fertilizer'])><a href="?category=fertilizer">Pemupukan</a></li>
                         </ul>
                         <div class="grid grid-flow-row grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                             @foreach ($fertilizeSchedules as $fertilizeSchedule)
