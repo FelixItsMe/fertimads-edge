@@ -15,36 +15,37 @@
       <div class="grid grid-flow-row grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <x-card-info>
           <h5 class="text-xs text-slate-400">Total Laporan Pemupukan</h5>
-          <span class="font-bold">0</span>
+          <span class="font-bold">{{ $reportsCount }}</span>
         </x-card-info>
       </div>
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 flex justify-between">
           <h1 class="text-3xl font-extrabold">Tabel Laporan Pemupukan</h1>
-          <a href="{{ route('fertilization-report.export') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Export Data</a>
+          <div class="flex space-x-3">
+            <a href="{{ route('fertilization-report.export') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-excel"></i> Excel</a>
+            <a href="{{ route('fertilization-report.export') }}" class="bg-red-500 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-pdf"></i> PDF</a>
+          </div>
         </div>
         <table class="w-full border-slate-400 table mb-0 text-left">
           <thead>
             <tr>
-              <th>Waktu</th>
+              <th>Tanggal</th>
               <th>Nama Lahan</th>
               <th>Nama Kebun</th>
               <th>Jenis Pupuk Dasar</th>
               <th>Jumlah Pupuk Dasar</th>
-              <th>Jenis Pupuk Susulan</th>
-              <th>Jumlah Pupuk Susulan</th>
+              <th>Waktu</th>
             </tr>
           </thead>
           <tbody class="table-border-bottom-0">
             @forelse ($reports as $report)
             <tr>
               <td>{{ $report->created_at->format('d M Y H:i:s') }}</td>
-              <td>{{ '-' }}</td>
+              <td>{{ $report->deviceSelenoid->garden->land->name }}</td>
               <td>{{ $report->deviceSelenoid->garden->name }}</td>
               <td>{{ $report->pemupukan_type }}</td>
-              <td>{{ '-' }}</td>
-              <td>{{ '-' }}</td>
-              <td>{{ '-' }}</td>
+              <td>{{ number_format($report->total_volume, 2) }} Ltr</td>
+              <td>{{ $report->time_in_hours }} Jam</td>
             </tr>
             @empty
             <tr>

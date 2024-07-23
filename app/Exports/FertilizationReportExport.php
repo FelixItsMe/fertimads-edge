@@ -17,7 +17,8 @@ class FertilizationReportExport implements FromCollection, WithMapping, WithHead
     {
         return DeviceReport::query()
             ->where('type', 'like', '%pemupukan%')
-            ->with('deviceSelenoid.garden')
+            ->with('deviceSelenoid.garden.land')
+            ->latest()
             ->get();
     }
 
@@ -25,25 +26,23 @@ class FertilizationReportExport implements FromCollection, WithMapping, WithHead
     {
         return [
             $row->created_at->format('d M Y H:i:s'),
-            '-',
+            $row->deviceSelenoid->garden->land->name,
             $row->deviceSelenoid->garden->name,
             $row->pemupukan_type,
-            '-',
-            '-',
-            '-'
+            number_format($row->total_volume, 2) . ' Ltr',
+            $row->time_in_hours . ' Jam'
         ];
     }
 
     public function headings(): array
     {
         return [
-            'Waktu',
+            'Tanggal',
             'Nama Lahan',
             'Nama Kebun',
             'Jenis Pupuk Dasar',
-            'Jumlah Pupuk Dasar',
-            'Jenis Pupuk Susulan',
-            'Jumlah Pupuk Susulan'
+            'Volume Pupuk Dasar',
+            'Total Waktu'
         ];
     }
 }

@@ -14,10 +14,13 @@ class FeritilizerReportController extends Controller
     {
         $reports = DeviceReport::query()
             ->where('type', 'like', '%pemupukan%')
-            ->with('deviceSelenoid.garden')
+            ->with('deviceSelenoid.garden.land')
+            ->latest()
             ->paginate(10);
 
-        return view('pages.care.fertilizer-report.index', compact('reports'));
+        $reportsCount = DeviceReport::count();
+
+        return view('pages.care.fertilizer-report.index', compact('reports', 'reportsCount'));
     }
 
     public function export()

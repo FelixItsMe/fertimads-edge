@@ -54,4 +54,11 @@ class DeviceReport extends Model
             }
         });
     }
+
+    public function timeInHours(): Attribute
+    {
+        return Attribute::get(function ($value, $attributes) {
+            return number_format($attributes['total_time'] / 3600, 2);
+        });
+    }
 }
