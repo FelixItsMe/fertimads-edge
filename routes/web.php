@@ -54,6 +54,11 @@ Route::middleware('auth')->group(function () {
             Route::get('activity-schedule/date/{date}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'detailScheduleDay'])->name('activity-schedule.date');
 
             Route::get('activity-log', [\App\Http\Controllers\v1\Management\ActivityLogController::class, 'index'])->name('activity-log.index');
+
+            Route::get('test/import/excel', [\App\Http\Controllers\v1\Management\ActivityLogController::class, 'indexImport'])->name('test.import.excel.index');
+            Route::post('test/import/excel', [\App\Http\Controllers\v1\Management\ActivityLogController::class, 'storeImport'])->name('test.import.excel.store');
+
+            Route::resource('daily-irrigation', \App\Http\Controllers\v1\Management\DailyIrrigationController::class)->only(['index', 'create', 'store']);
     });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CONTROL->value])
