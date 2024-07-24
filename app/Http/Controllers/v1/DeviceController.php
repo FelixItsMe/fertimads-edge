@@ -93,9 +93,11 @@ class DeviceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Device $device)
+    public function show(Device $device): View
     {
-        //
+        $device->load(['deviceSelenoids.garden:id,name', 'deviceType']);
+
+        return view('pages.device.show', compact('device'));
     }
 
     /**
