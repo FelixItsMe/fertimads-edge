@@ -18,8 +18,8 @@ class DeviceSchedule extends Model
      */
     protected $fillable = [
         'device_selenoid_id',
+        'garden_id',
         'commodity_id',
-        'type',
         'commodity_age',
         'start_date',
         'end_date',
@@ -65,5 +65,15 @@ class DeviceSchedule extends Model
     public function deviceScheduleRuns(): HasMany
     {
         return $this->hasMany(DeviceScheduleRun::class);
+    }
+
+    /**
+     * Get the garden that owns the DeviceSchedule
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function garden(): BelongsTo
+    {
+        return $this->belongsTo(Garden::class);
     }
 }
