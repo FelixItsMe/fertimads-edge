@@ -132,7 +132,7 @@ class LandController extends Controller
         $lands = Land::query()
             ->select(['id', 'name', 'latitude', 'longitude', 'polygon'])
             ->with([
-                'gardens:id,land_id,name,polygon,latitude,longitude,color'
+                'gardens'
             ])
             ->get();
 
