@@ -244,7 +244,7 @@ class ControlHeadUnitController extends Controller
         $endDate = $startDate->copy()->addDays($remainingDays);
 
         $deviceSchedule = DeviceSchedule::create([
-            'device_selenoid_id' => $garden->deviceSelenoid->selenoid,
+            'device_selenoid_id' => $garden->deviceSelenoid->id,
             'garden_id' => $garden->id,
             'commodity_id' => $commodity->id,
             'commodity_age' => $commodityAge,
