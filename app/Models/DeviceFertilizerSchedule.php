@@ -6,6 +6,7 @@ use App\Enums\FertilizerScheduleTypeEnums;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class DeviceFertilizerSchedule extends Model
 {
@@ -64,5 +65,15 @@ class DeviceFertilizerSchedule extends Model
     public function deviceSelenoid(): BelongsTo
     {
         return $this->belongsTo(DeviceSelenoid::class);
+    }
+
+    /**
+     * Get the scheduleExecute associated with the DeviceFertilizerSchedule
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function scheduleExecute(): HasOne
+    {
+        return $this->hasOne(DeviceFertilizeScheduleExecute::class);
     }
 }

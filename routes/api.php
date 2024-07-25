@@ -12,6 +12,7 @@ Route::prefix('mobile/v1')->group(function(){
 
         Route::get('device', [App\Http\Controllers\Api\v1\DeviceController::class, 'getDevices']);
         Route::get('device/{device}', [App\Http\Controllers\Api\v1\DeviceController::class, 'detailDevice']);
+        Route::get('device/{device}/rsc/{selenoid}', [App\Http\Controllers\Api\v1\DeviceController::class, 'rscTelemetries']);
 
         Route::get('device/{device}/control', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'index']);
 
@@ -20,6 +21,9 @@ Route::prefix('mobile/v1')->group(function(){
         Route::post('device/{device}/control/manual/store', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'storeDeviceManual']);
         Route::post('device/{device}/control/schedule/store', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'storeDeviceSchedule']);
         Route::put('device/{device}/control/schedule/cancel', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'updateCancelDeviceSchedule']);
+        Route::get('device/{device}/control/schedule/fertilizer/list', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'listActiveFertilizeSchedule']);
+        Route::post('device/{device}/control/schedule/fertilizer/store', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'storeFertilizerSchedule']);
+        Route::put('device/{device}/control/schedule/fertilizer/cancel', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'updateCancenFertilizeSchedule']);
         Route::get('test-schedule', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'testSchedule']);
 
         Route::get('get-lands-polygon', [App\Http\Controllers\Api\v1\LandController::class, 'getLandsPolygon']);

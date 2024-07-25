@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\DeviceFertilizeScheduleExecute;
 use App\Models\DeviceSchedule;
+use App\Models\DeviceScheduleExecute;
 use App\Models\DeviceScheduleRun;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,7 +21,7 @@ class SendScheduledCommand implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected string $now, protected $deviceSchedules, protected $deviceFertilizerSchedules)
+    public function __construct(protected string $now, protected $deviceScheduleRuns, protected $deviceFertilizerSchedules)
     {
         //
     }
@@ -29,83 +31,39 @@ class SendScheduledCommand implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->processDeviceWaterSchedule($this->deviceSchedules);
+        $this->processDeviceWaterSchedule($this->deviceScheduleRuns);
         $this->processDeviceFertilizerSchedule($this->deviceFertilizerSchedules);
     }
 
-    private function processDeviceWaterSchedule($deviceSchedules) : bool {
-        if (!$deviceSchedules) {
+    private function processDeviceWaterSchedule($deviceScheduleRuns) : bool {
+        if (!$deviceScheduleRuns) {
             return false;
         }
 
         $now = now()->parse($this->now)->startOfMinute();
         [$formatedDate, $formatedTime] = explode(' ', $now->copy()->format('Y-m-d H:i:s'));
 
-        // change format and filter land id
-        $idLands = $deviceSchedules->map(function($schedule, $key){
-            return $schedule->deviceSelenoid->garden->land;
-        })
-        ->unique('id')
-        ->all();
-
-        $deviceScheduleRuns = collect();
-
-        $newLands = collect();
-
-        // get meteo fron lands latitude longitude
-        foreach ($idLands as $land) {
-            $response = Http::get('https://api.open-meteo.com/v1/forecast?latitude='.$land->latitude.'&longitude='.$land->longitude.'&hourly=et0_fao_evapotranspiration&timezone=Asia%2FBangkok&forecast_days=1');
-
-            if ($response->ok()) {
-                $newLands->push([
-                    'id' => $land->id,
-                    'meteo' => $response->json()
-                ]);
-            }
-        }
-
         // group schedules by device series
-        $grouped = $deviceSchedules->groupBy(function ($item, int $key) {
-            return $item->deviceSelenoid->device->series;
+        $grouped = $deviceScheduleRuns->groupBy(function ($item, int $key) {
+            return $item->deviceSchedule->deviceSelenoid->device->series;
         });
+
+        $deviceScheduleExecutesInsert = collect();
 
         foreach ($grouped->all() as $device_series => $values) {
             $formatedMessages = collect();
             foreach ($values as $value) {
-                $land = $newLands->firstWhere('id', $value->deviceSelenoid->garden->land_id);
-                if ($land) {
-                    $startDate = now()->parse($value->start_date);
-                    $plantedDate = $startDate->copy()->subDays($value->commodity_age)->startOfDay();
-                    $currentAge = $plantedDate->diffInDays($now->copy()->startOfDay());
-
-                    // get current phase by current age
-                    $currentPhase = collect($value->commodity->commodityPhases)
-                        ->first(function($phase)use($currentAge){
-                            return $currentAge <= $phase->age;
-                        });
-
-                    // get array index of current time from array meteo for getting ET value
-                    $indexEt = collect($land['meteo']['hourly']['time'])
-                        ->search($formatedDate ."T" . $now->copy()->startOfHour()->format('H:i'));
-
-                    // get ET0 value from prev index time $indexEt
-                    $et0 = $indexEt !== false
-                        ? $land['meteo']['hourly']['et0_fao_evapotranspiration'][$indexEt]
-                        : 0;
-                    $etDay = $et0 * $currentPhase->kc;
-                    $irigasi = $etDay * $value->deviceSelenoid->garden->area;
-                    $formatedMessages->push([
-                        'idLahan' => $value->deviceSelenoid->selenoid,
-                        'tipe' => 'penyiraman',
-                        'vol' => $irigasi
-                    ]);
-                    $deviceScheduleRuns->push([
-                        'device_schedule_id' => $value->id,
-                        'start_time' => $now->copy(),
-                        'total_volume' => $irigasi,
-                        'created_at' => $now->copy(),
-                    ]);
-                }
+                $formatedMessages->push([
+                    'idLahan' => $value->deviceSchedule->deviceSelenoid->selenoid,
+                    'tipe' => 'penyiraman',
+                    'vol' => $value->total_volume,
+                ]);
+                $deviceScheduleExecutesInsert->push([
+                    'device_schedule_run_id' => $value->id,
+                    'start_time' => $now,
+                    'total_volume' => $value->total_volume,
+                    'created_at' => now(),
+                ]);
             }
 
             if ($formatedMessages->all()) {
@@ -121,7 +79,9 @@ class SendScheduledCommand implements ShouldQueue
             }
         }
 
-        DeviceScheduleRun::insert($deviceScheduleRuns->all());
+        if ($deviceScheduleExecutesInsert->count() > 0) {
+            DeviceScheduleExecute::insert($deviceScheduleExecutesInsert->all());
+        }
 
         return true;
     }
@@ -137,6 +97,8 @@ class SendScheduledCommand implements ShouldQueue
             return $item->deviceSelenoid->device->series;
         });
 
+        $fertilizerScheduleExecute = collect();
+
         foreach ($grouped->all() as $device_series => $values) {
             $formatedMessages = collect();
             foreach ($values as $value) {
@@ -144,6 +106,14 @@ class SendScheduledCommand implements ShouldQueue
                     'idLahan' => $value->deviceSelenoid->selenoid,
                     'tipe' => $value->type->getDeviceLabel(),
                     'vol' => $value->total_volume,
+                ]);
+
+                $fertilizerScheduleExecute->push([
+                    'device_fertilizer_schedule_id' => $value->id,
+                    'type' => $value->type->value,
+                    'execute_start' => $now,
+                    'total_volume' => $value->total_volume,
+                    'created_at' => now(),
                 ]);
             }
 
@@ -158,6 +128,10 @@ class SendScheduledCommand implements ShouldQueue
                 );
                 $mqtt->disconnect();
             }
+        }
+
+        if ($fertilizerScheduleExecute->count() > 0) {
+            DeviceFertilizeScheduleExecute::insert($fertilizerScheduleExecute->all());
         }
 
         return true;
