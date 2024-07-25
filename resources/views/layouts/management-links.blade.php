@@ -119,3 +119,14 @@
         <div class="text-slate-400">Log Aktivitas</div>
     </a>
 </li>
+<li class="menu-item">
+    <a href="{{ route('daily-irrigation.index') }}" class="menu-link">
+        <i @class([
+            'menu-icon',
+            'active-icon' => request()->routeIs('daily-irrigation.*'),
+            'fa-solid',
+            'fa-cloud-sun-rain',
+            ]) ></i>
+        <div class="text-slate-400">Irigasi Harian</div>
+    </a>
+</li>
