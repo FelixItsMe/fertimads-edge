@@ -26,6 +26,7 @@ class DashboardController extends Controller
                 ->with('deviceSelenoid.garden:id,name')
                 ->has('deviceSelenoid.garden')
                 ->finished()
+                ->limit(6)
                 ->get();
         }
 
@@ -35,6 +36,7 @@ class DashboardController extends Controller
             $waterSchedules = DeviceScheduleRun::query()
                 ->with('deviceSchedule.deviceSelenoid.garden:id,name')
                 ->has('deviceSchedule.deviceSelenoid.garden')
+                ->limit(6)
                 ->get();
         }
 
