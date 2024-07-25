@@ -3,6 +3,7 @@
 use App\Enums\UserRoleEnums;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\v1\Care\FeritilizerReportController;
+use App\Http\Controllers\v1\Care\HarvestReportController;
 use App\Http\Controllers\v1\Care\PestController;
 use App\Http\Controllers\v1\Care\RSCDataController;
 use Illuminate\Support\Facades\Route;
@@ -76,6 +77,8 @@ Route::middleware('auth')->group(function () {
         Route::get('fertilization-report', [FeritilizerReportController::class, 'index'])->name('fertilization-report.index');
         Route::get('fertilization-report/export', [FeritilizerReportController::class, 'export'])->name('fertilization-report.export');
         Route::get('fertilization-report/export-pdf', [FeritilizerReportController::class, 'pdf'])->name('fertilization-report.export-pdf');
+
+        Route::get('harvest-report', [HarvestReportController::class, 'index'])->name('harvest-report.index');
 
         Route::resource('rsc', RSCDataController::class);
     });

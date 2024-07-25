@@ -14,50 +14,106 @@
         <li class="breadcrumb-item">
           <a href="#">Pages</a>
         </li>
-        <li class="breadcrumb-item breadcrumb-active">{{ __('RSC Data') }}</li>
+        <li class="breadcrumb-item breadcrumb-active">{{ __('Laporan Panen') }}</li>
       </ol>
     </h2>
   </x-slot>
 
   <div class="py-12">
     <div class="mx-auto sm:px-6 lg:px-8">
-      <div class="grid grid-flow-row grid-cols-1 gap-2">
-        <div>
-          <div id="map" class="rounded-md"></div>
+      <h1 class="text-2xl font-bold">List Rangkuman</h1>
+
+      <div class="mt-5">
+        <div class="grid grid-cols-2 gap-8">
+          <div class="bg-white p-6">
+            <div class="flex gap-x-5">
+              <div class="flex-1">
+                <div class="flex">
+                  <div class="w-1/2">
+                    <div class="text-sky-600 text-5xl font-bold">87%</div>
+                    <div class="text-zinc-500">Hasil Panen baik</div>
+                  </div>
+                  <div class="">
+                    <div class="text-zinc-500">Tanggal Panen</div>
+                    <div class="font-bold">{{ now()->format('d M Y') }}</div>
+                  </div>
+                </div>
+                <div class="mt-5 flex justify-between">
+                  <div class="w-1/2 flex flex-col space-y-2">
+                    <div class="text-teal-400 text-2xl font-bold">Lahan Jonggol</div>
+                    <div class="text-zinc-500">Kebun (3A)</div>
+                    <div class="text-zinc-500">Singkong</div>
+                    <div class="text-zinc-500">50 Populasi</div>
+                  </div>
+                  <div class="w-1/2 flex flex-col space-y-2 ">
+                    <div class="text-teal-400 text-2xl font-bold">Pupuk</div>
+                    <div class="text-zinc-500">Pupuk Urea</div>
+                    <div class="text-zinc-500">Pupuk Organik</div>
+                  </div>
+                </div>
+                <div class="mt-5 flex justify-between">
+                  <div class="w-1/2 flex flex-col space-y-2">
+                    <div class="text-teal-400 text-2xl font-bold">Hasil Panen</div>
+                    <div class="text-zinc-500">80 Ton</div>
+                  </div>
+                  <div class="w-1/2 flex flex-col space-y-2 ">
+                    <div class="text-teal-400 text-2xl font-bold">Hama</div>
+                    <div class="text-zinc-500">Tikus</div>
+                  </div>
+                </div>
+                <div class="mt-5 font-bold text-xl">Laporan Keuangan</div>
+                <div class="mt-5 flex justify-between">
+                  <div class="w-1/2 flex flex-col space-y-2">
+                    <div class="text-teal-400 font-bold">Operasional</div>
+                    <div class="text-teal-400 font-bold">Est Harga Jual</div>
+                    <div class="text-teal-400 font-bold">Laba Bersih</div>
+                  </div>
+                  <div class="w-1/2 flex flex-col space-y-2 ">
+                    <div class="">Rp. 1,000,000</div>
+                    <div class="">Rp. 1,000,000</div>
+                    <div class="font-bold">Rp. 1,000,000</div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="bg-gray-200 p-6">
+                  <div class="text-teal-400 text-2xl font-bold">Rangkuman Unsur Tanah</div>
+
+                  <div class="mt-5">
+                    <div class="w-full flex">
+                      <div class="w-[225px] text-zinc-500">Nitrogen</div>
+                      <div class="font-bold">7 mg/kg</div>
+                    </div>
+                    <div class="mt-3 w-full flex">
+                      <div class="w-[225px] text-zinc-500">Fosfor</div>
+                      <div class="font-bold">7 mg/kg</div>
+                    </div>
+                    <div class="mt-3 w-full flex">
+                      <div class="w-[225px] text-zinc-500">pH tanah</div>
+                      <div class="font-bold">7 mg/kg</div>
+                    </div>
+                    <div class="mt-3 w-full flex">
+                      <div class="w-[225px] text-zinc-500">Suhu Tanah</div>
+                      <div class="font-bold">7 mg/kg</div>
+                    </div>
+                    <div class="mt-3 w-full flex">
+                      <div class="w-[225px] text-zinc-500">Kelembapan Tanah</div>
+                      <div class="font-bold">7 mg/kg</div>
+                    </div>
+                    <div class="mt-3 w-full flex">
+                      <div class="w-[225px] text-zinc-500">Suhu Lingkungan</div>
+                      <div class="font-bold">7 mg/kg</div>
+                    </div>
+                    <div class="mt-3 w-full flex">
+                      <div class="w-[225px] text-zinc-500">Kelembapan Lingkungan</div>
+                      <div class="font-bold">7 mg/kg</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-5">
-        <div class="p-6 flex justify-between">
-          <h1 class="text-3xl font-extrabold">Tabel Data RSC</h1>
-          <a href="{{ route('pest.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Data</a>
-        </div>
-        <table class="w-full border-slate-400 table mb-0 text-left">
-          <thead>
-            <tr>
-              <th>Waktu</th>
-              <th>Kebun</th>
-              <th>Nitrogen</th>
-              <th>Fosfor</th>
-              <th>Kalium</th>
-              <th>EC</th>
-              <th>pH Tanah</th>
-              <th>Suhu Tanah</th>
-              <th>Kelembapan Tanah</th>
-              <th>Suhu Lingkungan</th>
-              <th>Kelembapan Lingkungan</th>
-            </tr>
-          </thead>
-          <tbody class="table-border-bottom-0">
-            @forelse ([] as $pest)
-            <tr>
-            </tr>
-            @empty
-            <tr>
-              <td colspan="12" class="text-center">Tidak ada data</td>
-            </tr>
-            @endforelse
-          </tbody>
-        </table>
       </div>
     </div>
   </div>

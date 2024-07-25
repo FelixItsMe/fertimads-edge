@@ -8,7 +8,7 @@
   </a>
 </li>
 <li class="menu-item">
-  <a href="{{ route('fertilization-report.index') }}" class="menu-link">
+  <a href="{{ route('harvest-report.index') }}" class="menu-link">
     <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('garden.*'),
       'fa-solid',
       'fa-table-cells',
