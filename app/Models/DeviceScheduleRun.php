@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class DeviceScheduleRun extends Model
 {
@@ -30,5 +31,15 @@ class DeviceScheduleRun extends Model
     public function deviceSchedule(): BelongsTo
     {
         return $this->belongsTo(DeviceSchedule::class);
+    }
+
+    /**
+     * Get the deviceScheduleExecute associated with the DeviceScheduleRun
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function deviceScheduleExecute(): HasOne
+    {
+        return $this->hasOne(DeviceScheduleExecute::class);
     }
 }

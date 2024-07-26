@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Device;
+use App\Models\DeviceTelemetry;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -22,11 +23,37 @@ class DeviceController extends Controller
     }
 
     public function detailDevice(Device $device) : JsonResponse {
-        $device->load('deviceType');
+        $device->load(['deviceType', 'deviceSelenoids']);
 
         return response()->json([
             'message' => 'Detail device with type',
             'device' => $device,
+        ]);
+    }
+
+    public function rscTelemetries(Request $request, Device $device, $selenoid) : JsonResponse {
+        $paginate = $request->query('paginate', 1);
+        $paginate = $paginate < 1 ? 1 : $paginate;
+        $offset = ($paginate - 1) * 10;
+        $limit = 10;
+        $telemetries = DeviceTelemetry::query()
+            ->where('device_id', $device->id)
+            ->orderByDesc('created_at')
+            ->offset($offset)
+            ->limit($limit)
+            ->get();
+
+        $formatTelemetries = collect($telemetries)
+            ->map(function($telemetry, $key)use($selenoid){
+                $new = (array) $telemetry->telemetry;
+                $new['SS' . $selenoid]->created_at = $telemetry->created_at->format('Y-m-d H:i:s');
+                return $new['SS' . $selenoid];
+            })
+            ->all();
+
+        return response()->json([
+            'message' => 'List telemetries',
+            'telemetries' => $formatTelemetries,
         ]);
     }
 }

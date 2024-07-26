@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('device_schedules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_selenoid_id')->constrained('device_selenoids')->cascadeOnDelete();
+            $table->foreignId('garden_id')->constrained('gardens')->cascadeOnDelete();
             $table->foreignId('commodity_id')->constrained('commodities')->cascadeOnDelete();
-            $table->unsignedTinyInteger('type')->comment('1 = siram, 2 = pupuk');
             $table->unsignedInteger('commodity_age')->default(0);
             $table->date('start_date');
             $table->date('end_date');

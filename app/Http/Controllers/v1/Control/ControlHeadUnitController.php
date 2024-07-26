@@ -16,6 +16,7 @@ use App\Models\DeviceSelenoid;
 use App\Models\DeviceSensor;
 use App\Models\Garden;
 use App\Models\Land;
+use App\Services\ScheduleService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -24,6 +25,10 @@ use PhpMqtt\Client\Facades\MQTT;
 
 class ControlHeadUnitController extends Controller
 {
+    public function __construct(private ScheduleService $scheduleService)
+    {
+    }
+
     public function indexControlManual() : View {
         $lands = Land::query()
             ->has('gardens.deviceSelenoid')
@@ -238,15 +243,25 @@ class ControlHeadUnitController extends Controller
         $remainingDays = $commodity->lastCommodityPhase->age - $commodityAge;
         $endDate = $startDate->copy()->addDays($remainingDays);
 
-        DeviceSchedule::create([
-            'device_selenoid_id'    => $garden->deviceSelenoid->id,
-            'commodity_id'          => $commodity->id,
-            'type'                  => 1,
-            'commodity_age'         => $commodityAge,
-            'start_date'            => $startDate,
-            'end_date'              => $endDate,
-            'execute_time'          => $request->safe()->execute_time,
+        $deviceSchedule = DeviceSchedule::create([
+            'device_selenoid_id' => $garden->deviceSelenoid->id,
+            'garden_id' => $garden->id,
+            'commodity_id' => $commodity->id,
+            'commodity_age' => $commodityAge,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'execute_time' => $request->safe()->execute_time,
         ]);
+
+        $this->scheduleService->calculateDailyIrrigationInGarden(
+            $deviceSchedule,
+            $garden,
+            $commodity,
+            $startDate,
+            $plantedDate,
+            $endDate,
+            $request->safe()->execute_time,
+        );
 
         $garden->deviceSelenoid->current_mode = 'schedule';
         $garden->push();
@@ -290,13 +305,14 @@ class ControlHeadUnitController extends Controller
 
         $activeFertilizeDevice = DeviceFertilizerSchedule::query()
             ->where(function(Builder $query)use($start){
-                $query->where('execute_start', '>=', $start->format('Y-m-d H:i:s'))
-                    ->orWhere('execute_end', '<=', $start->format('Y-m-d H:i:s'));
+                $query->where('execute_start', '<=', $start->format('Y-m-d H:i:s'))
+                ->where('execute_end', '>=', $start->format('Y-m-d H:i:s'));
             })
             ->orWhere(function(Builder $query)use($end){
-                $query->where('execute_start', '>=', $end->format('Y-m-d H:i:s'))
-                    ->orWhere('execute_end', '<=', $end->format('Y-m-d H:i:s'));
+                $query->where('execute_start', '<=', $end->format('Y-m-d H:i:s'))
+                ->where('execute_end', '>=', $end->format('Y-m-d H:i:s'));
             })
+            ->active()
             ->count();
 
         if ($activeFertilizeDevice > 0) {

@@ -10,12 +10,15 @@ use App\Http\Requests\Api\v1\DeviceControl\StoreDeviceManualRequest;
 use App\Http\Requests\Api\v1\DeviceControl\StoreDeviceScheduleRequest;
 use App\Http\Requests\Api\v1\DeviceControl\StoreDeviceSemiAutoRequest;
 use App\Http\Requests\Api\v1\DeviceControl\StoreDeviceSensorRequest;
+use App\Http\Requests\Api\v1\DeviceControl\StoreFertilizerScheduleRequest;
 use App\Models\Commodity;
 use App\Models\Device;
+use App\Models\DeviceFertilizerSchedule;
 use App\Models\DeviceSchedule;
 use App\Models\DeviceSelenoid;
 use App\Models\DeviceSensor;
 use App\Models\Garden;
+use App\Services\ScheduleService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,6 +28,10 @@ use PhpMqtt\Client\Facades\MQTT;
 
 class DeviceControlController extends Controller
 {
+    public function __construct(private ScheduleService $scheduleService)
+    {
+    }
+
     public function index(Request $request, Device $device): JsonResponse
     {
         $gardenId = $request->query('garden_id');
@@ -243,15 +250,25 @@ class DeviceControlController extends Controller
         $remainingDays = $commodity->lastCommodityPhase->age - $commodityAge;
         $endDate = $startDate->copy()->addDays($remainingDays);
 
-        DeviceSchedule::create([
-            'device_selenoid_id'    => $garden->deviceSelenoid->id,
-            'commodity_id'          => $commodity->id,
-            'type'                  => $request->safe()->type,
-            'commodity_age'         => $commodityAge,
-            'start_date'            => $startDate,
-            'end_date'              => $endDate,
-            'execute_time'          => $request->safe()->execute_time,
+        $deviceSchedule = DeviceSchedule::create([
+            'device_selenoid_id' => $garden->deviceSelenoid->selenoid,
+            'garden_id' => $garden->id,
+            'commodity_id' => $commodity->id,
+            'commodity_age' => $commodityAge,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'execute_time' => $request->safe()->execute_time,
         ]);
+
+        $this->scheduleService->calculateDailyIrrigationInGarden(
+            $deviceSchedule,
+            $garden,
+            $commodity,
+            $startDate,
+            $plantedDate,
+            $endDate,
+            $request->safe()->execute_time,
+        );
 
         $garden->deviceSelenoid->current_mode = 'schedule';
         $garden->push();
@@ -288,6 +305,87 @@ class DeviceControlController extends Controller
 
         return response()->json([
             'message' => 'Schedule canceled'
+        ]);
+    }
+
+    public function listActiveFertilizeSchedule(Device $device) : JsonResponse {
+        $deviceFertilizerSchedules = DeviceFertilizerSchedule::query()
+            ->whereHas('deviceSelenoid', function($query)use($device){
+                $query->where('device_id', $device->id);
+            })
+            ->active()
+            ->orderBy('execute_start')
+            ->paginate(10);
+
+        return response()->json([
+            'message' => 'List jadwal pemupukan yang belum selesai',
+            'fertilizerSchedules' => $deviceFertilizerSchedules
+        ]);
+    }
+
+    public function storeFertilizerSchedule(StoreFertilizerScheduleRequest $request, Device $device) : JsonResponse {
+        $garden = Garden::query()
+            ->with([
+                'deviceSelenoid.device:id,series,debit'
+            ])
+            ->has('deviceSelenoid')
+            ->find($request->safe()->garden_id);
+
+        $start = now()->parse($request->safe()->execute_date . " " . $request->safe()->execute_time)->startOfMinute();
+        $volume = $request->safe()->volume;
+        $calcMinutes = (!$garden->deviceSelenoid->device->debit)
+            ? 60
+            : ($volume / $garden->deviceSelenoid->device->debit);
+        $end = $start->copy()->addMinutes($calcMinutes);
+
+        $activeFertilizeDevice = DeviceFertilizerSchedule::query()
+            ->where(function(Builder $query)use($start){
+                $query->where('execute_start', '<=', $start->format('Y-m-d H:i:s'))
+                ->where('execute_end', '>=', $start->format('Y-m-d H:i:s'));
+            })
+            ->orWhere(function(Builder $query)use($end){
+                $query->where('execute_start', '<=', $end->format('Y-m-d H:i:s'))
+                ->where('execute_end', '>=', $end->format('Y-m-d H:i:s'));
+            })
+            ->active()
+            ->count();
+
+        if ($activeFertilizeDevice > 0) {
+            return response()->json([
+                'message' => 'Terdapat jadwal diwaktu yang dipilih, harap ubah pilihan waktu pemupukan!'
+            ], 400);
+        }
+
+        DeviceFertilizerSchedule::create([
+            'device_selenoid_id' => $garden->deviceSelenoid->id,
+            'type' => $request->safe()->type,
+            'execute_start' => $start,
+            'execute_end' => $end,
+            'total_volume' => $volume,
+        ]);
+
+        return response()->json([
+            'message' => 'Berhasil menyimpan jadwal',
+        ]);
+    }
+
+    public function updateCancenFertilizeSchedule(Request $request, Device $device) : JsonResponse {
+        $request->validate([
+            'fertilizer_schedule_id' => 'required|integer',
+        ]);
+
+        $deviceFertilizerSchedule = DeviceFertilizerSchedule::query()
+            ->whereHas('deviceSelenoid', function($query)use($device){
+                $query->where('device_id', $device->id);
+            })
+            ->active()
+            ->findOrFail($request->fertilizer_schedule_id);
+
+        $deviceFertilizerSchedule->is_finished = 1;
+        $deviceFertilizerSchedule->save();
+
+        return response()->json([
+            'message' => 'Jadwal pemupukan dibatalkan'
         ]);
     }
 
