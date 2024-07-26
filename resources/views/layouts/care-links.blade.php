@@ -25,7 +25,15 @@
     <div class="text-slate-400">Laporan Hama</div>
   </a>
 </li>
-
+<li class="menu-item">
+  <a href="{{ route('disease.index') }}" class="menu-link">
+    <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('disease.*'),
+      'fa-solid',
+      'fa-apple-whole',
+      ]) ></i>
+    <div class="text-slate-400">Laporan Penyakit</div>
+  </a>
+</li>
 <li class="menu-item">
   <a href="{{ route('rsc.index') }}" class="menu-link">
     <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('rsc.*'),
