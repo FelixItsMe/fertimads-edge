@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::create('weeds', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('category');
-            $table->text('symptoms');
-            $table->text('cause');
-            $table->text('control');
-            $table->string('pestisida');
-            $table->string('works_category');
-            $table->text('chemical');
-            $table->text('active_materials');
-            $table->text('cure_name');
+            $table->string('foto');
+            $table->string('nama_gulma');
+            $table->text('deskripsi');
+            $table->text('pengendalian');
+            $table->string('jenis_pestisida');
+            $table->string('klasifikasi_berdasarkan_cara_kerja');
+            $table->string('golongan_senyawa_kimia');
+            $table->string('bahan_aktif');
+            $table->string('nama_obat');
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@ use App\Http\Controllers\v1\Care\FeritilizerReportController;
 use App\Http\Controllers\v1\Care\HarvestReportController;
 use App\Http\Controllers\v1\Care\PestController;
 use App\Http\Controllers\v1\Care\RSCDataController;
+use App\Http\Controllers\v1\Care\WeedsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -88,6 +89,7 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('rsc', RSCDataController::class);
         Route::resource('disease', DiseaseController::class);
+        Route::resource('weeds', WeedsController::class);
     });
 
     // extra to get data
