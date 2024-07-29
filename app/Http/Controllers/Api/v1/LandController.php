@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\Land;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -52,9 +53,11 @@ class LandController extends Controller
         ]);
     }
 
-    public function getListLandsFromDevice(Device $device) : JsonResponse {
+    public function getListLandsFromDevice(?Device $device = null) : JsonResponse {
         $lands = Land::query()
-            ->whereHas('gardens.deviceSelenoid', fn($query) => $query->where('device_id', $device->id))
+            ->when($device, function(Builder $query, $device){
+                $query->whereHas('gardens.deviceSelenoid', fn($query) => $query->where('device_id', $device->id));
+            })
             ->get(['id', 'name']);
 
         return response()->json([

@@ -27,7 +27,7 @@ Route::prefix('mobile/v1')->group(function(){
         Route::get('test-schedule', [App\Http\Controllers\Api\v1\DeviceControlController::class, 'testSchedule']);
 
         Route::get('get-lands-polygon', [App\Http\Controllers\Api\v1\LandController::class, 'getLandsPolygon']);
-        Route::get('get-lands-list-device/{device}', [App\Http\Controllers\Api\v1\LandController::class, 'getListLandsFromDevice']);
+        Route::get('get-lands-list-device/{device?}', [App\Http\Controllers\Api\v1\LandController::class, 'getListLandsFromDevice']);
 
         Route::get('get-gardens-list-land/{land}', [App\Http\Controllers\Api\v1\GardenController::class, 'getListGardensFromLands']);
         Route::get('garden/{garden}/detail', [App\Http\Controllers\Api\v1\GardenController::class, 'detailGarden']);
