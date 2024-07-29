@@ -23,6 +23,11 @@
 </head>
 
 <body class="font-sans antialiased">
+  <div id="loading-spinner" class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-primary z-50"
+    style="z-index: 9999;">
+    <div class="loader border-t-4 border-b-4 border-blue-500 rounded-full w-16 h-16 animate-spin"></div>
+  </div>
+
   <div class="fixed top-4 right-4 bg-red-500 text-white p-4 rounded-md hidden" id="error-body" style="z-index: 999">
     <i class="fa-solid fa-circle-exclamation"></i>&nbsp;<span id="error-message"></span>
   </div>
@@ -51,6 +56,17 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   @stack('scripts')
+  <script>
+    // Show the loading spinner when the page starts loading
+    document.getElementById('loading-spinner').classList.remove('hidden');
+    document.getElementById('layout-wrapper').classList.add('hidden');
+
+    // Hide the loading spinner when the page has fully loaded
+    window.addEventListener('load', function() {
+      document.getElementById('loading-spinner').classList.add('hidden');
+      document.getElementById('layout-wrapper').classList.remove('hidden');
+    });
+  </script>
 </body>
 
 </html>
