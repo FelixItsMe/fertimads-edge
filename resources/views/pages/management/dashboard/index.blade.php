@@ -27,7 +27,7 @@
                     <span class="font-bold">{{ $countGarden }}</span>
                 </x-card-info>
                 <x-card-info class="w-full">
-                    <h5 class="text-xs text-slate-400">Total Komoditi</h5>
+                    <h5 class="text-xs text-slate-400">Total Varietas</h5>
                     <span class="font-bold">{{ $countCommodity }}</span>
                 </x-card-info>
                 <x-card-info class="w-full">
@@ -159,7 +159,7 @@
                 maxZoom: 20,
                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
             });
-            let googleStreetsSecond = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            let googleStreetsSecond = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
                 maxZoom: 20,
                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
             });
@@ -224,7 +224,7 @@
 
                     land.gardens.forEach(garden => {
                         currentGroupGarden.addLayer(L.polygon(garden.polygon, {
-                            color: '#' + garden.color + "55",
+                            color: '#' + garden.color,
                         }))
                     })
 

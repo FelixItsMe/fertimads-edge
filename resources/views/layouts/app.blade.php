@@ -50,6 +50,9 @@
         <main>
           {{ $slot }}
         </main>
+        <footer class="px-6 py-1 font-normal text-base text-slate-400">
+          Copyright © {{ now()->year }} IPB UNIVERSITY. All Right Reserved.
+        </footer>
       </div>
     </div>
   </div>

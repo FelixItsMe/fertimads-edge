@@ -77,6 +77,8 @@ Route::middleware('auth')->group(function () {
             Route::post('head-unit/schedule-water', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleWater'])->name('head-unit.schedule-water.store');
             Route::get('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.index');
             Route::post('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.store');
+
+            Route::get('telemetry-rsc', [\App\Http\Controllers\v1\Control\TelemetryRscController::class, 'index'])->name('telemetry-rsc.index');
     });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CARE->value])->prefix('care')->group(function () {
@@ -96,6 +98,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('extra')->name('extra.')->group(function(){
         // garden
         Route::get('garden/list', [\App\Http\Controllers\v1\GardenController::class, 'listGardensName'])->name('garden.list');
+        Route::get('garden/{garden}/modal', [\App\Http\Controllers\v1\GardenController::class, 'gardenModal'])->name('garden.modal');
 
         // device
         Route::get('device-selenoid/{deviceSelenoid}/sensor', [\App\Http\Controllers\v1\DeviceSelenoidController::class, 'selenoidSensor'])->name('device-selenoid.sensor');

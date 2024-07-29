@@ -9,6 +9,7 @@ use App\Http\Requests\Control\StoreControlScheduleFertilizerRequest;
 use App\Http\Requests\Control\StoreControlScheduleWaterRequest;
 use App\Http\Requests\Control\StoreControlSemiAutoRequest;
 use App\Http\Requests\Control\StoreControlSensorRequest;
+use App\Http\Requests\Control\StoreControlStopRequest;
 use App\Models\Commodity;
 use App\Models\DeviceFertilizerSchedule;
 use App\Models\DeviceSchedule;
@@ -331,6 +332,53 @@ class ControlHeadUnitController extends Controller
 
         return response()->json([
             'message' => 'Berhasil menyimpan jadwal',
+            'request' => $request->validated()
+        ]);
+    }
+
+    public function stopDevice(StoreControlStopRequest $request) : JsonResponse {
+        $garden = Garden::query()
+            ->with('deviceSelenoid.device:id,series')
+            ->findOrFail($request->safe()->garden_id);
+
+        $manual_selenoid_status = DeviceSelenoid::query()
+            ->where([
+                ['device_id', $garden->deviceSelenoid->device_id],
+            ])
+            ->get(['id', 'selenoid', 'status', 'garden_id']);
+
+        $id_land = collect([1,2,3,4]);
+        $exist_selenoid = collect();
+
+        $formated = $manual_selenoid_status->mapWithKeys(function(DeviceSelenoid $deviceSelenoid, int $key)use(&$exist_selenoid, $request){
+            $exist_selenoid->push($deviceSelenoid->selenoid);
+            $status = $deviceSelenoid->garden_id == $request->safe()->garden_id
+                ? 'off'
+                : $deviceSelenoid->status->getLabelText();
+            return ["lahan" . $deviceSelenoid->selenoid => $status];
+        });
+
+        $diff = $id_land
+            ->diff($exist_selenoid->all())
+            ->mapWithKeys(function(int $selenoid, int $key){
+                return ["lahan" . $selenoid => GardenSelenoidStatusEnums::OFF->getLabelText()];
+            });
+
+        MQTT::publish(
+            'fertimads/' . $garden->deviceSelenoid->device->series,
+            json_encode(
+                $formated
+                    ->merge($diff->all())
+                    ->merge([
+                        'mode' => 'manual',
+                        'tipe' => $request->safe()->type,
+                    ])
+                    ->all()
+            )
+        );
+
+        return response()->json([
+            'message' => 'Manual store',
             'request' => $request->validated()
         ]);
     }

@@ -7,6 +7,9 @@ use App\Http\Requests\Garden\StoreGardenRequest;
 use App\Http\Requests\Garden\UpdateGardenRequest;
 use App\Models\Commodity;
 use App\Models\Device;
+use App\Models\DeviceFertilizerSchedule;
+use App\Models\DeviceSchedule;
+use App\Models\DeviceScheduleRun;
 use App\Models\DeviceSelenoid;
 use App\Models\Garden;
 use App\Models\Land;
@@ -170,6 +173,15 @@ class GardenController extends Controller
             'gardens' => Garden::query()
                 ->orderBy('name')
                 ->get(['id', 'name'])
+        ]);
+    }
+
+    public function gardenModal(Garden $garden) : JsonResponse {
+        $garden->load('commodity:id,name');
+        return response()->json([
+            'message' => 'Data kebun untuk modal',
+            'garden' => $garden,
+            'telemetry' => $this->gardenService->formatedLatestTelemetry($garden)
         ]);
     }
 }
