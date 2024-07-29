@@ -103,28 +103,35 @@
     }
     let currentGroupGarden = L.layerGroup()
 
-    let googleStreets = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    });
-    let googleStreetsSecond = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    });
-    let googleStreetsThird = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    });
+    let baseMapOptions = {
+      'Open Street Map': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
+        maxZoom: 18,
+      }),
+      'Google Satellite': L.tileLayer('https://www.google.cn/maps/vt?lyrs=s,h&x={x}&y={y}&z={z}', {
+        attribution: '&copy; Google Hybrid',
+        maxZoom: 18,
+      }),
+      'Google Street': L.tileLayer('https://www.google.cn/maps/vt?lyrs=m&x={x}&y={y}&z={z}', {
+        attribution: '&copy; Google Street',
+        maxZoom: 18,
+      })
+    };
 
     const map = L.map('map', {
         preferCanvas: true,
-        layers: [googleStreetsSecond],
+        layers: [baseMapOptions['Google Satellite']],
         zoomControl: false
       })
-      .setView([-6.869080223722067, 107.72491693496704], 12);
+      .setView([-6.46958, 107.033339], 18);
 
     L.control.zoom({
-      position: 'topright'
+      position: 'bottomleft'
     }).addTo(map);
+
+    L.control.layers(baseMapOptions, null, {
+      position: 'bottomright'
+    }).addTo(map)
 
     const getPopupContent = function(layer) {
       if (layer instanceof L.Marker || layer instanceof L.CircleMarker) {
