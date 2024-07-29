@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['roleAccess:' . UserRoleEnums::MANAGEMENT->value])
         ->prefix('management')
-        ->group(function(){
+        ->group(function () {
             Route::group([
                 'prefix' => 'dashboard',
             ], function () {
@@ -62,11 +62,11 @@ Route::middleware('auth')->group(function () {
             Route::post('test/import/excel', [\App\Http\Controllers\v1\Management\ActivityLogController::class, 'storeImport'])->name('test.import.excel.store');
 
             Route::resource('daily-irrigation', \App\Http\Controllers\v1\Management\DailyIrrigationController::class)->only(['index', 'create', 'store']);
-    });
+        });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CONTROL->value])
         ->prefix('control')
-        ->group(function(){
+        ->group(function () {
             Route::get('head-unit/manual', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlManual'])->name('head-unit.manual.index');
             Route::post('head-unit/manual', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlManual'])->name('head-unit.manual.store');
             Route::get('head-unit/semi-auto', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlSemiAuto'])->name('head-unit.semi-auto.index');
@@ -77,7 +77,7 @@ Route::middleware('auth')->group(function () {
             Route::post('head-unit/schedule-water', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleWater'])->name('head-unit.schedule-water.store');
             Route::get('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.index');
             Route::post('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.store');
-    });
+        });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CARE->value])->prefix('care')->group(function () {
         Route::resource('pest', PestController::class);
@@ -93,7 +93,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // extra to get data
-    Route::prefix('extra')->name('extra.')->group(function(){
+    Route::prefix('extra')->name('extra.')->group(function () {
         // garden
         Route::get('garden/list', [\App\Http\Controllers\v1\GardenController::class, 'listGardensName'])->name('garden.list');
 
@@ -103,7 +103,11 @@ Route::middleware('auth')->group(function () {
         Route::get('get-land/{land}', [\App\Http\Controllers\v1\LandController::class, 'getLand'])->name('land.get-land');
         Route::get('get-land-polygon-with-garden/{land}', [\App\Http\Controllers\v1\LandController::class, 'getLandPolygonWithGardens'])->name('land.get-land-polygon');
         Route::get('land/polygon/garden', [\App\Http\Controllers\v1\LandController::class, 'landsPolyWithGardensPoly'])->name('land.polygon.garden');
+        Route::get('garden/{garden}/latest-telemetry', [App\Http\Controllers\Api\v1\GardenController::class, 'gardenLatestTelemetry'])->name('garden.latest-telemetry');
+        Route::get('activity-schedule', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'index'])->name('activity-schedule.index');
+        Route::get('activity-schedule/year/{year}/month/{month}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'scheduleInMonth'])->name('activity-schedule.schedule-in-month');
+        Route::get('activity-schedule/date/{date}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'detailScheduleDay'])->name('activity-schedule.date');
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
