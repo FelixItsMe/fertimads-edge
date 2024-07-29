@@ -2,10 +2,12 @@
 
 use App\Enums\UserRoleEnums;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\v1\Care\DiseaseController;
 use App\Http\Controllers\v1\Care\FeritilizerReportController;
 use App\Http\Controllers\v1\Care\HarvestReportController;
 use App\Http\Controllers\v1\Care\PestController;
 use App\Http\Controllers\v1\Care\RSCDataController;
+use App\Http\Controllers\v1\Care\WeedsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -86,6 +88,8 @@ Route::middleware('auth')->group(function () {
         Route::get('harvest-report', [HarvestReportController::class, 'index'])->name('harvest-report.index');
 
         Route::resource('rsc', RSCDataController::class);
+        Route::resource('disease', DiseaseController::class);
+        Route::resource('weeds', WeedsController::class);
     });
 
     // extra to get data
