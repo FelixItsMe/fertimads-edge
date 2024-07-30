@@ -23,8 +23,10 @@ class DashboardController extends Controller
 
         if (!$scheduleCategory || $scheduleCategory == 'fertilizer') {
             $fertilizeSchedules = DeviceFertilizerSchedule::query()
-                ->with('deviceSelenoid.garden:id,name')
-                ->has('deviceSelenoid.garden')
+                ->with([
+                    'deviceSelenoid',
+                    'garden:id,name'
+                ])
                 ->finished()
                 ->limit(6)
                 ->get();
@@ -34,8 +36,8 @@ class DashboardController extends Controller
 
         if (!$scheduleCategory || $scheduleCategory == 'water') {
             $waterSchedules = DeviceScheduleRun::query()
-                ->with('deviceSchedule.deviceSelenoid.garden:id,name')
-                ->has('deviceSchedule.deviceSelenoid.garden')
+                ->with('deviceSchedule.garden:id,name')
+                ->has('deviceSchedule.garden')
                 ->limit(6)
                 ->get();
         }

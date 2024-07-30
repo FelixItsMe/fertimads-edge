@@ -117,8 +117,10 @@ class LandController extends Controller
         $land = Land::query()
             ->select(['id', 'name', 'area', 'polygon', 'latitude', 'longitude'])
             ->with([
-                'gardens:id,land_id,polygon,color,name',
-                'gardens.deviceSelenoid:id,selenoid,garden_id',
+                'gardens' => function($query){
+                    $query->select(['id','land_id','polygon','color','name'])->has('deviceSelenoid');
+                },
+                'gardens.deviceSelenoid',
             ])
             ->findOrFail($id);
 

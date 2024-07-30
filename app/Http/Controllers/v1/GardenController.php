@@ -7,6 +7,11 @@ use App\Http\Requests\Garden\StoreGardenRequest;
 use App\Http\Requests\Garden\UpdateGardenRequest;
 use App\Models\Commodity;
 use App\Models\Device;
+use App\Models\DeviceFertilizerSchedule;
+use App\Models\DeviceFertilizeScheduleExecute;
+use App\Models\DeviceSchedule;
+use App\Models\DeviceScheduleExecute;
+use App\Models\DeviceScheduleRun;
 use App\Models\DeviceSelenoid;
 use App\Models\Garden;
 use App\Models\Land;
@@ -170,6 +175,52 @@ class GardenController extends Controller
             'gardens' => Garden::query()
                 ->orderBy('name')
                 ->get(['id', 'name'])
+        ]);
+    }
+
+    public function gardenModal(Garden $garden) : JsonResponse {
+        $garden->load([
+            'deviceSelenoid',
+            'commodity:id,name'
+        ]);
+
+        $hasWaterSchedule = DeviceSchedule::query()
+            ->active()
+            ->count();
+
+        $waterSchedule = DeviceScheduleExecute::query()
+            ->whereHas('deviceScheduleRun.deviceSchedule', function($query)use($garden){
+                $query->where('garden_id', $garden->id);
+            })
+            ->whereNull('end_time')
+            ->first();
+        $fertilizerSchedule = DeviceFertilizeScheduleExecute::query()
+            ->whereHas('deviceFertilizerSchedule.deviceSelenoid', function($query)use($garden){
+                $query->where('garden_id', $garden->id);
+            })
+            ->whereNull('execute_end')
+            ->first();
+
+        return response()->json([
+            'message' => 'Data kebun untuk modal',
+            'garden' => $garden,
+            'telemetry' => $this->gardenService->formatedLatestTelemetry($garden),
+            'hasWaterSchedule' => $hasWaterSchedule,
+            'waterSchedule' => $waterSchedule,
+            'fertilizerSchedule' => $fertilizerSchedule,
+        ]);
+    }
+
+    public function activeWaterSchedules(Garden $garden) : JsonResponse {
+        $activeWaterSchedules = DeviceSchedule::query()
+            ->with('commodity:id,name')
+            ->where('garden_id', $garden->id)
+            ->active()
+            ->get();
+
+        return response()->json([
+            'message' => 'List jadwal penyiraman aktif',
+            'activeWaterSchedules' => $activeWaterSchedules,
         ]);
     }
 }
