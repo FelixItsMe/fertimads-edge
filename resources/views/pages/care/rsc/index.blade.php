@@ -361,21 +361,21 @@
                                 <p class="text-gray-500 font-bold">Kegiatan</p>
                               </td>
                               <td class="pb-1">:</td>
-                              <td class="pb-1"><span class="text-gray-500 font-normal" id="jenisKegiatan">Penyiraman</span></td>
+                              <td class="pb-1"><span class="text-gray-500 font-normal" id="jenisKegiatan">-</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
                                 <p class="text-gray-500 font-bold">Volume</p>
                               </td>
                               <td class="py-1">:</td>
-                              <td class="py-1"><span class="text-gray-500 font-normal" id="volume">50 Liter Air</span></td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="volume">-</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
                                 <p class="text-gray-500 font-bold">Total Waktu</p>
                               </td>
                               <td class="py-1">:</td>
-                              <td class="py-1"><span class="text-gray-500 font-normal" id="waktuKegiatan">30 Menit Penyiraman</span></td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="waktuKegiatan">-</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
@@ -383,31 +383,38 @@
                               </td>
                               <td class="py-1">:</td>
                               <td class="py-1">
-                                <div class="text-gray-500 font-normal" id="waktuPenjadwalan">Senin, 18 Mei 2024</div>
+                                <div class="text-gray-500 font-normal" id="waktuPenjadwalan">-</div>
                               </td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
                                 <p class="text-gray-500 font-bold">Flow Rate Progress</p>
                               </td>
-                              <td class="py-1">:</td>
+                            </tr>
+                            <tr class="py-3">
                               <td class="py-1">
                                 <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                  <div class="bg-yellow-300 h-2.5 rounded-full" style="width: 45%"></div>
+                                  <div class="bg-yellow-300 h-2.5 rounded-full" style="width: ${latestTelemetry.telemetry.flow_meter.V}%"></div>
                                 </div>
+                              </td>
+                              <td class="py-1"></td>
+                              <td class="py-1 px-3">
+                              ${latestTelemetry.telemetry.flow_meter.V.toFixed(2)}%
                               </td>
                             </tr>
                           </tbody>
                         </table>
 
                         <div class="flex items-center space-x-4 mt-3">
-                          <span class="w-4 rounded-full aspect-square bg-yellow-300"></span>
-                          <span class="">Pemupukan</span>
-                        </div>
+                          <div class="flex items-center space-x-2">
+                            <span class="w-4 rounded-full aspect-square bg-yellow-300"></span>
+                            <span class="">Pemupukan</span>
+                          </div>
 
-                        <div class="flex items-center space-x-4 mt-1">
-                          <span class="w-4 rounded-full aspect-square bg-blue-300"></span>
-                          <span class="">Penyiraman</span>
+                          <div class="flex items-center space-x-2">
+                            <span class="w-4 rounded-full aspect-square bg-blue-300"></span>
+                            <span class="">Penyiraman</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -590,6 +597,13 @@
 
                 await getGardenScheduleDetail(garden.id, e.dataset.date).then(data => {
                   let jenisKegiatan = data.types.join(" | ")
+
+                  data.water?.map(row => {
+                    $(document).find('#waktuKegiatan').text(`${row.total_waktu} Menit`)
+                    $(document).find('#volume').text(`${row.total_volume ?? '-'} Liter`)
+                    $(document).find('#waktuPenjadwalan').text(`${row.waktu_mulai ?? '-'}`)
+                  })
+
                   $(document).find('#jenisKegiatan').text(jenisKegiatan)
                 })
               }
