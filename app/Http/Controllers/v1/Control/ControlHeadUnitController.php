@@ -331,6 +331,7 @@ class ControlHeadUnitController extends Controller
         }
 
         DeviceFertilizerSchedule::create([
+            'garden_id' => $garden->id,
             'device_selenoid_id' => $garden->deviceSelenoid->id,
             'type' => $request->safe()->type,
             'execute_start' => $start,
