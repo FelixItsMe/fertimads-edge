@@ -221,9 +221,18 @@ class ControlHeadUnitController extends Controller
             ])
             ->find($request->safe()->garden_id);
 
-        if ($garden->deviceSelenoid->activeDeviceSchedule) {
+        $startDate = now()->parse($request->safe()->start_date);
+
+        $checkWaterSchedule = DeviceSchedule::query()
+            ->where('garden_id', $garden->id)
+            ->where('is_finished', 0)
+            ->where('start_date', '<=', $startDate)
+            ->where('end_date', '>=', $startDate)
+            ->count();
+
+        if ($checkWaterSchedule > 0) {
             return response()->json([
-                'message' => 'Kebun sudah memiliki penjadwalan yang sedang berjalan! Hapus jadwal sebelumnya sebelum membuat yang baru!'
+                'message' => 'Waktu yang dipilih bentrok dengan jadwal yang sudah ada!'
             ], 400);
         }
 
@@ -239,7 +248,6 @@ class ControlHeadUnitController extends Controller
 
         $commodityAge = $request->safe()->commodity_age;
 
-        $startDate = now()->parse($request->safe()->start_date);
         $plantedDate = $startDate->copy()->subDays($commodityAge);
         $remainingDays = $commodity->lastCommodityPhase->age - $commodityAge;
         $endDate = $startDate->copy()->addDays($remainingDays);
@@ -352,10 +360,7 @@ class ControlHeadUnitController extends Controller
 
         $formated = $manual_selenoid_status->mapWithKeys(function(DeviceSelenoid $deviceSelenoid, int $key)use(&$exist_selenoid, $request){
             $exist_selenoid->push($deviceSelenoid->selenoid);
-            $status = $deviceSelenoid->garden_id == $request->safe()->garden_id
-                ? 'off'
-                : $deviceSelenoid->status->getLabelText();
-            return ["lahan" . $deviceSelenoid->selenoid => $status];
+            return ["lahan" . $deviceSelenoid->selenoid => GardenSelenoidStatusEnums::OFF->getLabelText()];
         });
 
         $diff = $id_land
@@ -371,7 +376,7 @@ class ControlHeadUnitController extends Controller
                     ->merge($diff->all())
                     ->merge([
                         'mode' => 'manual',
-                        'tipe' => $request->safe()->type,
+                        'tipe' => 'penyiraman',
                     ])
                     ->all()
             )
@@ -380,6 +385,15 @@ class ControlHeadUnitController extends Controller
         return response()->json([
             'message' => 'Manual store',
             'request' => $request->validated()
+        ]);
+    }
+
+    public function stopWaterSchedule(DeviceSchedule $deviceSchedule) : JsonResponse {
+        $deviceSchedule->is_finished = 1;
+        $deviceSchedule->save();
+
+        return response()->json([
+            'message' => 'Berhasil dihentikan'
         ]);
     }
 }

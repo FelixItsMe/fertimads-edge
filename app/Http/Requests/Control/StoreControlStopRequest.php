@@ -23,7 +23,6 @@ class StoreControlStopRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type'      => 'required|string|in:penyiraman,pemupukanN,pemupukanP,pemupukanK',
             'garden_id' => ['required', new GardenHasSelenoid],
         ];
     }

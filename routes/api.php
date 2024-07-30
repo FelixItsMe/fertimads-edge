@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\v1\Care\PestController;
+use App\Http\Controllers\Api\v1\CommodityController;
+use App\Http\Controllers\Api\v1\DiseaseController;
+use App\Http\Controllers\Api\v1\WeedsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +43,10 @@ Route::prefix('mobile/v1')->group(function(){
         Route::post('pest', [PestController::class, 'store']);
         Route::get('pest/{pest}', [PestController::class, 'show']);
         Route::post('pest/{pest}/delete', [PestController::class, 'destroy']);
+
+        Route::get('/commodities', [CommodityController::class, 'index']);
+        Route::get('/diseases', [DiseaseController::class, 'index']);
+        Route::get('/weeds', [WeedsController::class, 'index']);
     });
 
     Route::get('/user', function (Request $request) {

@@ -1,19 +1,19 @@
 <x-app-layout>
-    @push('styles')
-        <link rel="stylesheet" href="{{ asset('leaflet/leaflet.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
-        <style>
-            #map {
-                height: 70vh;
-            }
-        </style>
-    @endpush
+  @push('styles')
+  <link rel="stylesheet" href="{{ asset('leaflet/leaflet.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
+  <style>
+    #map {
+      height: 70vh;
+    }
+  </style>
+  @endpush
 
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+  <x-slot name="header">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      {{ __('Dashboard') }}
+    </h2>
+  </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col gap-4">
@@ -129,98 +129,106 @@
                             @endforeach
                         </ol>
 
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    @push('scripts')
-        <script src="{{ asset('leaflet/leaflet.js') }}"></script>
-        <script src="{{ asset('js/extend.js') }}"></script>
-        <script src="{{ asset('js/map.js') }}"></script>
-        <script src="{{ asset('js/api.js') }}"></script>
-        <script>
-            let stateData = {
-                polygon: null,
-                layerPolygon: null,
-                latitude: null,
-                longitude: null,
-            }
-            let currentMarkerLayer = null
-            let currentPolygonLayer = null
-            let currentLand = {
-                polygonLayer: null,
-                markerLayer: null,
-            }
-            let currentGroupGarden = L.layerGroup()
-            // Layer MAP
-            let googleStreets = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            });
-            let googleStreetsSecond = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            });
-            let googleStreetsThird = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            });
+  @push('scripts')
+  <script src="{{ asset('leaflet/leaflet.js') }}"></script>
+  <script src="{{ asset('js/extend.js') }}"></script>
+  <script src="{{ asset('js/map.js') }}"></script>
+  <script src="{{ asset('js/api.js') }}"></script>
+  <script>
+    let stateData = {
+      polygon: null,
+      layerPolygon: null,
+      latitude: null,
+      longitude: null,
+    }
+    let currentMarkerLayer = null
+    let currentPolygonLayer = null
+    let currentLand = {
+      polygonLayer: null,
+      markerLayer: null,
+    }
+    let currentGroupGarden = L.layerGroup()
+    let baseMapOptions = {
+      'Open Street Map': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
+        maxZoom: 18,
+      }),
+      'Google Satellite': L.tileLayer('https://www.google.cn/maps/vt?lyrs=s,h&x={x}&y={y}&z={z}', {
+        attribution: '&copy; Google Hybrid',
+        maxZoom: 18,
+      }),
+      'Google Street': L.tileLayer('https://www.google.cn/maps/vt?lyrs=m&x={x}&y={y}&z={z}', {
+        attribution: '&copy; Google Street',
+        maxZoom: 18,
+      })
+    };
 
-            // Layer MAP
-            const map = L.map('map', {
-                    preferCanvas: true,
-                    layers: [googleStreetsSecond],
-                    zoomControl: true
-                })
-                .setView([-6.869080223722067, 107.72491693496704], 12);
+    const map = L.map('map', {
+        preferCanvas: true,
+        layers: [baseMapOptions['Google Satellite']],
+        zoomControl: false
+      })
+      .setView([-6.46958, 107.033339], 18);
 
-            const getLands = async () => {
-                const data = await fetchData(
-                    "{{ route('extra.land.polygon.garden') }}",
-                    {
-                        method: "GET",
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
-                                .nodeValue,
-                            'Accept': 'application/json',
-                        },
-                    }
-                );
+    L.control.zoom({
+      position: 'bottomleft'
+    }).addTo(map);
 
-                return data?.lands
-            }
+    L.control.layers(baseMapOptions, null, {
+      position: 'bottomright'
+    }).addTo(map)
 
-            const initLandPolygon = async (id, map) => {
-                const lands = await getLands()
+    const getLands = async () => {
+      const data = await fetchData(
+        "{{ route('extra.land.polygon.garden') }}", {
+          method: "GET",
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+              .nodeValue,
+            'Accept': 'application/json',
+          },
+        }
+      );
 
-                if (currentLand.polygonLayer) {
-                    currentLand.polygonLayer.remove()
-                }
+      return data?.lands
+    }
 
-                if (!lands) {
-                    return false
-                }
+    const initLandPolygon = async (id, map) => {
+      const lands = await getLands()
 
-                currentGroupGarden.clearLayers()
+      if (currentLand.polygonLayer) {
+        currentLand.polygonLayer.remove()
+      }
 
-                let firstLand = null
+      if (!lands) {
+        return false
+      }
 
-                lands.forEach(land => {
-                    if (land.gardens) {
-                      firstLand = L.polygon(land.polygon, {
-                          dashArray: '10, 10',
-                          dashOffset: '20',
-                          color: '#fff',
-                      })
-                    }
-                    currentGroupGarden.addLayer(
-                      L.polygon(land.polygon, {
-                          dashArray: '10, 10',
-                          dashOffset: '20',
-                          color: '#fff',
-                      })
-                    )
+      currentGroupGarden.clearLayers()
+
+      let firstLand = null
+
+      lands.forEach(land => {
+        if (land.gardens) {
+          firstLand = L.polygon(land.polygon, {
+            dashArray: '10, 10',
+            dashOffset: '20',
+            color: '#fff',
+          })
+        }
+        currentGroupGarden.addLayer(
+          L.polygon(land.polygon, {
+            dashArray: '10, 10',
+            dashOffset: '20',
+            color: '#fff',
+          })
+        )
 
                     land.gardens.forEach(garden => {
                         currentGroupGarden.addLayer(L.polygon(garden.polygon, {
@@ -228,23 +236,21 @@
                         }))
                     })
 
-                })
+      })
 
-                map.fitBounds(firstLand.getBounds());
+      currentGroupGarden.addTo(map)
 
-                currentGroupGarden.addTo(map)
+      return true
+    }
 
-                return true
-            }
+    const pickLand = landId => {
+      initLandPolygon(landId, map)
+    }
 
-            const pickLand = landId => {
-                initLandPolygon(landId, map)
-            }
-
-            window.onload = () => {
-                console.log('Hello world');
-                initLandPolygon(1, map)
-            }
-        </script>
-    @endpush
+    window.onload = () => {
+      console.log('Hello world');
+      initLandPolygon(1, map)
+    }
+  </script>
+  @endpush
 </x-app-layout>

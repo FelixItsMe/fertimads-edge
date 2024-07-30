@@ -12,31 +12,38 @@ use Illuminate\Http\Request;
 
 class ActivityScheduleController extends Controller
 {
-    public function index() : View {
+    public function index(): View
+    {
         return view('pages.management.activity-schedule.index');
     }
 
-    public function scheduleInMonth(int $year, int $month) : JsonResponse {
+    public function scheduleInMonth(int $year, int $month): JsonResponse
+    {
         $now = now()->parse("$year-$month-01");
 
         $startMonth = $now->copy()->startOfMonth()->format('Y-m-d');
         $endMonth = $now->copy()->endOfMonth()->format('Y-m-d');
 
         $waterSchedules = DeviceSchedule::query()
-            ->where(function(Builder $query)use($startMonth, $endMonth){
+            ->where(function (Builder $query) use ($startMonth, $endMonth) {
                 $query->where([
                     ['start_date', '>=', $startMonth],
                     ['end_date', '>=', $endMonth],
                 ])
-                ->orWhere([
-                    ['start_date', '<=', $startMonth],
-                    ['end_date', '>=', $startMonth],
-                    ['end_date', '<=', $endMonth],
-                ])
-                ->orWhere([
-                    ['start_date', '<=', $startMonth],
-                    ['end_date', '>=', $endMonth],
-                ]);
+                    ->orWhere([
+                        ['start_date', '<=', $startMonth],
+                        ['end_date', '>=', $startMonth],
+                        ['end_date', '<=', $endMonth],
+                    ])
+                    ->orWhere([
+                        ['start_date', '<=', $startMonth],
+                        ['end_date', '>=', $endMonth],
+                    ]);
+            })
+            ->when(request('garden_id'), function ($query) {
+                $query->whereHas('deviceSelenoid', function ($query) {
+                    $query->where('garden_id', request('garden_id'));
+                });
             })
             ->active()
             ->get();
@@ -44,6 +51,11 @@ class ActivityScheduleController extends Controller
         $fertilizerSchedules = DeviceFertilizerSchedule::query()
             ->whereYear('execute_start', $year)
             ->whereMonth('execute_start', $month)
+            ->when(request('garden_id'), function ($query) {
+                $query->whereHas('deviceSelenoid', function ($query) {
+                    $query->where('garden_id', request('garden_id'));
+                });
+            })
             ->active()
             ->get();
 
@@ -91,14 +103,19 @@ class ActivityScheduleController extends Controller
         ]);
     }
 
-    public function detailScheduleDay($date) : JsonResponse {
+    public function detailScheduleDay($date): JsonResponse
+    {
         $now = now()->parse($date);
         $types = collect();
         $waterTimes = collect();
         $fertilizerTimes = collect();
 
         $waterSchedules = DeviceSchedule::query()
-            ->has('deviceSelenoid.garden')
+            ->when(request('garden_id'), function ($query) {
+                $query->whereRelation('deviceSelenoid', 'garden_id', request('garden_id'));
+            }, function ($query) {
+                $query->has('deviceSelenoid.garden');
+            })
             ->where([
                 ['start_date', '<=', $now->format('Y-m-d')],
                 ['end_date', '>=', $now->format('Y-m-d')],
@@ -115,7 +132,11 @@ class ActivityScheduleController extends Controller
         }
 
         $fertilizerSchedules = DeviceFertilizerSchedule::query()
-            ->has('deviceSelenoid.garden')
+            ->when(request('garden_id'), function ($query) {
+                $query->whereRelation('deviceSelenoid', 'garden_id', request('garden_id'));
+            }, function ($query) {
+                $query->has('deviceSelenoid.garden');
+            })
             ->active()
             ->whereDate('execute_start', $now->copy()->format('Y-m-d'))
             ->get();

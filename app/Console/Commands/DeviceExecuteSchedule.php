@@ -60,6 +60,7 @@ class DeviceExecuteSchedule extends Command
             ->whereHas('deviceSchedule', function($query){
                 $query->where('is_finished', 0);
             })
+            ->doesntHave('deviceScheduleExecute')
             ->where('start_time', $now->copy()->format('Y-m-d H:i:s'))
             ->get();
         $deviceFertilizerSchedules = DeviceFertilizerSchedule::query()
