@@ -115,12 +115,12 @@ class LandController extends Controller
     public function getLandPolygonWithGardens($id): JsonResponse
     {
         $land = Land::query()
-            // ->select(['id', 'name', 'area', 'polygon', 'latitude', 'longitude'])
+            ->select(['id', 'name', 'area', 'polygon', 'latitude', 'longitude'])
             ->with([
-                'gardens:id,land_id,polygon,color,name',
-                'gardens.deviceSelenoid' => function($query){
-                    $query->whereNotNull('garden_id');
+                'gardens' => function($query){
+                    $query->select(['id','land_id','polygon','color','name'])->has('deviceSelenoid');
                 },
+                'gardens.deviceSelenoid',
             ])
             ->findOrFail($id);
 
