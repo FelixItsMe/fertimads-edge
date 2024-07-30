@@ -259,7 +259,7 @@ class DeviceControlController extends Controller
         $endDate = $startDate->copy()->addDays($remainingDays);
 
         $deviceSchedule = DeviceSchedule::create([
-            'device_selenoid_id' => $garden->deviceSelenoid->selenoid,
+            'device_selenoid_id' => $garden->deviceSelenoid->id,
             'garden_id' => $garden->id,
             'commodity_id' => $commodity->id,
             'commodity_age' => $commodityAge,
@@ -365,6 +365,7 @@ class DeviceControlController extends Controller
         }
 
         DeviceFertilizerSchedule::create([
+            'garden_id' => $garden->id,
             'device_selenoid_id' => $garden->deviceSelenoid->id,
             'type' => $request->safe()->type,
             'execute_start' => $start,

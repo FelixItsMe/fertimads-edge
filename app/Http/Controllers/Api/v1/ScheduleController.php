@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\DeviceFertilizerSchedule;
 use App\Models\DeviceSchedule;
+use App\Models\DeviceScheduleRun;
 use App\Models\Garden;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -41,9 +42,7 @@ class ScheduleController extends Controller
             ->get();
 
         $fertilizerSchedules = DeviceFertilizerSchedule::query()
-            ->whereHas('deviceSelenoid', function(Builder $query)use($garden){
-                $query->where('garden_id', $garden->id);
-            })
+            ->where('garden_id', $garden->id)
             ->whereYear('execute_start', $year)
             ->whereMonth('execute_start', $month)
             ->active()
@@ -94,53 +93,24 @@ class ScheduleController extends Controller
         $waterTimes = collect();
         $fertilizerTimes = collect();
 
-        $waterSchedules = DeviceSchedule::query()
-            ->has('deviceSelenoid.garden')
-            ->whereHas('deviceSelenoid', function(Builder $query)use($garden){
+        $waterSchedule = DeviceScheduleRun::query()
+            ->with('deviceScheduleExecute')
+            ->whereHas('deviceSchedule', function(Builder $query)use($garden){
                 $query->where('garden_id', $garden->id);
             })
-            ->where([
-                ['start_date', '<=', $now->format('Y-m-d')],
-                ['end_date', '>=', $now->format('Y-m-d')],
-            ])
-            ->active()
+            ->whereDate('start_time', $now->format('Y-m-d'))
             ->get();
 
-        if ($waterSchedules->count() > 0) {
-            foreach ($waterSchedules as $waterSchedule) {
-                $waterTimes->push($waterSchedule->execute_time);
-            }
-
-            $types->push('Penyiraman');
-        }
-
         $fertilizerSchedules = DeviceFertilizerSchedule::query()
-            ->has('deviceSelenoid.garden')
-            ->whereHas('deviceSelenoid', function(Builder $query)use($garden){
-                $query->where('garden_id', $garden->id);
-            })
-            ->active()
+            ->with('scheduleExecute')
+            ->where('garden_id', $garden->id)
             ->whereDate('execute_start', $now->copy()->format('Y-m-d'))
             ->get();
 
-        if ($fertilizerSchedules->count() > 0) {
-            foreach ($fertilizerSchedules as $fertilizerSchedule) {
-                $fertilizerTimes->push(now()->parse($fertilizerSchedule->execute_start)->format('H:i:s'));
-                $duration = now()
-                    ->parse($fertilizerSchedule->execute_start)
-                    ->diffInMinutes(
-                        now()->parse($fertilizerSchedule->execute_end)
-                    );
-            }
-
-            $types->push('Pemupukan');
-        }
-
         return response()->json([
             'message' => 'Detail schedule',
-            'types' => $types->all(),
-            'waterTimes' => $waterTimes->all(),
-            'fertilizeTimes' => $fertilizerTimes->all(),
+            'waterSchedule' => $waterSchedule,
+            'fertilizerSchedules' => $fertilizerSchedules,
         ]);
     }
 }

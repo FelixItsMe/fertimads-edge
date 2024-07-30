@@ -18,6 +18,7 @@ class DeviceFertilizerSchedule extends Model
      * @var array
      */
     protected $fillable = [
+        'garden_id',
         'device_selenoid_id',
         'is_finished',
         'type',
@@ -55,6 +56,16 @@ class DeviceFertilizerSchedule extends Model
     public function scopeFinished($query)
     {
         return $query->where('is_finished', 1);
+    }
+
+    /**
+     * Get the garden that owns the DeviceFertilizerSchedule
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function garden(): BelongsTo
+    {
+        return $this->belongsTo(Garden::class);
     }
 
     /**
