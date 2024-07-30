@@ -32,7 +32,7 @@ class DeviceExecuteSchedule extends Command
     public function handle()
     {
         // NOTE: Delete the parse time
-        $now = now()->parse('2024-07-24 15:00:00')->startOfMinute();
+        $now = now()->startOfMinute();
         [$formatedDate, $formatedTime] = explode(' ', $now->copy()->format('Y-m-d H:i:s'));
         // $deviceSchedules = DeviceSchedule::query()
         //     ->with([
