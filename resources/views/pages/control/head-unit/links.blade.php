@@ -1,14 +1,3 @@
-
-<a href="{{ route('head-unit.manual.index') }}"
-    @class([
-        'bg-white' => !request()->routeIs('head-unit.manual.index'),
-        'bg-primary' => request()->routeIs('head-unit.manual.index'),
-        'text-white' => request()->routeIs('head-unit.manual.index'),
-        'rounded-md',
-        'px-4',
-        'py-2',
-        'text-xs',
-    ])>Manual</a>
 <a href="{{ route('head-unit.semi-auto.index') }}"
     @class([
         'bg-white' => !request()->routeIs('head-unit.semi-auto.index'),
@@ -18,7 +7,7 @@
         'px-4',
         'py-2',
         'text-xs',
-    ])>Semi-Manual</a>
+    ])>Manual</a>
 <a href="{{ route('head-unit.sensor.index') }}"
     @class([
         'bg-white' => !request()->routeIs('head-unit.sensor.index'),
@@ -28,7 +17,7 @@
         'px-4',
         'py-2',
         'text-xs',
-    ])>Auto/Sensor</a>
+    ])>Auto (Sensor RSC)</a>
 <a href="{{ route('head-unit.schedule-water.index') }}"
     @class([
         'bg-white' => !request()->routeIs('head-unit.schedule-water.index') && !request()->routeIs('head-unit.schedule-fertilizer.index'),
@@ -38,4 +27,4 @@
         'px-4',
         'py-2',
         'text-xs',
-    ])>Schedule</a>
+    ])>Jadwal</a>

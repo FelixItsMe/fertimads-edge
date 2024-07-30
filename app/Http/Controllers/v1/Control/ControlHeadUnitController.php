@@ -9,6 +9,7 @@ use App\Http\Requests\Control\StoreControlScheduleFertilizerRequest;
 use App\Http\Requests\Control\StoreControlScheduleWaterRequest;
 use App\Http\Requests\Control\StoreControlSemiAutoRequest;
 use App\Http\Requests\Control\StoreControlSensorRequest;
+use App\Http\Requests\Control\StoreControlStopRequest;
 use App\Models\Commodity;
 use App\Models\DeviceFertilizerSchedule;
 use App\Models\DeviceSchedule;
@@ -220,9 +221,18 @@ class ControlHeadUnitController extends Controller
             ])
             ->find($request->safe()->garden_id);
 
-        if ($garden->deviceSelenoid->activeDeviceSchedule) {
+        $startDate = now()->parse($request->safe()->start_date);
+
+        $checkWaterSchedule = DeviceSchedule::query()
+            ->where('garden_id', $garden->id)
+            ->where('is_finished', 0)
+            ->where('start_date', '<=', $startDate)
+            ->where('end_date', '>=', $startDate)
+            ->count();
+
+        if ($checkWaterSchedule > 0) {
             return response()->json([
-                'message' => 'Kebun sudah memiliki penjadwalan yang sedang berjalan! Hapus jadwal sebelumnya sebelum membuat yang baru!'
+                'message' => 'Waktu yang dipilih bentrok dengan jadwal yang sudah ada!'
             ], 400);
         }
 
@@ -238,7 +248,6 @@ class ControlHeadUnitController extends Controller
 
         $commodityAge = $request->safe()->commodity_age;
 
-        $startDate = now()->parse($request->safe()->start_date);
         $plantedDate = $startDate->copy()->subDays($commodityAge);
         $remainingDays = $commodity->lastCommodityPhase->age - $commodityAge;
         $endDate = $startDate->copy()->addDays($remainingDays);
@@ -332,6 +341,59 @@ class ControlHeadUnitController extends Controller
         return response()->json([
             'message' => 'Berhasil menyimpan jadwal',
             'request' => $request->validated()
+        ]);
+    }
+
+    public function stopDevice(StoreControlStopRequest $request) : JsonResponse {
+        $garden = Garden::query()
+            ->with('deviceSelenoid.device:id,series')
+            ->findOrFail($request->safe()->garden_id);
+
+        $manual_selenoid_status = DeviceSelenoid::query()
+            ->where([
+                ['device_id', $garden->deviceSelenoid->device_id],
+            ])
+            ->get(['id', 'selenoid', 'status', 'garden_id']);
+
+        $id_land = collect([1,2,3,4]);
+        $exist_selenoid = collect();
+
+        $formated = $manual_selenoid_status->mapWithKeys(function(DeviceSelenoid $deviceSelenoid, int $key)use(&$exist_selenoid, $request){
+            $exist_selenoid->push($deviceSelenoid->selenoid);
+            return ["lahan" . $deviceSelenoid->selenoid => GardenSelenoidStatusEnums::OFF->getLabelText()];
+        });
+
+        $diff = $id_land
+            ->diff($exist_selenoid->all())
+            ->mapWithKeys(function(int $selenoid, int $key){
+                return ["lahan" . $selenoid => GardenSelenoidStatusEnums::OFF->getLabelText()];
+            });
+
+        MQTT::publish(
+            'fertimads/' . $garden->deviceSelenoid->device->series,
+            json_encode(
+                $formated
+                    ->merge($diff->all())
+                    ->merge([
+                        'mode' => 'manual',
+                        'tipe' => 'penyiraman',
+                    ])
+                    ->all()
+            )
+        );
+
+        return response()->json([
+            'message' => 'Manual store',
+            'request' => $request->validated()
+        ]);
+    }
+
+    public function stopWaterSchedule(DeviceSchedule $deviceSchedule) : JsonResponse {
+        $deviceSchedule->is_finished = 1;
+        $deviceSchedule->save();
+
+        return response()->json([
+            'message' => 'Berhasil dihentikan'
         ]);
     }
 }
