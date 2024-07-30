@@ -24,7 +24,7 @@
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 flex flex-row justify-between w-1/4">
                     <div>
-                        <h5 class="text-xs text-slate-400">Luas Lahan (Hektar)</h5>
+                        <h5 class="text-xs text-slate-400">Luas Lahan (m²)</h5>
                         <span class="font-bold">{{ $sumArea }}</span>
                     </div>
                     <div class="flex items-center">
