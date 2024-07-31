@@ -55,7 +55,7 @@ class PestController extends Controller
                 'gemini_response' => $geminiResponse
             ]);
 
-        return redirect()->route('pest.index');
+        return redirect()->route('pest.index')->with('pest-success', 'Data berhasil disimpan!');
     }
 
     public function show(Pest $pest, GeminiService $service)

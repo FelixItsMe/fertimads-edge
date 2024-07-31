@@ -1,7 +1,7 @@
 <x-app-layout>
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-      {{ __('Manajemen Hama') }}
+      {{ __('Laporan Hama') }}
     </h2>
   </x-slot>
 
@@ -18,6 +18,11 @@
           <span class="font-bold">{{ $pests->total() }}</span>
         </x-card-info>
       </div>
+      @if (session()->has('pest-success'))
+      <div class="p-4 text-sm text-green-800 rounded-lg bg-green-50" role="alert">
+        <span class="font-medium">{{ session('pest-success') }}</span>
+      </div>
+      @endif
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 flex justify-between">
           <h1 class="text-3xl font-extrabold">Tabel Laporan Hama</h1>
@@ -74,26 +79,28 @@
   <script src="{{ asset('js/api.js') }}"></script>
   <script>
     const deleteData = async (id) => {
-      const data = await fetchData(
-        "{{ route('pest.destroy', 'ID') }}".replace('ID', id), {
-          method: "DELETE",
-          headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
-            'Accept': 'application/json',
-          },
+      if (confirm('Apakah anda yakin akan menghapus data ini?')) {
+        const data = await fetchData(
+          "{{ route('pest.destroy', 'ID') }}".replace('ID', id), {
+            method: "DELETE",
+            headers: {
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
+              'Accept': 'application/json',
+            },
+          }
+        );
+
+        console.log(data);
+
+        if (!data) {
+          alert('Error')
+          return false
         }
-      );
 
-      console.log(data);
+        location.reload()
 
-      if (!data) {
-        alert('Error')
-        return false
+        return true
       }
-
-      location.reload()
-
-      return true
     }
 
     window.onload = () => {
