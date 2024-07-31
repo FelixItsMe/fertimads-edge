@@ -5,6 +5,8 @@ namespace App\Http\Controllers\v1\Management;
 use App\Http\Controllers\Controller;
 use App\Models\DeviceFertilizerSchedule;
 use App\Models\DeviceSchedule;
+use App\Models\DeviceScheduleRun;
+use App\Models\Garden;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +16,13 @@ class ActivityScheduleController extends Controller
 {
     public function index(): View
     {
-        return view('pages.management.activity-schedule.index');
+        $gardens = Garden::query()
+            ->select(['id', 'name'])
+            ->with('deviceSelenoid:id,garden_id,selenoid')
+            ->has('deviceSelenoid')
+            ->get();
+
+        return view('pages.management.activity-schedule.index', compact('gardens'));
     }
 
     public function scheduleInMonth(int $year, int $month): JsonResponse
@@ -45,7 +53,6 @@ class ActivityScheduleController extends Controller
                     $query->where('garden_id', request('garden_id'));
                 });
             })
-            ->active()
             ->get();
 
         $fertilizerSchedules = DeviceFertilizerSchedule::query()
@@ -56,7 +63,6 @@ class ActivityScheduleController extends Controller
                     $query->where('garden_id', request('garden_id'));
                 });
             })
-            ->active()
             ->get();
 
         $period = now()->parse($startMonth)->toPeriod($endMonth, 1, 'days');
@@ -103,77 +109,55 @@ class ActivityScheduleController extends Controller
         ]);
     }
 
-    public function detailScheduleDay($date): JsonResponse
+    public function gardensScheduleDay($date): JsonResponse
     {
         $now = now()->parse($date);
-        $types = collect();
-        $water = collect();
-        $fertilize = collect();
 
-        $waterSchedules = DeviceSchedule::query()
-            ->when(request('garden_id'), function ($query) {
-                $query->whereRelation('deviceSelenoid', 'garden_id', request('garden_id'));
-            }, function ($query) {
-                $query->has('deviceSelenoid.garden');
+        $gardens = Garden::query()
+            ->select(['id', 'name'])
+            ->with('deviceSelenoid:id,garden_id,selenoid')
+            ->whereHas('deviceSchedules.deviceScheduleRuns', function($query)use($now){
+                $query->whereDate('start_time', $now->format('Y-m-d'));
             })
-            ->with(['deviceScheduleRuns' => function ($query) use ($now) {
-                $query->whereDate('start_time', '<=', $now->format('Y-m-d'))->whereDate('end_time', '>=', $now->format('Y-m-d'));
-            }])
-            ->where([
-                ['start_date', '<=', $now->format('Y-m-d')],
-                ['end_date', '>=', $now->format('Y-m-d')],
-            ])
-            ->active()
-            ->get();
-
-        if ($waterSchedules->count() > 0) {
-            foreach ($waterSchedules as $waterSchedule) {
-                if (count($waterSchedule?->deviceScheduleRuns) > 0) {
-                    $duration = now()
-                        ->parse($waterSchedule->deviceScheduleRuns[0]->start_time)
-                        ->diffInMinutes(
-                            now()->parse($waterSchedule->deviceScheduleRuns[0]->end_time)
-                        );
-                }
-
-                $water->add([
-                    'waktu_mulai' => $waterSchedule->execute_time,
-                    'total_volume' => $waterSchedule?->deviceScheduleRuns->first()?->total_volume,
-                    'total_waktu' => $duration ?? 0,
-                ]);
-            }
-
-            $types->push('Penyiraman');
-        }
-
-        $fertilizerSchedules = DeviceFertilizerSchedule::query()
-            ->when(request('garden_id'), function ($query) {
-                $query->whereRelation('deviceSelenoid', 'garden_id', request('garden_id'));
-            }, function ($query) {
-                $query->has('deviceSelenoid.garden');
+            ->orWhereHas('deviceFertilizerSchedules', function($query)use($now){
+                $query->whereDate('execute_start', $now->format('Y-m-d'));
             })
-            ->active()
-            ->whereDate('execute_start', $now->copy()->format('Y-m-d'))
             ->get();
-
-        if ($fertilizerSchedules->count() > 0) {
-            foreach ($fertilizerSchedules as $fertilizerSchedule) {
-                $fertilize->push(now()->parse($fertilizerSchedule->execute_start)->format('H:i:s'));
-                $duration = now()
-                    ->parse($fertilizerSchedule->execute_start)
-                    ->diffInMinutes(
-                        now()->parse($fertilizerSchedule->execute_end)
-                    );
-            }
-
-            $types->push('Pemupukan');
-        }
 
         return response()->json([
             'message' => 'Detail schedule',
-            'types' => $types->all(),
-            'water' => $water->values(),
-            'fertilize' => $fertilize->all(),
+            'gardens' => $gardens,
+        ]);
+    }
+
+    public function detailGardenScheduleDay($date, Garden $garden) : JsonResponse {
+        $now = now()->parse($date)->format('Y-m-d');
+        $waterSchedules = DeviceScheduleRun::query()
+            ->with([
+                'deviceScheduleExecute' => function($query){
+                    $query->whereNotNull('end_time');
+                }
+            ])
+            ->whereHas('deviceSchedule', function(Builder $query)use($garden){
+                $query->where('garden_id', $garden->id);
+            })
+            ->whereDate('start_time', $now)
+            ->get();
+
+        $fertilizerSchedules = DeviceFertilizerSchedule::query()
+            ->with([
+                'scheduleExecute' => function($query){
+                    $query->whereNotNull('execute_end');
+                }
+            ])
+            ->whereDate('execute_start', $now)
+            ->where('garden_id', $garden->id)
+            ->get();
+
+        return response()->json([
+            'message' => 'Detail jadwal pada kebun',
+            'waterSchedules' => $waterSchedules,
+            'fertilizerSchedules' => $fertilizerSchedules,
         ]);
     }
 }
