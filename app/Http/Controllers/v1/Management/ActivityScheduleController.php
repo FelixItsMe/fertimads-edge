@@ -107,8 +107,8 @@ class ActivityScheduleController extends Controller
     {
         $now = now()->parse($date);
         $types = collect();
-        $waterTimes = collect();
-        $fertilizerTimes = collect();
+        $water = collect();
+        $fertilize = collect();
 
         $waterSchedules = DeviceSchedule::query()
             ->when(request('garden_id'), function ($query) {
@@ -116,6 +116,9 @@ class ActivityScheduleController extends Controller
             }, function ($query) {
                 $query->has('deviceSelenoid.garden');
             })
+            ->with(['deviceScheduleRuns' => function ($query) use ($now) {
+                $query->whereDate('start_time', '<=', $now->format('Y-m-d'))->whereDate('end_time', '>=', $now->format('Y-m-d'));
+            }])
             ->where([
                 ['start_date', '<=', $now->format('Y-m-d')],
                 ['end_date', '>=', $now->format('Y-m-d')],
@@ -125,7 +128,19 @@ class ActivityScheduleController extends Controller
 
         if ($waterSchedules->count() > 0) {
             foreach ($waterSchedules as $waterSchedule) {
-                $waterTimes->push($waterSchedule->execute_time);
+                if (count($waterSchedule?->deviceScheduleRuns) > 0) {
+                    $duration = now()
+                        ->parse($waterSchedule->deviceScheduleRuns[0]->start_time)
+                        ->diffInMinutes(
+                            now()->parse($waterSchedule->deviceScheduleRuns[0]->end_time)
+                        );
+                }
+
+                $water->add([
+                    'waktu_mulai' => $waterSchedule->execute_time,
+                    'total_volume' => $waterSchedule?->deviceScheduleRuns->first()?->total_volume,
+                    'total_waktu' => $duration ?? 0,
+                ]);
             }
 
             $types->push('Penyiraman');
@@ -143,7 +158,7 @@ class ActivityScheduleController extends Controller
 
         if ($fertilizerSchedules->count() > 0) {
             foreach ($fertilizerSchedules as $fertilizerSchedule) {
-                $fertilizerTimes->push(now()->parse($fertilizerSchedule->execute_start)->format('H:i:s'));
+                $fertilize->push(now()->parse($fertilizerSchedule->execute_start)->format('H:i:s'));
                 $duration = now()
                     ->parse($fertilizerSchedule->execute_start)
                     ->diffInMinutes(
@@ -157,8 +172,8 @@ class ActivityScheduleController extends Controller
         return response()->json([
             'message' => 'Detail schedule',
             'types' => $types->all(),
-            'waterTimes' => $waterTimes->all(),
-            'fertilizeTimes' => $fertilizerTimes->all(),
+            'water' => $water->values(),
+            'fertilize' => $fertilize->all(),
         ]);
     }
 }

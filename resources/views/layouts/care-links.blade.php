@@ -9,7 +9,7 @@
 </li>
 <li class="menu-item">
   <a href="{{ route('harvest-report.index') }}" class="menu-link">
-    <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('garden.*'),
+    <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('harvest-report.*'),
       'fa-solid',
       'fa-table-cells',
       ]) ></i>

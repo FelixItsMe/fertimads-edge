@@ -15,7 +15,7 @@
       <div class="grid grid-flow-row grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <x-card-info>
           <h5 class="text-xs text-slate-400">Total Laporan Pemupukan</h5>
-          <span class="font-bold">{{ $reportsCount }}</span>
+          <span class="font-bold">{{ $reports->total() }}</span>
         </x-card-info>
       </div>
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -32,8 +32,8 @@
               <th>Tanggal</th>
               <th>Nama Lahan</th>
               <th>Nama Kebun</th>
-              <th>Jenis Pupuk Dasar</th>
-              <th>Jumlah Pupuk Dasar</th>
+              <th>Jenis Pupuk</th>
+              <th>Volume Pupuk</th>
               <th>Waktu</th>
             </tr>
           </thead>

@@ -47,7 +47,7 @@ class PestController extends Controller
                 'pest_name' => $pestName,
                 'file' => $image,
                 'garden_id' => $request->garden_id,
-                'commodity_Id' => $request->commodity_id,
+                'commodity_id' => $request->commodity_id,
                 'infected_count' => $request->infected_count,
                 'gemini_prompt' => $geminiPrompt,
                 'gemini_response' => $geminiResponse
