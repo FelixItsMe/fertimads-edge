@@ -32,11 +32,13 @@ class GardenController extends Controller
 
         if ($currentType && $currentType->water == 1) {
             $waterSchedule = DeviceScheduleRun::query()
+                ->whereHas('deviceSchedule', function(Builder $query)use($garden){
+                    $query->where('garden_id', $garden->id);
+                })
                 ->whereDoesntHave('deviceScheduleExecute', function (Builder $query) {
                     $query->whereNotNull('end_time');
                 })
                 ->whereDate('start_time', now()->format('Y-m-d'))
-                ->where('garden_id', $garden->id)
                 ->first();
 
             $currentTargetVolume += $waterSchedule->total_volume;
