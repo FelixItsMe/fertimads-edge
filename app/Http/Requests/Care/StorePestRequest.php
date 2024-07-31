@@ -23,7 +23,7 @@ class StorePestRequest extends FormRequest
     {
         return [
             'file' => 'required|image',
-            // 'garden_id' => 'required|exists:gardens,id',
+            'garden_id' => 'required|exists:gardens,id',
             'commodity_id' => 'required|exists:commodities,id',
             'infected_count' => 'required',
             'gemini_prompt' => 'required'
