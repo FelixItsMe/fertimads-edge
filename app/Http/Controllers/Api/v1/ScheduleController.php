@@ -38,14 +38,12 @@ class ScheduleController extends Controller
                     ['end_date', '>=', $endMonth],
                 ]);
             })
-            ->active()
             ->get();
 
         $fertilizerSchedules = DeviceFertilizerSchedule::query()
             ->where('garden_id', $garden->id)
             ->whereYear('execute_start', $year)
             ->whereMonth('execute_start', $month)
-            ->active()
             ->get();
 
         $period = now()->parse($startMonth)->toPeriod($endMonth, 1, 'days');

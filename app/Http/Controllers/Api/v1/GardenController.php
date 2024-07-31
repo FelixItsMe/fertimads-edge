@@ -42,12 +42,15 @@ class GardenController extends Controller
     }
 
     public function gardenLatestTelemetry(Garden $garden) : JsonResponse {
-        $garden->load('deviceSelenoid');
+        $garden->load('deviceSelenoid.device:id,series,pumps');
+
+        $currentType = $garden->deviceSelenoid?->device?->pumps;
 
         return response()
             ->json([
                 'message'   => 'Latest Telemetry Data',
-                'telemetry'  => $this->gardenService->formatedLatestTelemetry($garden)
+                'telemetry'  => $this->gardenService->formatedLatestTelemetry($garden),
+                'currentType' => $currentType,
             ]);
     }
 
