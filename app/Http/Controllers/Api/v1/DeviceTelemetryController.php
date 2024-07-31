@@ -33,7 +33,7 @@ class DeviceTelemetryController extends Controller
     }
 
     public function gardenLatestTelemetry(Garden $garden) : JsonResponse {
-        $garden->load('deviceSelenoid');
+        $garden->load('deviceSelenoid.device');
 
         if (!$garden->deviceSelenoid) {
             return response()->json([
@@ -47,10 +47,13 @@ class DeviceTelemetryController extends Controller
             ->orderByDesc('created_at')
             ->first();
 
+        $currentType = $garden->deviceSelenoid?->device?->pumps;
+
         return response()
             ->json([
                 'message' => 'Latest Telemetry Data',
-                'telemetry' => $latestTelemetry
+                'telemetry' => $latestTelemetry,
+                'currentType' => $currentType,
             ]);
     }
 }
