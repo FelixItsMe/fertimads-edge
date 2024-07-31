@@ -25,7 +25,7 @@
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 flex flex-row justify-between w-1/4">
                     <div>
                         <h5 class="text-xs text-slate-400">Luas Lahan (m²)</h5>
-                        <span class="font-bold">{{ $sumArea }}</span>
+                        <span class="font-bold">{{ $sums->total_area }}</span>
                     </div>
                     <div class="flex items-center">
                         <i class="fa-solid fa-globe p-3 bg-primary text-white rounded-lg"></i>
@@ -33,7 +33,11 @@
                 </div>
                 <x-card-info class="w-1/4">
                     <h5 class="text-xs text-slate-400">Total Blok</h5>
-                    <span class="font-bold">0&nbsp;Blok</span>
+                    <span class="font-bold">{{ $sums->total_block }}&nbsp;Blok</span>
+                </x-card-info>
+                <x-card-info class="w-1/4">
+                    <h5 class="text-xs text-slate-400">Total Population</h5>
+                    <span class="font-bold">{{ $sums->total_population }}</span>
                 </x-card-info>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">

@@ -53,6 +53,8 @@ class StoreGardenRequest extends FormRequest
             'land_id'       => 'required|exists:lands,id',
             'device_id'     => ['nullable', 'exists:devices,id', new GardenDeviceAvailability],
             'color'         => ['required', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
+            'count_block'   => 'required|integer|min:0',
+            'population'    => 'required|integer|min:0',
         ];
     }
 }
