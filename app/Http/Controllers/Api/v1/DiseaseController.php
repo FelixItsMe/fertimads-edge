@@ -12,6 +12,9 @@ class DiseaseController extends Controller
     {
         $diseases = Disease::query()
             ->latest()
+            ->when(request('search'), function ($query) {
+                $query->where('name', 'like', '%'. request('search') .'%');
+            })
             ->paginate(10);
 
         return response()->json($diseases);

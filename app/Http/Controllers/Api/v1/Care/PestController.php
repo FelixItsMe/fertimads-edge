@@ -22,6 +22,9 @@ class PestController extends Controller
     {
         $pests = Pest::query()
             ->with(['garden', 'commodity'])
+            ->when(request('search'), function ($query) {
+                $query->where('pest_name', 'like', '%'. request('search') .'%');
+            })
             ->paginate(10);
 
         return response()->json($pests);
