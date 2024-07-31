@@ -31,9 +31,6 @@
   <x-slot name="header">
     <h2 class="leading-tight">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="#">Pages</a>
-        </li>
         <li class="breadcrumb-item breadcrumb-active">{{ __('RSC Data') }}</li>
       </ol>
     </h2>
@@ -41,23 +38,26 @@
 
   <div class="py-12">
     <div class="mx-auto sm:px-6 lg:px-8">
-      <div class="grid grid-flow-row grid-cols-1 gap-2">
+      <div class="grid grid-flow-row grid-cols-1 gap-2 mb-4">
         <div>
           <div id="map" class="rounded-md"></div>
         </div>
       </div>
-      <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-5">
+      <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 flex justify-between">
           <h1 class="text-3xl font-extrabold">Tabel Data RSC</h1>
-          <a href="{{ route('pest.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Data</a>
+          <div>
+            <input type="text" placeholder="Search" aria-placeholder="Search" class="rounded-full">
+            <button type="button" class="bg-primary text-white px-4 py-2 rounded-lg font-bold">Export Data</button>
+          </div>
         </div>
-        <table class="w-full border-slate-400 table mb-0 text-left">
+        <table class="w-full align-middle border-slate-400 table mb-0">
           <thead>
             <tr>
               <th>Waktu</th>
               <th>Kebun</th>
               <th>Nitrogen</th>
-              <th>Fosfor</th>
+              <th>Phospor</th>
               <th>Kalium</th>
               <th>EC</th>
               <th>pH Tanah</th>
@@ -68,18 +68,38 @@
             </tr>
           </thead>
           <tbody class="table-border-bottom-0">
-            @forelse ([] as $pest)
             <tr>
+              <td>12/11/2023 13:00</td>
+              <td>2(a)</td>
+              <td>7 mg/kg</td>
+              <td>3 mg/kg</td>
+              <td>5 mg/kg</td>
+              <td>151 ppm</td>
+              <td>5</td>
+              <td>30.30<sup>o</sup>C</td>
+              <td>64.20%</td>
+              <td>30.30<sup>o</sup>C</td>
+              <td>21.20%</td>
+            </tr>
+            {{-- @forelse ($deviceTelemetries as $deviceTelemetry)
+                          <tr>
+                              <td>{{ number_format($deviceTelemetry->telemetry->, 2) }}</td>
+            <td>0</td>
             </tr>
             @empty
             <tr>
-              <td colspan="12" class="text-center">Tidak ada data</td>
+              <td colspan="6" class="text-center">Tidak ada data</td>
             </tr>
-            @endforelse
+            @endforelse --}}
           </tbody>
         </table>
+        {{-- @if ($deviceTelemetries->hasPages())
+                  <div class="p-6">
+                      {{ $deviceTelemetries->links() }}
       </div>
+      @endif --}}
     </div>
+  </div>
   </div>
 
   @push('scripts')
@@ -245,7 +265,7 @@
                   <div class="mt-2">
                     <div class="grid grid-cols-2 gap-4">
                       <div>
-                        <h4 class="text-lg font-medium leading-6 text-gray-900 mb-2">Informasi Kebun ${garden.name}</h4>
+                        <h4 class="text-lg font-medium leading-6 text-gray-900 mb-2">Informasi Kebun ${garden?.name ?? ''}</h4>
                         <table class="w-full">
                           <tbody>
                             <tr class="py-3">
@@ -253,7 +273,7 @@
                                 <p class="text-gray-500 font-bold">Luas Kebun</p>
                               </td>
                               <td class="pb-1">:</td>
-                              <td class="pb-1"><span class="text-gray-500 font-normal" id="luasKebun">${garden.area} m²</span></td>
+                              <td class="pb-1"><span class="text-gray-500 font-normal" id="luasKebun">${garden?.area ?? '-'} m²</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
@@ -274,21 +294,21 @@
                               <p class="text-gray-500 font-bold">Komoditi</p>
                               </td>
                               <td class="py-1">:</td>
-                              <td class="py-1"><span class="text-gray-500 font-normal" id="komoditi">${garden.commodity.name}</span></td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="komoditi">${garden?.commodity?.name ?? ''}</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
                                 <p class="text-gray-500 font-bold">Total Blok</p>
                               </td>
                               <td class="py-1">:</td>
-                              <td class="py-1"><span class="text-gray-500 font-normal" id="totalBlok">${garden.count_block} Blok</span></td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="totalBlok">${garden?.count_block ?? '-'} Blok</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
                                 <p class="text-gray-500 font-bold">Populasi</p>
                               </td>
                               <td class="py-1">:</td>
-                              <td class="py-1"><span class="text-gray-500 font-normal" id="populasi">${garden.populations || '-'} Tanaman</span></td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="populasi">${garden?.populations || '-'} Tanaman</span></td>
                             </tr>
                           </tbody>
                         </table>
@@ -298,39 +318,39 @@
                         <div class="flex w-full flex-wrap gap-5">
                           <div>
                             <div class="font-bold text-gray-500">Nitrogen</div>
-                            <div class="text-gray-500 font-normal">${latestTelemetry.telemetry.soil_sensor.N} mg/kg</div>
+                            <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.N ?? 0)} mg/kg</div>
                           </div>
                           <div>
                             <div class="font-bold text-gray-500">Fosfor</div>
-                            <div class="text-gray-500 font-normal">${latestTelemetry.telemetry.soil_sensor.P} mg/kg</div>
+                            <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.P ?? 0)} mg/kg</div>
                           </div>
                           <div>
                             <div class="font-bold text-gray-500">Kalium</div>
-                            <div class="text-gray-500 font-normal">${latestTelemetry.telemetry.soil_sensor.K} mg/kg</div>
+                            <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.K ?? 0)} mg/kg</div>
                           </div>
                           <div>
                             <div class="font-bold text-gray-500">EC</div>
-                            <div class="text-gray-500 font-normal">${latestTelemetry.telemetry.soil_sensor.EC} ppm</div>
+                            <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.EC ?? 0)} uS/cm</div>
                           </div>
                           <div>
                             <div class="font-bold text-gray-500">pH Tanah</div>
-                            <div class="text-gray-500 font-normal">${latestTelemetry.telemetry.soil_sensor.pH}</div>
+                            <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.pH ?? 0)}</div>
                           </div>
                           <div>
                             <div class="font-bold text-gray-500">Suhu Tanah</div>
-                            <div class="text-gray-500 font-normal">${latestTelemetry.telemetry.soil_sensor.T}C<sup>o</sup></div>
+                            <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.T ?? 0)}<sup>o</sup>C</div>
                           </div>
                           <div>
                             <div class="font-bold text-gray-500">Kelembapan tanah</div>
-                            <div class="text-gray-500 font-normal">${latestTelemetry.telemetry.soil_sensor.H}%</div>
+                            <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.H ?? 0)}%</div>
                           </div>
                           <div>
                             <div class="font-bold text-gray-500">Suhu Lingkungan</div>
-                            <div class="text-gray-500 font-normal">${latestTelemetry.telemetry.dht1.T.toFixed(2)}C<sup>o</sup></div>
+                            <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.dht1.T ?? 0).toFixed(2)}<sup>o</sup>C</div>
                           </div>
                           <div>
                             <div class="font-bold text-gray-500">Kelembapan Lingkungan</div>
-                            <div class="text-gray-500 font-normal">${latestTelemetry.telemetry.dht1.H.toFixed(2)}%</div>
+                            <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.dht1.H ?? 0).toFixed(2)}%</div>
                           </div>
                         </div>
                       </div>
@@ -361,21 +381,21 @@
                                 <p class="text-gray-500 font-bold">Kegiatan</p>
                               </td>
                               <td class="pb-1">:</td>
-                              <td class="pb-1"><span class="text-gray-500 font-normal" id="jenisKegiatan">Penyiraman</span></td>
+                              <td class="pb-1"><span class="text-gray-500 font-normal" id="jenisKegiatan">-</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
                                 <p class="text-gray-500 font-bold">Volume</p>
                               </td>
                               <td class="py-1">:</td>
-                              <td class="py-1"><span class="text-gray-500 font-normal" id="volume">50 Liter Air</span></td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="volume">-</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
-                                <p class="text-gray-500 font-bold">Total Waktu</p>
+                                <p class="text-gray-500 font-bold">Estimasi Durasi</p>
                               </td>
                               <td class="py-1">:</td>
-                              <td class="py-1"><span class="text-gray-500 font-normal" id="waktuKegiatan">30 Menit Penyiraman</span></td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="waktuKegiatan">-</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
@@ -383,31 +403,38 @@
                               </td>
                               <td class="py-1">:</td>
                               <td class="py-1">
-                                <div class="text-gray-500 font-normal" id="waktuPenjadwalan">Senin, 18 Mei 2024</div>
+                                <div class="text-gray-500 font-normal" id="waktuPenjadwalan">-</div>
                               </td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
                                 <p class="text-gray-500 font-bold">Flow Rate Progress</p>
                               </td>
-                              <td class="py-1">:</td>
+                            </tr>
+                            <tr class="py-3">
                               <td class="py-1">
                                 <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                  <div class="bg-yellow-300 h-2.5 rounded-full" style="width: 45%"></div>
+                                  <div class="bg-yellow-300 h-2.5 rounded-full" style="width: ${latestTelemetry?.telemetry?.flow_meter.V ?? '0'}%"></div>
                                 </div>
+                              </td>
+                              <td class="py-1"></td>
+                              <td class="py-1 px-3">
+                              ${(latestTelemetry?.telemetry?.flow_meter.V ?? 0).toFixed(2)}%
                               </td>
                             </tr>
                           </tbody>
                         </table>
 
                         <div class="flex items-center space-x-4 mt-3">
-                          <span class="w-4 rounded-full aspect-square bg-yellow-300"></span>
-                          <span class="">Pemupukan</span>
-                        </div>
+                          <div class="flex items-center space-x-2">
+                            <span class="w-4 rounded-full aspect-square bg-yellow-300"></span>
+                            <span class="">Pemupukan</span>
+                          </div>
 
-                        <div class="flex items-center space-x-4 mt-1">
-                          <span class="w-4 rounded-full aspect-square bg-blue-300"></span>
-                          <span class="">Penyiraman</span>
+                          <div class="flex items-center space-x-2">
+                            <span class="w-4 rounded-full aspect-square bg-blue-300"></span>
+                            <span class="">Penyiraman</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -439,13 +466,11 @@
         return false
       }
 
-      currentLand.polygonLayer = initPolygon(map, lands[0].polygon, {
+      currentLand.polygonLayer = initPolygon(map, lands[lands.length - 1].polygon, {
         dashArray: '10, 10',
         dashOffset: '20',
         color: '#bdbdbd',
       })
-
-      map.fitBounds(currentLand.polygonLayer.getBounds());
 
       currentGroupGarden.clearLayers()
 
@@ -590,6 +615,19 @@
 
                 await getGardenScheduleDetail(garden.id, e.dataset.date).then(data => {
                   let jenisKegiatan = data.types.join(" | ")
+
+                  if (data.water && data.water.length < 1) {
+                    $(document).find('#waktuKegiatan').text(`0 Menit`)
+                    $(document).find('#volume').text(`- Liter`)
+                    $(document).find('#waktuPenjadwalan').text(`-`)
+                  }
+
+                  data.water?.map(row => {
+                    $(document).find('#waktuKegiatan').text(`${(row.total_waktu??0).toFixed(2)} Menit`)
+                    $(document).find('#volume').text(`${(row.total_volume ?? 0).toFixed(2) ?? '-'} Liter`)
+                    $(document).find('#waktuPenjadwalan').text(`${row.waktu_mulai ?? '-'}`)
+                  })
+
                   $(document).find('#jenisKegiatan').text(jenisKegiatan)
                 })
               }

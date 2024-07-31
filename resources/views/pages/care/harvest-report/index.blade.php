@@ -24,7 +24,7 @@
       <h1 class="text-2xl font-bold">List Rangkuman</h1>
 
       <div class="mt-5">
-        <div class="grid grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
           <div class="bg-white p-6">
             <div class="flex gap-x-5">
               <div class="flex-1">

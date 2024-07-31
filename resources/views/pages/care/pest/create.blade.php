@@ -62,7 +62,7 @@
                 <x-input-error :messages="$errors->get('commodity_id')" class="mt-2" />
               </div>
               <div class="w-full">
-                <label for="" class="block">Jumlah Terinfeksi</label>
+                <label for="" class="block">Jumlah Pohon Terinfeksi</label>
                 <x-text-input class="w-full" name="infected_count" id=""></x-text-input>
                 <x-input-error :messages="$errors->get('infected_count')" class="mt-2" />
               </div>
@@ -74,6 +74,7 @@
             </div>
             <div class="block mt-5">
               <x-primary-button>Kirim</x-primary-button>
+              <a href="{{ route('pest.index') }}" class='inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150'>Batal</a>
             </div>
           </div>
         </div>

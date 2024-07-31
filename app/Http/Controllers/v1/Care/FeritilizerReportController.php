@@ -20,9 +20,7 @@ class FeritilizerReportController extends Controller
             ->latest()
             ->paginate(10);
 
-        $reportsCount = DeviceReport::count();
-
-        return view('pages.care.fertilizer-report.index', compact('reports', 'reportsCount'));
+        return view('pages.care.fertilizer-report.index', compact('reports'));
     }
 
     public function export()
