@@ -27,6 +27,7 @@ class Garden extends Model
         'area',
         'color',
         'count_block',
+        'population',
         'commodity_id',
         'land_id',
     ];
@@ -73,5 +74,25 @@ class Garden extends Model
     public function pests(): HasMany
     {
         return $this->hasMany(Pest::class);
+    }
+
+    /**
+     * Get all of the deviceSchedules for the Garden
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deviceSchedules(): HasMany
+    {
+        return $this->hasMany(DeviceSchedule::class);
+    }
+
+    /**
+     * Get all of the deviceFertilizerSchedules for the Garden
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deviceFertilizerSchedules(): HasMany
+    {
+        return $this->hasMany(DeviceFertilizerSchedule::class);
     }
 }
