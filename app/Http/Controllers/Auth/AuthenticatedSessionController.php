@@ -39,7 +39,7 @@ class AuthenticatedSessionController extends Controller
                 break;
 
             default:
-            $routeName = 'dashboard.index';
+                $routeName = 'dashboard.index';
                 break;
         }
 

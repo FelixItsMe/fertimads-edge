@@ -8,6 +8,9 @@
 
   <title>{{ config('app.name', 'Laravel') }}</title>
 
+  {{-- Famicon --}}
+  <link rel="icon" href="{{ asset('images/default/famicon.svg') }}">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
@@ -47,7 +50,7 @@
         @endisset
 
         <!-- Page Content -->
-        <main>
+        <main class="min-h-screen">
           {{ $slot }}
         </main>
         <footer class="px-6 py-1 font-normal text-base text-slate-400">

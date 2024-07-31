@@ -59,7 +59,7 @@
             'menu-icon',
             'active-icon' => request()->routeIs('tool.*'),
             'fa-solid',
-            'fa-motorcycle',
+            'fa-hammer',
             ]) ></i>
         <div class="text-slate-400">Manajemen Peralatan</div>
     </a>

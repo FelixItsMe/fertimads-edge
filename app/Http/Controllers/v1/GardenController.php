@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GardenController extends Controller
 {
@@ -42,10 +43,15 @@ class GardenController extends Controller
             ->orderBy('name')
             ->paginate('10');
 
-        $sumArea = Garden::query()
-            ->sum('area');
+        $sums = Garden::query()
+            ->select(
+                DB::raw('SUM(area) as total_area'),
+                DB::raw('SUM(count_block) as total_block'),
+                DB::raw('SUM(population) as total_population')
+            )
+            ->first();
 
-        return view('pages.garden.index', compact('gardens', 'sumArea'));
+        return view('pages.garden.index', compact('gardens', 'sums'));
     }
 
     /**
