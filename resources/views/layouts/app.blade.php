@@ -50,7 +50,7 @@
         @endisset
 
         <!-- Page Content -->
-        <main>
+        <main class="min-h-screen">
           {{ $slot }}
         </main>
         <footer class="px-6 py-1 font-normal text-base text-slate-400">

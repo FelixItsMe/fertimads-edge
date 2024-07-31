@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
   <style>
     #map {
-      height: 70vh;
+      height: 100vh;
     }
   </style>
   @endpush
@@ -90,6 +90,16 @@
                 <x-input-label for="color">{{ __('Warna') }}</x-input-label>
                 <x-text-input id="color" class="block mt-1 w-full p-1" type="color" name="color" :value="'#' . $garden->color" required autofocus autocomplete="color" />
                 <x-input-error :messages="$errors->get('altitude')" class="mt-2" />
+              </div>
+              <div class="w-full">
+                <x-input-label for="count_block">{{ __('Blok') }}</x-input-label>
+                <x-text-input id="count_block" class="count_block mt-1 w-full rounded-xl" type="number" step=".01" name="count_block" :value="$garden->count_block" required autofocus autocomplete="count_block" />
+                <x-input-error :messages="$errors->get('count_block')" class="mt-2" />
+              </div>
+              <div class="w-full">
+                <x-input-label for="population">{{ __('Populasi') }}</x-input-label>
+                <x-text-input id="population" class="population mt-1 w-full rounded-xl" type="number" step=".01" name="population" :value="$garden->population" required autofocus autocomplete="population" />
+                <x-input-error :messages="$errors->get('population')" class="mt-2" />
               </div>
               <div class="flex flex-col">
                 <div class="w-full flex justify-end">
