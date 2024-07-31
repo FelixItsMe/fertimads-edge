@@ -117,7 +117,10 @@ class ActivityScheduleController extends Controller
                 $query->has('deviceSelenoid.garden');
             })
             ->with(['deviceScheduleRuns' => function ($query) use ($now) {
-                $query->whereDate('start_time', '<=', $now->format('Y-m-d'))->whereDate('end_time', '>=', $now->format('Y-m-d'));
+                $query
+                    ->whereDate('start_time', '<=', $now->format('Y-m-d'))
+                    ->whereDate('end_time', '>=', $now->format('Y-m-d'))
+                    ->with('deviceScheduleExecute');
             }])
             ->where([
                 ['start_date', '<=', $now->format('Y-m-d')],
@@ -134,12 +137,20 @@ class ActivityScheduleController extends Controller
                         ->diffInMinutes(
                             now()->parse($waterSchedule->deviceScheduleRuns[0]->end_time)
                         );
+
+                    $actualDuration = now()
+                        ->parse($waterSchedule->deviceScheduleRuns[0]->deviceScheduleExecute?->start_time)
+                        ->diffInMinutes(
+                            now()->parse($waterSchedule->deviceScheduleRuns[0]->deviceScheduleExecute?->end_time)
+                        );
                 }
 
                 $water->add([
                     'waktu_mulai' => $waterSchedule->execute_time,
-                    'total_volume' => $waterSchedule?->deviceScheduleRuns->first()?->total_volume,
-                    'total_waktu' => $duration ?? 0,
+                    'total_volume' => $waterSchedule?->deviceScheduleRuns->first()?->deviceScheduleExecute?->total_volume,
+                    'estimasi_volume' => $waterSchedule?->deviceScheduleRuns->first()?->total_volume,
+                    'total_waktu' => $actualDuration ?? 0,
+                    'estimasi_waktu' => $duration ?? 0,
                 ]);
             }
 
@@ -158,13 +169,26 @@ class ActivityScheduleController extends Controller
 
         if ($fertilizerSchedules->count() > 0) {
             foreach ($fertilizerSchedules as $fertilizerSchedule) {
-                $fertilize->push(now()->parse($fertilizerSchedule->execute_start)->format('H:i:s'));
                 $duration = now()
                     ->parse($fertilizerSchedule->execute_start)
                     ->diffInMinutes(
                         now()->parse($fertilizerSchedule->execute_end)
                     );
+
+                $actualDuration = now()
+                    ->parse($fertilizerSchedule->scheduleExecute?->execute_start)
+                    ->diffInMinutes(
+                        now()->parse($fertilizerSchedule->scheduleExecute?->execute_end)
+                    );
             }
+
+            $fertilize->add([
+                'waktu_mulai' => now()->parse($fertilizerSchedule->execute_start)->format('H:i:s'),
+                'total_volume' => $fertilizerSchedule?->scheduleExecute?->total_volume,
+                'estimasi_volume' => $fertilizerSchedule?->total_volume,
+                'total_waktu' => $actualDuration ?? 0,
+                'estimasi_waktu' => $duration ?? 0,
+            ]);
 
             $types->push('Pemupukan');
         }
@@ -173,7 +197,7 @@ class ActivityScheduleController extends Controller
             'message' => 'Detail schedule',
             'types' => $types->all(),
             'water' => $water->values(),
-            'fertilize' => $fertilize->all(),
+            'fertilize' => $fertilize->values(),
         ]);
     }
 }

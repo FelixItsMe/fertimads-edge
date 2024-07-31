@@ -377,34 +377,48 @@
                         <table class="w-full">
                           <tbody>
                             <tr class="py-3">
-                              <td class="pb-1">
+                              <td class="pb-1" style="vertical-align: top">
                                 <p class="text-gray-500 font-bold">Kegiatan</p>
                               </td>
-                              <td class="pb-1">:</td>
+                              <td class="pb-1" style="vertical-align: top">:</td>
                               <td class="pb-1"><span class="text-gray-500 font-normal" id="jenisKegiatan">-</span></td>
                             </tr>
                             <tr class="py-3">
-                              <td class="py-1">
-                                <p class="text-gray-500 font-bold">Volume</p>
+                              <td class="py-1" style="vertical-align: top">
+                                <p class="text-gray-500 font-bold">Estimasi Volume</p>
                               </td>
-                              <td class="py-1">:</td>
+                              <td class="py-1" style="vertical-align: top">:</td>
                               <td class="py-1"><span class="text-gray-500 font-normal" id="volume">-</span></td>
                             </tr>
                             <tr class="py-3">
-                              <td class="py-1">
+                              <td class="py-1" style="vertical-align: top">
                                 <p class="text-gray-500 font-bold">Estimasi Durasi</p>
                               </td>
-                              <td class="py-1">:</td>
+                              <td class="py-1" style="vertical-align: top">:</td>
                               <td class="py-1"><span class="text-gray-500 font-normal" id="waktuKegiatan">-</span></td>
                             </tr>
                             <tr class="py-3">
-                              <td class="py-1">
+                              <td class="py-1" style="vertical-align: top">
                               <p class="text-gray-500 font-bold">Waktu Penjadwalan</p>
                               </td>
-                              <td class="py-1">:</td>
+                              <td class="py-1" style="vertical-align: top">:</td>
                               <td class="py-1">
                                 <div class="text-gray-500 font-normal" id="waktuPenjadwalan">-</div>
                               </td>
+                            </tr>
+                            <tr class="py-3">
+                              <td class="py-1" style="vertical-align: top">
+                                <p class="text-gray-500 font-bold">Aktual Volume</p>
+                              </td>
+                              <td class="py-1" style="vertical-align: top">:</td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="aktualVolume">-</span></td>
+                            </tr>
+                            <tr class="py-3">
+                              <td class="py-1" style="vertical-align: top">
+                                <p class="text-gray-500 font-bold">Aktual Durasi</p>
+                              </td>
+                              <td class="py-1" style="vertical-align: top">:</td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="aktualWaktuKegiatan">-</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
@@ -614,21 +628,47 @@
                 e.classList.add(...classes)
 
                 await getGardenScheduleDetail(garden.id, e.dataset.date).then(data => {
-                  let jenisKegiatan = data.types.join(" | ")
+                  let jenisKegiatan = data.types.join(" <br /> ")
 
                   if (data.water && data.water.length < 1) {
                     $(document).find('#waktuKegiatan').text(`0 Menit`)
                     $(document).find('#volume').text(`- Liter`)
+                    $(document).find('#aktualWaktuKegiatan').text(`0 Menit`)
+                    $(document).find('#aktualVolume').text(`- Liter`)
                     $(document).find('#waktuPenjadwalan').text(`-`)
                   }
 
+                  $(document).find('#waktuKegiatan').empty()
+                  $(document).find('#volume').empty()
+                  $(document).find('#aktualWaktuKegiatan').empty()
+                  $(document).find('#aktualVolume').empty()
+                  $(document).find('#waktuPenjadwalan').empty()
+
                   data.water?.map(row => {
-                    $(document).find('#waktuKegiatan').text(`${(row.total_waktu??0).toFixed(2)} Menit`)
-                    $(document).find('#volume').text(`${(row.total_volume ?? 0).toFixed(2) ?? '-'} Liter`)
-                    $(document).find('#waktuPenjadwalan').text(`${row.waktu_mulai ?? '-'}`)
+                    $(document).find('#waktuKegiatan').text(`${(row.estimasi_waktu??0).toFixed(2)} Menit Penyiraman`)
+                    $(document).find('#volume').text(`${(row.estimasi_volume ?? 0).toFixed(2) ?? '-'} Liter Air`)
+                    $(document).find('#aktualWaktuKegiatan').text(`${(row.total_waktu??0).toFixed(2)} Menit Penyiraman`)
+                    $(document).find('#aktualVolume').text(`${(row.total_volume ?? 0).toFixed(2) ?? '-'} Liter Air`)
+                    $(document).find('#waktuPenjadwalan').text(`Penyiraman Jam ${row.waktu_mulai ?? '-'}`)
                   })
 
-                  $(document).find('#jenisKegiatan').text(jenisKegiatan)
+                  data.fertilize?.map(row => {
+                    if (data.water.length > 0) {
+                      $(document).find('#waktuKegiatan').append(`<br /> ${(row.estimasi_waktu??0).toFixed(2)} Menit Pemupukan`)
+                      $(document).find('#volume').append(`<br /> ${(row.estimasi_volume ?? 0).toFixed(2) ?? '-'} Liter Pupuk`)
+                      $(document).find('#aktualWaktuKegiatan').append(`<br /> ${(row.total_waktu??0).toFixed(2)} Menit Pemupukan`)
+                      $(document).find('#aktualVolume').append(`<br /> ${(row.total_volume ?? 0).toFixed(2) ?? '-'} Liter Pupuk`)
+                      $(document).find('#waktuPenjadwalan').append(`<br /> Pemupukan Jam ${row.waktu_mulai ?? '-'}`)
+                    } else {
+                      $(document).find('#waktuKegiatan').append(`${(row.estimasi_waktu??0).toFixed(2)} Menit Pemupukan`)
+                      $(document).find('#volume').append(`${(row.estimasi_volume ?? 0).toFixed(2) ?? '-'} Liter Pupuk`)
+                      $(document).find('#aktualWaktuKegiatan').append(`${(row.total_waktu??0).toFixed(2)} Menit Pemupukan`)
+                      $(document).find('#aktualVolume').append(`${(row.total_volume ?? 0).toFixed(2) ?? '-'} Liter Pupuk`)
+                      $(document).find('#waktuPenjadwalan').append(`Pemupukan Jam ${row.waktu_mulai ?? '-'}`)
+                    }
+                  })
+
+                  $(document).find('#jenisKegiatan').html(jenisKegiatan)
                 })
               }
 

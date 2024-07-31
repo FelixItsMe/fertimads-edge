@@ -40,6 +40,6 @@ class DeviceScheduleRun extends Model
      */
     public function deviceScheduleExecute(): HasOne
     {
-        return $this->hasOne(DeviceScheduleExecute::class);
+        return $this->hasOne(DeviceScheduleExecute::class, 'device_schedule_run_id');
     }
 }
