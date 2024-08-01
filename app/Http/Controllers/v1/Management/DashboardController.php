@@ -62,7 +62,7 @@ class DashboardController extends Controller
         $countGarden = Garden::count();
         $countCommodity = Commodity::count();
         $countTool = Tool::count();
-        $countUser = User::count();
+        $countUser = User::whereNot('role', 'su')->count();
 
         return view('pages.management.dashboard.index', compact(
             'fertilizeSchedules',
