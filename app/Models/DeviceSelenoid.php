@@ -7,6 +7,7 @@ use App\Enums\GardenSelenoidStatusEnums;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class DeviceSelenoid extends Model
@@ -74,5 +75,25 @@ class DeviceSelenoid extends Model
     public function activeDeviceSchedule(): HasOne
     {
         return $this->hasOne(DeviceSchedule::class)->where('is_finished', 0);
+    }
+
+    /**
+     * Get all of the deviceSchedules for the DeviceSelenoid
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deviceSchedules(): HasMany
+    {
+        return $this->hasMany(DeviceSchedule::class);
+    }
+
+    /**
+     * Get all of the deviceFertilizerSchedules for the DeviceSelenoid
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deviceFertilizerSchedules(): HasMany
+    {
+        return $this->hasMany(DeviceFertilizerSchedule::class);
     }
 }
