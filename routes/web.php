@@ -2,6 +2,7 @@
 
 use App\Enums\UserRoleEnums;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\v1\Care\ActivityScheduleController;
 use App\Http\Controllers\v1\Care\DiseaseController;
 use App\Http\Controllers\v1\Care\FeritilizerReportController;
 use App\Http\Controllers\v1\Care\HarvestReportController;
@@ -112,8 +113,8 @@ Route::middleware('auth')->group(function () {
         Route::get('land/polygon/garden', [\App\Http\Controllers\v1\LandController::class, 'landsPolyWithGardensPoly'])->name('land.polygon.garden');
         Route::get('garden/{garden}/latest-telemetry', [App\Http\Controllers\Api\v1\GardenController::class, 'gardenLatestTelemetry'])->name('garden.latest-telemetry');
         Route::get('activity-schedule', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'index'])->name('activity-schedule.index');
-        Route::get('activity-schedule/year/{year}/month/{month}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'scheduleInMonth'])->name('activity-schedule.schedule-in-month');
-        Route::get('activity-schedule/date/{date}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'detailScheduleDay'])->name('activity-schedule.date');
+        Route::get('activity-schedule/year/{year}/month/{month}', [ActivityScheduleController::class, 'scheduleInMonth'])->name('activity-schedule.schedule-in-month');
+        Route::get('activity-schedule/date/{date}', [ActivityScheduleController::class, 'detailScheduleDay'])->name('activity-schedule.date');
     });
 });
 

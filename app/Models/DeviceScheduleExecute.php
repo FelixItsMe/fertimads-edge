@@ -29,6 +29,6 @@ class DeviceScheduleExecute extends Model
      */
     public function deviceScheduleRun(): BelongsTo
     {
-        return $this->belongsTo(DeviceScheduleRun::class);
+        return $this->belongsTo(DeviceScheduleRun::class, 'device_schedule_run_id');
     }
 }

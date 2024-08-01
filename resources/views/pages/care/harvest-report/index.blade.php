@@ -81,6 +81,10 @@
 
                   <div class="mt-5">
                     <div class="w-full flex">
+                      <div class="w-[225px] text-zinc-500">Kalium</div>
+                      <div class="font-bold">7 mg/kg</div>
+                    </div>
+                    <div class="w-full flex">
                       <div class="w-[225px] text-zinc-500">Nitrogen</div>
                       <div class="font-bold">7 mg/kg</div>
                     </div>
@@ -90,23 +94,23 @@
                     </div>
                     <div class="mt-3 w-full flex">
                       <div class="w-[225px] text-zinc-500">pH tanah</div>
-                      <div class="font-bold">7 mg/kg</div>
+                      <div class="font-bold">7</div>
                     </div>
                     <div class="mt-3 w-full flex">
                       <div class="w-[225px] text-zinc-500">Suhu Tanah</div>
-                      <div class="font-bold">7 mg/kg</div>
+                      <div class="font-bold">28<sup>o</sup>C</div>
                     </div>
                     <div class="mt-3 w-full flex">
                       <div class="w-[225px] text-zinc-500">Kelembapan Tanah</div>
-                      <div class="font-bold">7 mg/kg</div>
+                      <div class="font-bold">65%</div>
                     </div>
                     <div class="mt-3 w-full flex">
                       <div class="w-[225px] text-zinc-500">Suhu Lingkungan</div>
-                      <div class="font-bold">7 mg/kg</div>
+                      <div class="font-bold">27<sup>o</sup>C</div>
                     </div>
                     <div class="mt-3 w-full flex">
                       <div class="w-[225px] text-zinc-500">Kelembapan Lingkungan</div>
-                      <div class="font-bold">7 mg/kg</div>
+                      <div class="font-bold">67%</div>
                     </div>
                   </div>
                 </div>

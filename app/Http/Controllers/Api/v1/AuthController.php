@@ -18,6 +18,10 @@ class AuthController extends Controller
                 ['email', $request->safe()->email],
                 ['role', 'control'],
             ])
+            ->orWhere([
+                ['email', $request->safe()->email],
+                ['role', 'care'],
+            ])
             ->first();
 
         if (!$user) {
