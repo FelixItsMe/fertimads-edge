@@ -13,7 +13,7 @@ class WeedsController extends Controller
         $weeds = Weeds::query()
             ->latest()
             ->when(request('search'), function ($query) {
-                $query->where('name', 'like', '%'. request('search') .'%');
+                $query->where('nama_gulma', 'like', '%'. request('search') .'%');
             })
             ->paginate(10);
 
