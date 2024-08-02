@@ -36,8 +36,13 @@
                 <div class="p-3 flex justify-between items-center">
                     <div>
                       <form action="" method="get">
-                        <x-text-input class="block mt-1 w-full rounded-xl" type="text" name="search" :value="request('search')"
-                          aria-placeholder="Cari" placeholder="Cari" />
+                        <div class="relative mt-1">
+                          <input type="text" name="search" class="w-full px-4 py-2 border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+                            placeholder="Cari" value="{{ request()->query('search') }}">
+                          <button type="submit" class="absolute inset-y-0 right-0 px-4 py-2 text-sm text-gray-600 focus:outline-none">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                          </button>
+                        </div>
                       </form>
                     </div>
                     <div class="items-center">
@@ -63,16 +68,16 @@
                                   <td>{{ $land->area }}&nbsp;m²</td>
                                   <td>{{ Str::limit($land->address, 25) }}</td>
                                   <td>{{ $land->latitude }},&nbsp;{{ $land->longitude }},&nbsp;{{ $land->altitude }}</td>
-                                  <td>0</td>
+                                  <td>{{ $land->gardens_count }}</td>
                                   <td>
                                       <div class="flex flex-row space-x-2">
-                                          <a href="{{ route('land.show', $land->id) }}" title="Edit Lahan" class="text-sm text-info">
+                                          <a href="{{ route('land.show', $land->id) }}" title="Detail Lahan" class="text-sm text-info">
                                               <i class="fa-solid fa-circle-info"></i>
                                           </a>
                                           <a href="{{ route('land.edit', $land->id) }}" title="Edit Lahan" class="text-sm text-warning">
                                               <i class="fa-solid fa-pen"></i>
                                           </a>
-                                          <a href="#" onclick="deleteData({{ $land->id }})" title="Hapus Lahan" class="text-sm text-danger">
+                                          <a href="#" onclick="deleteData({{ $land->id }}, '{{ $land->name }}')" title="Hapus Lahan" class="text-sm text-danger">
                                               <i class="fa-solid fa-trash-can"></i>
                                           </a>
                                       </div>
@@ -97,7 +102,13 @@
     @push('scripts')
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
-            const deleteData = async (id) => {
+            const deleteData = async (id, name) => {
+                const isDelete = confirm(`Apakah anda yakin ingin menghapus lahan ${name}?`)
+
+                if (!isDelete) {
+                  return false
+                }
+
                 const data = await fetchData(
                     "{{ route('land.destroy', 'ID') }}".replace('ID', id),
                     {
@@ -123,8 +134,6 @@
 
             window.onload = () => {
                 console.log('Hello World');
-
-
             }
         </script>
     @endpush
