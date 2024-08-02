@@ -40,6 +40,13 @@ class GardenController extends Controller
             ->with([
                 'commodity:id,name'
             ])
+            ->when(request()->query('search'), function(Builder $query, $search){
+                $search = '%' . trim($search) . '%';
+                $query->whereAny([
+                    'name',
+                    'area',
+                ], 'LIKE', $search);
+            })
             ->orderBy('name')
             ->paginate('10');
 
