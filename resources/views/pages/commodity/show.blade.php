@@ -51,30 +51,32 @@
                         </a>
                     @endif
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <table class="w-full align-middle border-slate-400 table mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Fase tumbuh</th>
-                                    <th>Umur (Hari)</th>
-                                    <th>per fase pertumbuhan (Hari)</th>
-                                    <th>kc</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-border-bottom-0">
-                                @forelse ($commodity->commodityPhases as $commodityPhase)
-                                    <tr>
-                                        <td>Fase {{ $commodityPhase->phase->value }}: {{ $commodityPhase->phase->getLabelText() }}</td>
-                                        <td class="text-center">{{ $commodityPhase->age }}</td>
-                                        <td class="text-center">{{ $commodityPhase->growth_phase }}</td>
-                                        <td class="text-center">{{ $commodityPhase->kc }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="4" class="text-center">Tidak ada data</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-scroll">
+                          <table class="w-full align-middle border-slate-400 table mb-0">
+                              <thead>
+                                  <tr>
+                                      <th>Fase tumbuh</th>
+                                      <th>Umur (Hari)</th>
+                                      <th>per fase pertumbuhan (Hari)</th>
+                                      <th>kc</th>
+                                  </tr>
+                              </thead>
+                              <tbody class="table-border-bottom-0">
+                                  @forelse ($commodity->commodityPhases as $commodityPhase)
+                                      <tr>
+                                          <td>Fase {{ $commodityPhase->phase->value }}: {{ $commodityPhase->phase->getLabelText() }}</td>
+                                          <td class="text-center">{{ $commodityPhase->age }}</td>
+                                          <td class="text-center">{{ $commodityPhase->growth_phase }}</td>
+                                          <td class="text-center">{{ $commodityPhase->kc }}</td>
+                                      </tr>
+                                  @empty
+                                      <tr>
+                                          <td colspan="4" class="text-center">Tidak ada data</td>
+                                      </tr>
+                                  @endforelse
+                              </tbody>
+                          </table>
+                        </div>
                     </div>
                 </div>
             </div>
