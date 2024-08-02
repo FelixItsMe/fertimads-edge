@@ -5,10 +5,12 @@ namespace App\Http\Controllers\v1\Care;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Care\StorePestRequest;
 use App\Models\Commodity;
+use App\Models\Disease;
 use App\Models\Garden;
 use App\Models\Pest;
 use App\Services\GeminiService;
 use App\Services\ImageService;
+use App\Services\SimhashService;
 use GeminiAPI\Laravel\Facades\Gemini;
 use GuzzleHttp\Psr7\Request;
 
@@ -37,11 +39,27 @@ class PestController extends Controller
         return view('pages.care.pest.create', compact('gardens', 'commodities'));
     }
 
-    public function store(StorePestRequest $request, GeminiService $service)
+    public function store(StorePestRequest $request, GeminiService $service, SimhashService $simhash)
     {
         $image = $this->imageService->image_intervention($request->safe()->file, 'fertimads/images/pest/', 1/1);
 
         [$geminiPrompt, $geminiResponse, $diseaseName, $pestName] = $service->generate('image/jpeg', $image, $request->gemini_prompt);
+
+        $response = json_decode($geminiResponse);
+
+        $selectedDisease = null;
+        $diseases = Disease::query()
+            ->get();
+
+        foreach($diseases as $disease) {
+            if ($simhash->isSimilar($response->nama_penyakit, $disease->name)) {
+                $selectedDisease = $disease;
+            }
+        }
+
+        if (!is_null($selectedDisease)) {
+            return redirect()->route('disease.show', $selectedDisease->id);
+        }
 
         Pest::query()
             ->create([
