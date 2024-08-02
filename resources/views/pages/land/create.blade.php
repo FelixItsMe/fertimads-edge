@@ -12,7 +12,7 @@
     <h2 class="leading-tight">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="{{ route('land.index') }}">Lahan</a>
+          <a href="{{ route('land.index') }}">Manajemen Lahan</a>
         </li>
         <li class="breadcrumb-item breadcrumb-active">{{ __('Tambah Lahan Baru') }}</li>
       </ol>
@@ -32,7 +32,7 @@
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
               </div>
               <div class="w-full lg:w-1/2 flex-shrink">
-                <x-input-label for="area">{{ __('Luas Lahan') }}</x-input-label>
+                <x-input-label for="area">{{ __('Luas Lahan') }} (m²)</x-input-label>
                 <x-text-input id="area" class="block mt-1 w-full rounded-xl" type="number" min="0" step=".01" name="area" :value="old('area')" required autofocus autocomplete="area" />
                 <x-input-error :messages="$errors->get('area')" class="mt-2" />
               </div>
@@ -51,12 +51,12 @@
                 <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
               </div>
               <div class="w-full lg:w-1/3 flex-shrink">
-                <x-input-label for="longitude">{{ __('longitude') }}</x-input-label>
+                <x-input-label for="longitude">{{ __('Longitude') }}</x-input-label>
                 <x-text-input id="longitude" class="block mt-1 w-full rounded-xl" type="text" name="longitude" :value="old('longitude')" required autofocus autocomplete="longitude" />
                 <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
               </div>
               <div class="w-full lg:w-1/3 flex-shrink">
-                <x-input-label for="altitude">{{ __('altitude') }}</x-input-label>
+                <x-input-label for="altitude">{{ __('Altitude') }} (mdpl)</x-input-label>
                 <x-text-input id="altitude" class="block mt-1 w-full rounded-xl" type="number" step=".01" name="altitude" :value="old('altitude')" required autofocus autocomplete="altitude" />
                 <x-input-error :messages="$errors->get('altitude')" class="mt-2" />
               </div>

@@ -20,6 +20,7 @@ class LandController extends Controller
     {
         $lands = Land::query()
             ->select(['id', 'name', 'area', 'latitude', 'longitude', 'altitude', 'address'])
+            ->withCount('gardens')
             ->when(request()->query('search'), function(Builder $query, $search){
                 $search = '%' . trim($search) . '%';
                 $query->whereAny([
@@ -67,6 +68,8 @@ class LandController extends Controller
      */
     public function show(Land $land): View
     {
+        $land->loadCount('gardens');
+
         return view('pages.land.show', compact('land'));
     }
 
