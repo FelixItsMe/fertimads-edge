@@ -32,24 +32,20 @@ class ActivityScheduleController extends Controller
         $startMonth = $now->copy()->startOfMonth()->format('Y-m-d');
         $endMonth = $now->copy()->endOfMonth()->format('Y-m-d');
 
-        $waterSchedules = DeviceSchedule::query()
-            ->where(function (Builder $query) use ($startMonth, $endMonth) {
-                $query->where([
-                    ['start_date', '>=', $startMonth],
-                    ['end_date', '>=', $endMonth],
-                ])
-                    ->orWhere([
-                        ['start_date', '<=', $startMonth],
-                        ['end_date', '>=', $startMonth],
-                        ['end_date', '<=', $endMonth],
-                    ])
-                    ->orWhere([
-                        ['start_date', '<=', $startMonth],
-                        ['end_date', '>=', $endMonth],
-                    ]);
+        $waterSchedules = DeviceScheduleRun::query()
+            ->whereHas('deviceSchedule', function(Builder $query){
+                $query->where('is_finished', 0);
             })
+            ->orWhere(function(Builder $query){
+                $query->whereHas('deviceSchedule', function(Builder $query){
+                    $query->where('is_finished', 1);
+                })
+                ->has('deviceScheduleExecute');
+            })
+            ->whereYear('start_time', $year)
+            ->whereMonth('start_time', $month)
             ->when(request('garden_id'), function ($query) {
-                $query->whereHas('deviceSelenoid', function ($query) {
+                $query->whereHas('deviceSchedule', function ($query) {
                     $query->where('garden_id', request('garden_id'));
                 });
             })
@@ -59,9 +55,7 @@ class ActivityScheduleController extends Controller
             ->whereYear('execute_start', $year)
             ->whereMonth('execute_start', $month)
             ->when(request('garden_id'), function ($query) {
-                $query->whereHas('deviceSelenoid', function ($query) {
-                    $query->where('garden_id', request('garden_id'));
-                });
+                $query->where('garden_id', request('garden_id'));
             })
             ->get();
 
@@ -71,15 +65,20 @@ class ActivityScheduleController extends Controller
         foreach ($period as $datetime) {
             $schedule = collect();
             foreach ($waterSchedules as $waterSchedule) {
-                $startDate = now()->parse($waterSchedule->start_date);
-                $endDate = now()->parse($waterSchedule->end_date);
+                $startDate = now()->parse($waterSchedule->start_time)->startOfDay();
                 if (
-                    $datetime->gte($startDate) &&
-                    $datetime->lte($endDate)
+                    $datetime->startOfDay()->equalTo($startDate)
                 ) {
                     $schedule->push(1);
                     break;
                 }
+                // if (
+                //     $datetime->gte($startDate) &&
+                //     $datetime->lte($endDate)
+                // ) {
+                //     $schedule->push(1);
+                //     break;
+                // }
             }
 
             foreach ($fertilizerSchedules as $fertilizerSchedule) {
@@ -117,7 +116,18 @@ class ActivityScheduleController extends Controller
             ->select(['id', 'name'])
             ->with('deviceSelenoid:id,garden_id,selenoid')
             ->whereHas('deviceSchedules.deviceScheduleRuns', function($query)use($now){
-                $query->whereDate('start_time', $now->format('Y-m-d'));
+                $query->whereDate('start_time', $now->format('Y-m-d'))
+                    ->where(function($query){
+                        $query->whereHas('deviceSchedule', function(Builder $query){
+                            $query->where('is_finished', 0);
+                        })
+                        ->orWhere(function(Builder $query){
+                            $query->whereHas('deviceSchedule', function(Builder $query){
+                                $query->where('is_finished', 1);
+                            })
+                            ->has('deviceScheduleExecute');
+                        });
+                    });
             })
             ->orWhereHas('deviceFertilizerSchedules', function($query)use($now){
                 $query->whereDate('execute_start', $now->format('Y-m-d'));
@@ -138,6 +148,17 @@ class ActivityScheduleController extends Controller
                     $query->whereNotNull('end_time');
                 }
             ])
+            ->where(function($query){
+                $query->whereHas('deviceSchedule', function(Builder $query){
+                    $query->where('is_finished', 0);
+                })
+                ->orWhere(function(Builder $query){
+                    $query->whereHas('deviceSchedule', function(Builder $query){
+                        $query->where('is_finished', 1);
+                    })
+                    ->has('deviceScheduleExecute');
+                });
+            })
             ->whereHas('deviceSchedule', function(Builder $query)use($garden){
                 $query->where('garden_id', $garden->id);
             })
