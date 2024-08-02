@@ -31,12 +31,22 @@
           <div class="w-full sm:w-1/4">
             <div class="p-6 bg-white overflow-hidden shadow-sm sm:rounded-lg flex flex-col gap-y-4">
               <div class="w-full">
-                <x-input-label for="name">{{ __('Nama Lahan') }}</x-input-label>
+                <x-input-label for="land_id">{{ __('Pilih Lahan') }}</x-input-label>
+                <x-select-input id="land_id" class="block mt-1 w-full rounded-xl" name="land_id">
+                  <option value="">Pilih Lahan</option>
+                  @foreach ($lands as $id => $land)
+                  <option value="{{ $id }}">{{ $land }}</option>
+                  @endforeach
+                </x-select-input>
+                <x-input-error :messages="$errors->get('land_id')" class="mt-2" />
+              </div>
+              <div class="w-full">
+                <x-input-label for="name">{{ __('Nama Kebun') }}</x-input-label>
                 <x-text-input id="name" class="block mt-1 w-full rounded-xl" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
               </div>
               <div class="w-full">
-                <x-input-label for="area">{{ __('Luas Lahan') }}</x-input-label>
+                <x-input-label for="area">{{ __('Luas Kebun') }}&nbsp;(m²)</x-input-label>
                 <x-text-input id="area" class="block mt-1 w-full rounded-xl" type="number" min="0" step=".01" name="area" :value="old('area')" required autofocus autocomplete="area" />
                 <x-input-error :messages="$errors->get('area')" class="mt-2" />
               </div>
@@ -49,16 +59,6 @@
                   @endforeach
                 </x-select-input>
                 <x-input-error :messages="$errors->get('commodity_id')" class="mt-2" />
-              </div>
-              <div class="w-full">
-                <x-input-label for="land_id">{{ __('Pilih Lahan') }}</x-input-label>
-                <x-select-input id="land_id" class="block mt-1 w-full rounded-xl" name="land_id">
-                  <option value="">Pilih Lahan</option>
-                  @foreach ($lands as $id => $land)
-                  <option value="{{ $id }}">{{ $land }}</option>
-                  @endforeach
-                </x-select-input>
-                <x-input-error :messages="$errors->get('land_id')" class="mt-2" />
               </div>
               <div class="w-full">
                 <x-input-label for="device_id">{{ __('Pilih Perangkat') }}</x-input-label>
@@ -76,12 +76,12 @@
                 <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
               </div>
               <div class="w-full">
-                <x-input-label for="longitude">{{ __('longitude') }}</x-input-label>
+                <x-input-label for="longitude">{{ __('Longitude') }}</x-input-label>
                 <x-text-input id="longitude" class="block mt-1 w-full rounded-xl" type="text" name="longitude" :value="old('longitude')" required autofocus autocomplete="longitude" />
                 <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
               </div>
               <div class="w-full">
-                <x-input-label for="altitude">{{ __('altitude') }}</x-input-label>
+                <x-input-label for="altitude">{{ __('Altitude') }}&nbsp;(mdpl)</x-input-label>
                 <x-text-input id="altitude" class="block mt-1 w-full rounded-xl" type="number" step=".01" name="altitude" :value="old('altitude')" required autofocus autocomplete="altitude" />
                 <x-input-error :messages="$errors->get('altitude')" class="mt-2" />
               </div>
@@ -337,11 +337,13 @@
       currentGroupGarden.clearLayers()
 
       land.gardens.forEach(garden => {
-        currentGroupGarden.addLayer(L.polygon(garden.polygon, {
-          dashArray: '10, 10',
-          dashOffset: '20',
-          color: '#' + garden.color + "55",
-        }))
+        currentGroupGarden.addLayer(
+          L.polygon(garden.polygon, {
+            dashArray: '10, 10',
+            dashOffset: '20',
+            color: '#' + garden.color + "55",
+          }).bindPopup(garden.name)
+        )
       })
 
       currentGroupGarden.addTo(map)

@@ -7,6 +7,7 @@ use App\Http\Requests\Land\StoreLandRequest;
 use App\Http\Requests\Land\UpdateLandRequest;
 use App\Models\Land;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,15 @@ class LandController extends Controller
     {
         $lands = Land::query()
             ->select(['id', 'name', 'area', 'latitude', 'longitude', 'altitude', 'address'])
+            ->withCount('gardens')
+            ->when(request()->query('search'), function(Builder $query, $search){
+                $search = '%' . trim($search) . '%';
+                $query->whereAny([
+                    'name',
+                    'address',
+                    'area'
+                ], 'LIKE', $search);
+            })
             ->orderByDesc('id')
             ->paginate(10);
 
@@ -58,6 +68,8 @@ class LandController extends Controller
      */
     public function show(Land $land): View
     {
+        $land->loadCount('gardens');
+
         return view('pages.land.show', compact('land'));
     }
 

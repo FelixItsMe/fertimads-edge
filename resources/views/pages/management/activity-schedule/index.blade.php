@@ -27,6 +27,14 @@
                             </div>
                         </div>
                         <div id="calendar"></div>
+                        <div class="grid grid-cols-1 mt-3">
+                          <div class="flex items-center space-x-2">
+                            <div class="bg-primary w-10 h-1"></div> <span>Penyiraman</span>
+                          </div>
+                          <div class="flex items-center space-x-2">
+                            <div class="bg-yellow-400 w-10 h-1"></div> <span>Pemupukan</span>
+                          </div>
+                        </div>
                     </div>
                 </div>
                 <div>

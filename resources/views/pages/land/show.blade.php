@@ -12,7 +12,7 @@
     <h2 class="leading-tight">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="{{ route('land.index') }}">Lahan</a>
+          <a href="{{ route('land.index') }}">Manajemen Lahan</a>
         </li>
         <li class="breadcrumb-item breadcrumb-active">{{ __('Detail Lahan') }}</li>
       </ol>
@@ -35,7 +35,7 @@
               </div>
               <div class="w-full">
                 <x-input-label class="text-slate-400" for="name">{{ __('Luas Lahan') }}</x-input-label>
-                <span>{{ $land->area }} Hektar</span>
+                <span>{{ $land->area }}&nbsp;m²</span>
               </div>
               <div class="w-full">
                 <x-input-label class="text-slate-400" for="name">{{ __('Lokasi Lahan') }}</x-input-label>
@@ -43,11 +43,15 @@
               </div>
               <div class="w-full">
                 <x-input-label class="text-slate-400" for="name">{{ __('Koordinat Lahan') }}</x-input-label>
-                <span>{{ $land->latitude }}, {{ $land->longitude }}, {{ $land->altitude }}</span>
+                <span>{{ $land->latitude }}, {{ $land->longitude }}</span>
               </div>
               <div class="w-full">
-                <x-input-label class="text-slate-400" for="name">{{ __('Jumlah Lahan') }}</x-input-label>
-                <span>0</span>
+                <x-input-label class="text-slate-400" for="name">{{ __('Altitude') }}</x-input-label>
+                <span>{{ $land->altitude }} mdpl</span>
+              </div>
+              <div class="w-full">
+                <x-input-label class="text-slate-400" for="name">{{ __('Jumlah Kebun') }}</x-input-label>
+                <span>{{ $land->gardens_count }}</span>
               </div>
             </div>
           </div>
