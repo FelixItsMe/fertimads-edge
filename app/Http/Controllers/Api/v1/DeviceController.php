@@ -47,6 +47,8 @@ class DeviceController extends Controller
             ->map(function($telemetry, $key)use($selenoid){
                 $new = (array) $telemetry->telemetry;
                 $new['SS' . $selenoid]->created_at = $telemetry->created_at->format('Y-m-d H:i:s');
+                $new['SS' . $selenoid]->areaH = $new['DHT1']->H;
+                $new['SS' . $selenoid]->areaT = $new['DHT1']->T;
                 return $new['SS' . $selenoid];
             })
             ->all();
