@@ -37,7 +37,7 @@
                       </div>
                       <div class="flex flex-col">
                           <div class="w-full">
-                              <x-input-label for="name">{{ __('Nama Komoditi') }}</x-input-label>
+                              <x-input-label for="name">{{ __('Nama Alat') }}</x-input-label>
                               <x-text-input id="name" class="block mt-1 w-full rounded-xl" type="text"
                                   name="name" :value="$tool->name" required autofocus autocomplete="name" />
                               <x-input-error :messages="$errors->get('name')" class="mt-2" />
