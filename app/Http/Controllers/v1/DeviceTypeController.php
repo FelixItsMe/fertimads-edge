@@ -63,9 +63,9 @@ class DeviceTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DeviceType $deviceType)
+    public function show(DeviceType $deviceType): View
     {
-        //
+        return view('pages.device-type.show', compact('deviceType'));
     }
 
     /**
