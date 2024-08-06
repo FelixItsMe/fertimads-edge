@@ -22,7 +22,7 @@ class UpdateInfrastructureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image'         => 'required|image|mimes:png,jpg,jpeg|max:2048',
+            'image'         => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'name'          => 'required|string|max:255',
             'quantity'      => 'required|integer|min:0',
             'description'   => 'required|string|max:2000',
