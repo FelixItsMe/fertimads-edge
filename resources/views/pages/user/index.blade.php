@@ -37,11 +37,11 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ ucfirst($user->role) }}</td>
                                 <td>
-                                    <div class="flex flex-row space-x-2">
-                                        <a href="{{ route('user.edit', $user->id) }}" title="Edit Lahan" class="text-sm text-warning">
+                                    <div class="flex flex-row space-x-2 justify-center">
+                                        <a href="{{ route('user.edit', $user->id) }}" title="Edit Anggota" class="text-sm text-warning p-1">
                                             <i class="fa-solid fa-pen"></i>
                                         </a>
-                                        <a href="#" onclick="deleteData({{ $user->id }})" title="Hapus Lahan" class="text-sm text-danger">
+                                        <a href="#" onclick="deleteData({{ $user->id }})" title="Hapus Anggota" class="text-sm text-danger p-1">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </a>
                                     </div>
@@ -66,6 +66,14 @@
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
             const deleteData = async (id) => {
+                const isDelete = confirm(`Apakah anda yakin ingin menghapus lahan ${name}?`)
+
+                if (!isDelete) {
+                  return false
+                }
+
+                showLoading()
+
                 const data = await fetchData(
                     "{{ route('user.destroy', 'ID') }}".replace('ID', id),
                     {
@@ -77,9 +85,9 @@
                     }
                 );
 
-                console.log(data);
-
                 if (!data) {
+                    hideLoading()
+
                     alert('Error')
                     return false
                 }
@@ -91,8 +99,6 @@
 
             window.onload = () => {
                 console.log('Hello World');
-
-
             }
         </script>
     @endpush

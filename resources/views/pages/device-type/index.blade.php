@@ -27,8 +27,10 @@
             <div class="grid grid-flow-row grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 @forelse ($deviceTypes as $deviceType)
                     <div class="flex flex-col gap-y-2 bg-white rounded-md overflow-hidden p-4">
-                        <img src="{{ asset($deviceType->image ?? 'images/default/default-image.jpg') }}" alt="Commodity Img"
-                            class="w-full aspect-square object-cover rounded-md">
+                        <a href="{{ route('device-type.show', $deviceType->id) }}" title="Klik untuk detail tipe perangkat">
+                          <img src="{{ asset($deviceType->image ?? 'images/default/default-image.jpg') }}" alt="Commodity Img"
+                              class="w-full aspect-square object-cover rounded-md">
+                        </a>
                         <div class="h-full flex flex-col justify-between">
                             <div>
                                 <span class="text-base mb-2">{{ $deviceType->name }}</span>
@@ -66,6 +68,14 @@
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
             const deleteData = async (id) => {
+                const isDelete = confirm(`Apakah anda yakin ingin menghapus lahan ${name}?`)
+
+                if (!isDelete) {
+                  return false
+                }
+
+                showLoading()
+
                 const data = await fetchData(
                     "{{ route('device-type.destroy', 'ID') }}".replace('ID', id),
                     {
@@ -77,10 +87,11 @@
                     }
                 );
 
-                console.log(data);
-
                 if (!data) {
+                    hideLoading()
+
                     alert('Error')
+
                     return false
                 }
 
