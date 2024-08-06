@@ -71,6 +71,14 @@
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
             const deleteData = async (id) => {
+                const isDelete = confirm(`Apakah anda yakin ingin menghapus lahan ${name}?`)
+
+                if (!isDelete) {
+                  return false
+                }
+
+                showLoading()
+
                 const data = await fetchData(
                     "{{ route('device.destroy', 'ID') }}".replace('ID', id),
                     {
@@ -82,9 +90,9 @@
                     }
                 );
 
-                console.log(data);
-
                 if (!data) {
+                    hideLoading()
+
                     alert('Error')
                     return false
                 }
