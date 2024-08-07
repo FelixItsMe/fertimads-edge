@@ -57,6 +57,7 @@
                               <th>Luas Lahan</th>
                               <th>Lokasi Lahan</th>
                               <th>Koordinat Lahan</th>
+                              <th>Altitude</th>
                               <th>Jumlah Kebun</th>
                               <th>Aksi</th>
                           </tr>
@@ -67,7 +68,8 @@
                                   <td>{{ $land->name }}</td>
                                   <td>{{ $land->area }}&nbsp;m²</td>
                                   <td>{{ Str::limit($land->address, 25) }}</td>
-                                  <td>{{ $land->latitude }},&nbsp;{{ $land->longitude }},&nbsp;{{ $land->altitude }}</td>
+                                  <td>{{ $land->latitude }},&nbsp;{{ $land->longitude }}</td>
+                                  <td>{{ $land->altitude }}&nbsp;mdpl</td>
                                   <td>{{ $land->gardens_count }}</td>
                                   <td>
                                       <div class="flex flex-row space-x-2">
