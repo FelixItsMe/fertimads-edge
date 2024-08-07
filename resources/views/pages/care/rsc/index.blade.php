@@ -57,7 +57,7 @@
               <th>Waktu</th>
               <th>Kebun</th>
               <th>Nitrogen</th>
-              <th>Phospor</th>
+              <th>Fosfor</th>
               <th>Kalium</th>
               <th>EC</th>
               <th>pH Tanah</th>
@@ -74,7 +74,7 @@
               <td>7 mg/kg</td>
               <td>3 mg/kg</td>
               <td>5 mg/kg</td>
-              <td>151 ppm</td>
+              <td>151 uS/cm</td>
               <td>5</td>
               <td>30.30<sup>o</sup>C</td>
               <td>64.20%</td>
@@ -99,7 +99,6 @@
       </div>
       @endif --}}
     </div>
-  </div>
   </div>
 
   @push('scripts')
@@ -183,61 +182,100 @@
     };
 
     const getLands = async () => {
-      const data = await fetchData(
-        "{{ route('extra.land.polygon.garden') }}", {
+      let lands
+
+      await fetchWithError({
+        url: "{{ route('extra.land.polygon.garden') }}",
+        setting: {
           method: "GET",
           headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
             'Accept': 'application/json',
-          },
+          }
+        },
+        onSuccess: (response) => {
+          lands = response?.lands
+        },
+        onError: (response, error, code) => {
+          console.log(response, error, code)
         }
-      );
+      })
 
-      return data?.lands
+      return lands
     }
 
     const getLatestTelemetry = async (gardenId) => {
-      const data = await fetchData(
-        "{{ route('extra.garden.latest-telemetry', 'ID') }}".replace('ID', gardenId), {
+      let data
+      await fetchWithError({
+        url: "{{ route('extra.garden.latest-telemetry', 'ID') }}".replace('ID', gardenId),
+        setting: {
           method: "GET",
           headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
             'Accept': 'application/json',
           }
-        })
-
-      return data;
+        },
+        onSuccess: (response) => {
+          data = response
+        },
+        onError: (response, error, code) => {
+          if (code === 404) {
+            errorMessage("Data Kebun tidak ditemukan!")
+          }
+        }
+      })
+      return data
     }
 
     const getGardenSchedule = async (gardenId, currentMonth = new Date().getMonth(), currentYear = new Date().getFullYear()) => {
-      const data = await fetchData(
-        "{{ route('extra.activity-schedule.schedule-in-month', ['month' => 'MONTH', 'year' => 'YEAR', 'garden_id' => 'ID']) }}"
-        .replace('MONTH', currentMonth)
-        .replace('YEAR', currentYear)
-        .replace('ID', gardenId), {
+      let data
+      await fetchWithError({
+        url: "{{ route('extra.activity-schedule.schedule-in-month', ['month' => 'MONTH', 'year' => 'YEAR', 'garden_id' => 'ID']) }}"
+          .replace('MONTH', currentMonth)
+          .replace('YEAR', currentYear)
+          .replace('ID', gardenId),
+        setting: {
           method: "GET",
           headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
             'Accept': 'application/json',
           }
-        })
-
-      return data;
+        },
+        onSuccess: (response) => {
+          data = response
+        },
+        onError: (response, error, code) => {
+          if (code === 404) {
+            errorMessage("Data Kebun tidak ditemukan!")
+          }
+        }
+      })
+      return data
     }
 
     const getGardenScheduleDetail = async (gardenId, currentDate) => {
-      const data = await fetchData(
-        "{{ route('extra.activity-schedule.date', ['date' => 'DATE', 'garden_id' => 'ID']) }}"
-        .replace('DATE', currentDate)
-        .replace('ID', gardenId), {
+      let data
+      await fetchWithError({
+        url: "{{ route('extra.activity-schedule.date', ['date' => 'DATE', 'garden_id' => 'ID']) }}"
+          .replace('DATE', currentDate)
+          .replace('ID', gardenId),
+        setting: {
           method: "GET",
           headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
             'Accept': 'application/json',
           }
-        })
-
-      return data;
+        },
+        onSuccess: (response) => {
+          data = response
+        },
+        onError: (response, error, code) => {
+          if (code === 404) {
+            errorMessage("Data Kebun tidak ditemukan!")
+          }
+        }
+      })
+      return data
     }
 
     const openModal = async (map, garden) => {
@@ -341,7 +379,7 @@
                             <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.T ?? 0)}<sup>o</sup>C</div>
                           </div>
                           <div>
-                            <div class="font-bold text-gray-500">Kelembapan tanah</div>
+                            <div class="font-bold text-gray-500">Kelembapan Tanah</div>
                             <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.H ?? 0)}%</div>
                           </div>
                           <div>
@@ -581,7 +619,6 @@
                       }
 
                       const schedule = availableSchedules.find(row => {
-                        console.log(row.date)
                         return row.date == formatDate
                       })
 
@@ -620,7 +657,6 @@
               let schedulesResponse
 
               const selectDate = async e => {
-                console.dir(e.dataset);
                 const classes = ['bg-primary', 'text-white', 'active']
 
                 document.querySelector('#calendar td.active')?.classList.remove(...classes)
@@ -715,7 +751,6 @@
       return true
     }
     window.onload = () => {
-      console.log('Hello world');
       initLandPolygon(1, map)
     }
   </script>
