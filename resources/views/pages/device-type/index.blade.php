@@ -20,15 +20,17 @@
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 flex justify-between">
-                    <h1 class="text-3xl font-extrabold">Tabel Tipe Perangkat IoT</h1>
+                    <h1 class="text-3xl font-extrabold">Daftar Tipe Perangkat IoT</h1>
                     <a href="{{ route('device-type.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Tipe Perangkat IoT</a>
                 </div>
             </div>
             <div class="grid grid-flow-row grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 @forelse ($deviceTypes as $deviceType)
                     <div class="flex flex-col gap-y-2 bg-white rounded-md overflow-hidden p-4">
-                        <img src="{{ asset($deviceType->image ?? 'images/default/default-image.jpg') }}" alt="Commodity Img"
-                            class="w-full aspect-square object-cover rounded-md">
+                        <a href="{{ route('device-type.show', $deviceType->id) }}" title="Klik untuk detail tipe perangkat">
+                          <img src="{{ asset($deviceType->image ?? 'images/default/default-image.jpg') }}" alt="Commodity Img"
+                              class="w-full aspect-square object-cover rounded-md">
+                        </a>
                         <div class="h-full flex flex-col justify-between">
                             <div>
                                 <span class="text-base mb-2">{{ $deviceType->name }}</span>
@@ -36,10 +38,10 @@
                             <div class="mt-2 flex flex-row justify-between items-center">
                                 <span>v{{ $deviceType->version }}</span>
                                 <div class="flex flex-row-reverse gap-2">
-                                    <a href="javascript:void(0);" onclick="deleteData({{ $deviceType->id }})" title="{{ __('Hapus Perangkat IoT') }}" class="text-xs text-danger">
+                                    <a href="javascript:void(0);" onclick="deleteData({{ $deviceType->id }})" title="{{ __('Hapus Tipe Perangkat IoT') }}" class="text-xs text-danger">
                                         <i class="fa-solid fa-trash-can pointer-events-none"></i>
                                     </a>
-                                    <a href="{{ route('device-type.edit', $deviceType->id) }}" title="{{ __('Edit Perangkat IoT') }}" class="text-xs text-warning">
+                                    <a href="{{ route('device-type.edit', $deviceType->id) }}" title="{{ __('Edit Tipe Perangkat IoT') }}" class="text-xs text-warning">
                                         <i class="fa-solid fa-pen pointer-events-none"></i>
                                     </a>
                                 </div>
@@ -66,6 +68,14 @@
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
             const deleteData = async (id) => {
+                const isDelete = confirm(`Apakah anda yakin ingin menghapus tipe perangkat ${name}?`)
+
+                if (!isDelete) {
+                  return false
+                }
+
+                showLoading()
+
                 const data = await fetchData(
                     "{{ route('device-type.destroy', 'ID') }}".replace('ID', id),
                     {
@@ -77,10 +87,11 @@
                     }
                 );
 
-                console.log(data);
-
                 if (!data) {
+                    hideLoading()
+
                     alert('Error')
+
                     return false
                 }
 

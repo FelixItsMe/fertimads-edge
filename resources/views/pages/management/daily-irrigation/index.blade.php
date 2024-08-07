@@ -28,15 +28,15 @@
                       <tr>
                           <th class="w-2">#</th>
                           <th>Waktu</th>
-                          <th>et0</th>
+                          <th>ET<sup>o</sup></th>
                       </tr>
                   </thead>
                   <tbody class="table-border-bottom-0">
                       @forelse ($dailyIrrigations as $dailyIrrigation)
                           <tr>
                               <td>{{ ($dailyIrrigations->currentPage() - 1) * $dailyIrrigations->perPage() + $loop->iteration }}</td>
-                              <td>{{ $dailyIrrigation->date }}</td>
-                              <td>{{ $dailyIrrigation->eto }}</td>
+                              <td class="text-center">{{ $dailyIrrigation->date }}</td>
+                              <td class="text-center">{{ $dailyIrrigation->eto }}</td>
                           </tr>
                       @empty
                           <tr>

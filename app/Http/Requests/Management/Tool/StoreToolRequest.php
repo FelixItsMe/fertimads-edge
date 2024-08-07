@@ -23,7 +23,7 @@ class StoreToolRequest extends FormRequest
     {
         return [
             'image'         => 'required|image|mimes:png,jpg,jpeg|max:2048',
-            'name'          => 'required|string|max:255',
+            'name'          => 'required|string|max:255|unique:tools,name',
             'quantity'      => 'required|integer|min:0',
             'description'   => 'required|string|max:2000',
         ];

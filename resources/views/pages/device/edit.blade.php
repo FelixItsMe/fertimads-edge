@@ -5,7 +5,7 @@
                 <li class="breadcrumb-item">
                     <a href="{{ route('device.index') }}">Manajemen Perangkat IoT</a>
                 </li>
-                <li class="breadcrumb-item breadcrumb-active">{{ __('Tambah Perangkat IoT Baru') }}</li>
+                <li class="breadcrumb-item breadcrumb-active">{{ __('Edit Perangkat IoT') }}</li>
             </ol>
         </h2>
     </x-slot>

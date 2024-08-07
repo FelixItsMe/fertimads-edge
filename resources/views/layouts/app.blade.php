@@ -63,14 +63,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   @stack('scripts')
   <script>
+    const showLoading = () => {
+      document.getElementById('loading-spinner').classList.remove('hidden');
+      document.getElementById('layout-wrapper').classList.add('hidden');
+    }
+    const hideLoading = () => {
+      document.getElementById('loading-spinner').classList.add('hidden');
+      document.getElementById('layout-wrapper').classList.remove('hidden');
+    }
+
     // Show the loading spinner when the page starts loading
-    document.getElementById('loading-spinner').classList.remove('hidden');
-    document.getElementById('layout-wrapper').classList.add('hidden');
+    showLoading()
 
     // Hide the loading spinner when the page has fully loaded
     window.addEventListener('load', function() {
-      document.getElementById('loading-spinner').classList.add('hidden');
-      document.getElementById('layout-wrapper').classList.remove('hidden');
+      hideLoading()
     });
   </script>
 </body>

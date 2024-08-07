@@ -35,14 +35,14 @@
                                 </div>
                                 <div class="grid grid-flow-row grid-cols-1 sm:grid-cols-3 gap-2">
                                     <div class="w-full">
-                                        <x-input-label for="age-{{ $loop->iteration }}" class="text-white">{{ __('Umur') }}</x-input-label>
+                                        <x-input-label for="age-{{ $loop->iteration }}" class="text-white">{{ __('Umur') }}&nbsp;(Hari)</x-input-label>
                                         <x-text-input id="age-{{ $loop->iteration }}" data-phase="{{ $loop->iteration }}" class="block mt-1 w-full rounded-xl" type="number"
                                             min="0" onchange="calculateGrowth(this)" onkeyup="calculateGrowth(this)"
                                             name="phase[{{ $commodityPhase->phase->value }}][age]" :value="$commodityPhase->age" required autocomplete="age" />
                                         <x-input-error :messages="$errors->get('age')" class="mt-2" />
                                     </div>
                                     <div class="w-full">
-                                        <x-input-label for="growth-phase-{{ $loop->iteration }}" class="text-white">{{ __('per Fase Pertumbuhan') }}</x-input-label>
+                                        <x-input-label for="growth-phase-{{ $loop->iteration }}" class="text-white">{{ __('per Fase Pertumbuhan') }}&nbsp;(Hari)</x-input-label>
                                         <x-text-input id="growth-phase-{{ $loop->iteration }}" data-phase="{{ $loop->iteration }}" class="block mt-1 w-full rounded-xl" type="number"
                                             min="0"
                                             name="phase[{{ $commodityPhase->phase->value }}][growth_phase]" :value="$commodityPhase->growth_phase" required autocomplete="growth_phase" />

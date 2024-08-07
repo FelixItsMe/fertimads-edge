@@ -23,7 +23,7 @@ class UpdateToolRequest extends FormRequest
     {
         return [
             'image'         => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
-            'name'          => 'required|string|max:255',
+            'name'          => 'required|string|max:255|unique:tools,name,' . $this->route('tool')->id,
             'quantity'      => 'required|integer|min:0',
             'description'   => 'required|string|max:2000',
         ];

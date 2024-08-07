@@ -26,7 +26,7 @@
               <table class="w-full align-middle border-slate-400 table mb-0">
                   <thead>
                       <tr>
-                          <th>#</th>
+                          <th class="w-5">#</th>
                           <th>Waktu</th>
                           <th>Kategori</th>
                           <th>Deskripsi</th>
@@ -35,9 +35,9 @@
                   <tbody class="table-border-bottom-0">
                       @forelse ($activityLog as $activity)
                           <tr>
-                              <td>{{ ($activityLog->currentPage() - 1) * $activityLog->perPage() + $loop->iteration }}</td>
-                              <td>{{ $activity->created_at }}</td>
-                              <td>{{ ucfirst($activity->event) }}</td>
+                              <td class="text-center">{{ ($activityLog->currentPage() - 1) * $activityLog->perPage() + $loop->iteration }}</td>
+                              <td class="text-center">{{ $activity->created_at }}</td>
+                              <td class="text-center">{{ ucfirst($activity->event) }}</td>
                               <td>{{ ucfirst($activity->description) }}</td>
                           </tr>
                       @empty

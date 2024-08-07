@@ -8,6 +8,7 @@ use App\Http\Requests\Commodity\UpdateCommodityRequest;
 use App\Models\Commodity;
 use App\Services\ImageService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -25,10 +26,58 @@ class CommodityController extends Controller
     {
         $commodities = Commodity::query()
             ->withCount('gardens')
-            ->orderBy('name')
+            ->when(request()->query('search'), function(Builder $query, $search){
+                $search = '%' . trim($search) . '%';
+                $query->whereAny([
+                    'name',
+                ], 'LIKE', $search);
+            })
+            ->when(request()->query('order_by'), function(Builder $query, $orderBy){
+                switch ($orderBy) {
+                    case 'name_asc':
+                        $query->orderBy('name');
+                        break;
+                    case 'name_desc':
+                        $query->orderByDesc('name');
+                        break;
+                    case 'date_asc':
+                        $query->orderBy('created_at');
+                        break;
+                    case 'date_desc':
+                        $query->orderByDesc('created_at');
+                        break;
+
+                    default:
+                        $query->orderBy('name');
+                        break;
+                }
+            })
             ->paginate(10);
 
-        return view('pages.commodity.index', compact('commodities'));
+        $orderBys = [
+            (object) [
+                'name' => 'Nama ASC',
+                'id' => 'filter-name-asc',
+                'value' => 'name_asc',
+            ],
+            (object) [
+                'name' => 'Nama DESC',
+                'id' => 'filter-name-desc',
+                'value' => 'name_desc',
+            ],
+            (object) [
+                'name' => 'Tanggal ASC',
+                'id' => 'filter-date-asc',
+                'value' => 'date_asc',
+            ],
+            (object) [
+                'name' => 'Tanggal DESC',
+                'id' => 'filter-date-desc',
+                'value' => 'date_desc',
+            ],
+        ];
+
+        return view('pages.commodity.index', compact('commodities', 'orderBys'));
     }
 
     /**

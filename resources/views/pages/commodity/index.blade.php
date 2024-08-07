@@ -18,18 +18,48 @@
                     <span class="font-bold">{{ $commodities->total() }}</span>
                 </x-card-info>
             </div>
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 flex justify-between">
-                    <h1 class="text-3xl font-extrabold">Tabel Komoditi</h1>
-                    <a href="{{ route('commodity.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Komoditi</a>
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-3">
+                <div class="flex max-md:flex-col max-md:space-y-4 md:justify-between">
+                    <div class="max-md:w-full">
+                        <form action="" method="get" id="form-filter">
+                            <div class="relative">
+                                <input type="text" name="search"
+                                    class="w-full px-4 py-2 border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+                                    placeholder="Cari" value="{{ request()->query('search') }}">
+                                <button type="submit"
+                                    class="absolute inset-y-0 right-0 px-4 py-2 text-sm text-gray-600 focus:outline-none">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </div>
+                            <div class="mt-3">
+                              <h3>Urutan</h3>
+                            </div>
+                            <div class="flex flex-row space-x-2">
+                                @foreach ($orderBys as $orderBy)
+                                  <div>
+                                      <input type="radio" id="{{ $orderBy->id }}" name="order_by" value="{{ $orderBy->value }}"
+                                          class="hidden peer/garden" onchange="filterAction()" @checked(request()->query('order_by') == $orderBy->value) />
+                                      <label for="{{ $orderBy->id }}"
+                                          class="inline-flex w-full px-4 py-2 bg-white rounded-md shadow-md text-xs cursor-pointer peer-checked/garden:bg-primary peer-checked/garden:text-white hover:text-gray-600">
+                                          {{ $orderBy->name }}
+                                      </label>
+                                  </div>
+                                @endforeach
+                            </div>
+                        </form>
+                    </div>
+                    <div class="max-md:w-full pt-1">
+                        <a href="{{ route('commodity.create') }}"
+                            class="bg-fertimads-2 text-white py-2 px-4 rounded-md box-border">Tambah Komoditi</a>
+                    </div>
                 </div>
             </div>
             <div class="grid grid-flow-row grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 @forelse ($commodities as $commodity)
                     <div class="flex flex-col gap-y-2 bg-white rounded-md overflow-hidden p-4">
                         <a href="{{ route('commodity.show', $commodity->id) }}">
-                            <img src="{{ asset($commodity->image ?? 'images/default/default-image.jpg') }}" alt="Commodity Img"
-                                class="w-full aspect-square object-cover rounded-md">
+                            <img src="{{ asset($commodity->image ?? 'images/default/default-image.jpg') }}"
+                                alt="Commodity Img" class="w-full aspect-square object-cover rounded-md">
                         </a>
                         <div class="h-full flex flex-col justify-between">
                             <div>
@@ -41,10 +71,12 @@
                             <div class="mt-2 flex flex-row justify-between items-center">
                                 <span class="text-xs">{{ $commodity->gardens_count }} Kebun</span>
                                 <div class="flex flex-row-reverse gap-2">
-                                    <a href="javascript:void(0);" onclick="deleteData({{ $commodity->id }})" title="{{ __('Hapus Komoditi') }}" class="text-xs text-danger">
+                                    <a href="javascript:void(0);" onclick="deleteData({{ $commodity->id }}, '{{ $commodity->name }}')"
+                                        title="{{ __('Hapus Komoditi') }}" class="text-xs text-danger">
                                         <i class="fa-solid fa-trash-can pointer-events-none"></i>
                                     </a>
-                                    <a href="{{ route('commodity.edit', $commodity->id) }}" title="{{ __('Edit Komoditi') }}" class="text-xs text-warning">
+                                    <a href="{{ route('commodity.edit', $commodity->id) }}"
+                                        title="{{ __('Edit Komoditi') }}" class="text-xs text-warning">
                                         <i class="fa-solid fa-pen pointer-events-none"></i>
                                     </a>
                                 </div>
@@ -70,13 +102,22 @@
     @push('scripts')
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
-            const deleteData = async (id) => {
+            const filterAction = () => {
+              document.querySelector('#form-filter').submit()
+            }
+            const deleteData = async (id, name) => {
+                const isDelete = confirm(`Apakah anda yakin ingin menghapus komoditas ${name}?`)
+
+                if (!isDelete) {
+                  return false
+                }
+
                 const data = await fetchData(
-                    "{{ route('commodity.destroy', 'ID') }}".replace('ID', id),
-                    {
+                    "{{ route('commodity.destroy', 'ID') }}".replace('ID', id), {
                         method: "DELETE",
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+                                .nodeValue,
                             'Accept': 'application/json',
                         },
                     }

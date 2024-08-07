@@ -20,8 +20,20 @@
           </div>
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
               <div class="p-6 flex justify-between">
-                  <h1 class="text-3xl font-extrabold">List Peralatan</h1>
-                  <a href="{{ route('tool.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Alat</a>
+                  <div>
+                    <form action="" method="get">
+                      <div class="relative">
+                        <input type="text" name="search" class="w-full px-4 py-2 border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+                          placeholder="Cari" value="{{ request()->query('search') }}">
+                        <button type="submit" class="absolute inset-y-0 right-0 px-4 py-2 text-sm text-gray-600 focus:outline-none">
+                          <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                  <div>
+                    <a href="{{ route('tool.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Alat</a>
+                  </div>
               </div>
           </div>
           <div class="grid grid-flow-row grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -69,6 +81,12 @@
       <script src="{{ asset('js/api.js') }}"></script>
       <script>
           const deleteData = async (id) => {
+              const isDelete = confirm(`Apakah anda yakin ingin menghapus alat ${name}?`)
+
+              if (!isDelete) {
+                return false
+              }
+
               const data = await fetchData(
                   "{{ route('tool.destroy', 'ID') }}".replace('ID', id),
                   {
