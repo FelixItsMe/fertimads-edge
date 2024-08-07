@@ -25,11 +25,6 @@
               </div>
               <div class="col-span-2 w-full flex flex-col gap-2">
                   <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 relative">
-                      <div class="absolute top-5 right-5">
-                        <a href="{{ route('device-type.edit', $deviceType->id) }}" title="{{ __('Edit Tipe Perangkat IoT') }}" class="text-base text-warning">
-                            <i class="fa-solid fa-pen pointer-events-none"></i>
-                        </a>
-                      </div>
                       <div class="flex flex-col gap-y-4">
                           <div class="w-full">
                               <x-input-label class="text-slate-400"
