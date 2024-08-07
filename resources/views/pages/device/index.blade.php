@@ -20,7 +20,7 @@
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 flex justify-between">
-                    <h1 class="text-3xl font-extrabold">Tabel Perangkat IoT</h1>
+                    <h1 class="text-3xl font-extrabold">Daftar Perangkat IoT</h1>
                     <a href="{{ route('device.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Perangkat IoT</a>
                 </div>
             </div>
@@ -71,7 +71,7 @@
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
             const deleteData = async (id) => {
-                const isDelete = confirm(`Apakah anda yakin ingin menghapus lahan ${name}?`)
+                const isDelete = confirm(`Apakah anda yakin ingin menghapus perangkat IoT ${name}?`)
 
                 if (!isDelete) {
                   return false
