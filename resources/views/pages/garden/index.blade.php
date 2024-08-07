@@ -24,7 +24,7 @@
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 flex flex-row justify-between">
                     <div>
-                        <h5 class="text-xs text-slate-400">Luas Kebun (m²)</h5>
+                        <h5 class="text-xs text-slate-400">Total Luas Kebun (m²)</h5>
                         <span class="font-bold">{{ $sums->total_area }}</span>
                     </div>
                     <div class="flex items-center">
