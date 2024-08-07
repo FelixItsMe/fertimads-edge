@@ -20,7 +20,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-flow-row grid-cols-1 gap-2">
                 <div>
                     <div id="map" class="rounded-md"></div>
@@ -110,7 +110,7 @@
         </div>
     </div>
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-flow-row grid-cols-1 gap-2">
                 <div>
                     <div id="map" class="rounded-md"></div>

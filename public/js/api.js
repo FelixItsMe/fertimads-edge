@@ -23,6 +23,26 @@ const fetchData = async (url, setting = {}) => {
     }
 }
 
+const fetchWithError = async ({ url, setting, onError, onSuccess }) => {
+    try {
+        const response = await fetch(url, setting || {})
+
+        if (response.ok) {
+            const data = await response.json()
+            onSuccess(data)
+            return
+        }
+
+        if (!response.ok) {
+            const data = await response.json()
+            const statusCode = response.status
+            onError(data, null, statusCode)
+        }
+    } catch (e) {
+        onError(null, e, null)
+    }
+}
+
 const errorMessage = (message) => {
     console.log(message);
     document.querySelector('#error-body').classList.remove('hidden')

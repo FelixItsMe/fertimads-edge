@@ -11,7 +11,7 @@
   </x-slot>
 
   <div class="py-12">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
           @if (session()->has('device-success'))
               <x-alert-info class="mb-3">
                   {{ session()->get('device-success') }}

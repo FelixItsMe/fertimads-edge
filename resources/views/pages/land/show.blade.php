@@ -20,7 +20,7 @@
   </x-slot>
 
   <div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
       <div class="flex flex-col sm:flex-row max-sm:gap-2 sm:space-x-2">
         <div class="w-full sm:w-3/4">
           <div id="map" class="rounded-md"></div>

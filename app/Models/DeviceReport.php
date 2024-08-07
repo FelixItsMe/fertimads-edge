@@ -46,7 +46,7 @@ class DeviceReport extends Model
                 case 'N':
                     return 'Nitrogen';
                 case 'P':
-                    return 'Phosphorus';
+                    return 'Fosfor';
                 case 'K':
                     return 'Kalium';
                 default:

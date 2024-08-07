@@ -16,7 +16,7 @@
   </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col gap-4">
+        <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8 flex flex-col gap-4">
             <div class="grid grid-flow-row grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 <x-card-info class="w-full">
                     <h5 class="text-xs text-slate-400">Luas Lahan</h5>
