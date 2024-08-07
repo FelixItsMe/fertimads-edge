@@ -66,7 +66,7 @@
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
             const deleteData = async (id) => {
-                const isDelete = confirm(`Apakah anda yakin ingin menghapus lahan ${name}?`)
+                const isDelete = confirm(`Apakah anda yakin ingin menghapus anggota ${name}?`)
 
                 if (!isDelete) {
                   return false
