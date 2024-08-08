@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\v1\Care;
 
+use App\Exports\WeedsReportExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Care\StoreWeedsRequest;
 use App\Models\Weeds;
 use App\Services\ImageService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class WeedsController extends Controller
 {
@@ -53,6 +56,22 @@ class WeedsController extends Controller
         $weeds = $weed;
 
         return view('pages.care.weeds.show', compact('weeds'));
+    }
+
+    public function pdf()
+    {
+        $reports = Weeds::query()
+            ->latest()
+            ->get();
+
+        $pdf = Pdf::loadView('exports.weeds-report', ['reports' => $reports])->setPaper('A4', 'landscape');
+
+        return $pdf->stream();
+    }
+
+    public function export()
+    {
+        return Excel::download(new WeedsReportExport, 'laporan_gulma.xlsx');
     }
 
     /**

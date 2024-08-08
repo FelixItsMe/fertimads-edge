@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1\Care;
 
+use App\Exports\PestReportExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Care\StorePestRequest;
 use App\Models\Commodity;
@@ -11,8 +12,10 @@ use App\Models\Pest;
 use App\Services\GeminiService;
 use App\Services\ImageService;
 use App\Services\SimhashService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use GeminiAPI\Laravel\Facades\Gemini;
 use GuzzleHttp\Psr7\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PestController extends Controller
 {
@@ -81,6 +84,23 @@ class PestController extends Controller
         $response = json_decode($pest->gemini_response);
 
         return view('pages.care.pest.show', compact('pest', 'response'));
+    }
+
+    public function pdf()
+    {
+        $reports = Pest::query()
+            ->with(['garden', 'commodity'])
+            ->latest()
+            ->get();
+
+        $pdf = Pdf::loadView('exports.pest-report', ['reports' => $reports])->setPaper('A4', 'landscape');
+
+        return $pdf->stream();
+    }
+
+    public function export()
+    {
+        return Excel::download(new PestReportExport, 'laporan_hama.xlsx');
     }
 
     /**

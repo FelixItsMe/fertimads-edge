@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\v1\Care;
 
+use App\Exports\DiseaseReportExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Care\StoreDiseaseRequest;
 use App\Models\Disease;
 use App\Services\ImageService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DiseaseController extends Controller
 {
@@ -51,6 +54,22 @@ class DiseaseController extends Controller
     public function show(Disease $disease)
     {
         return view('pages.care.disease.show', compact('disease'));
+    }
+
+    public function pdf()
+    {
+        $reports = Disease::query()
+            ->latest()
+            ->get();
+
+        $pdf = Pdf::loadView('exports.disease-report', ['reports' => $reports])->setPaper('A4', 'landscape');
+
+        return $pdf->stream();
+    }
+
+    public function export()
+    {
+        return Excel::download(new DiseaseReportExport, 'laporan_penyakit.xlsx');
     }
 
     /**

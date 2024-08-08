@@ -90,6 +90,12 @@ Route::middleware('auth')->group(function () {
         Route::get('fertilization-report', [FeritilizerReportController::class, 'index'])->name('fertilization-report.index');
         Route::get('fertilization-report/export', [FeritilizerReportController::class, 'export'])->name('fertilization-report.export');
         Route::get('fertilization-report/export-pdf', [FeritilizerReportController::class, 'pdf'])->name('fertilization-report.export-pdf');
+        Route::get('pest-report/export', [PestController::class, 'export'])->name('pest-report.export');
+        Route::get('pest-report/export-pdf', [PestController::class, 'pdf'])->name('pest-report.export-pdf');
+        Route::get('disease-report/export', [DiseaseController::class, 'export'])->name('disease-report.export');
+        Route::get('disease-report/export-pdf', [DiseaseController::class, 'pdf'])->name('disease-report.export-pdf');
+        Route::get('weeds-report/export', [WeedsController::class, 'export'])->name('weeds-report.export');
+        Route::get('weeds-report/export-pdf', [WeedsController::class, 'pdf'])->name('weeds-report.export-pdf');
 
         Route::get('harvest-report', [HarvestReportController::class, 'index'])->name('harvest-report.index');
 
