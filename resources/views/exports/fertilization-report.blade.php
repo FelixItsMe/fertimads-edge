@@ -31,8 +31,8 @@
         <th>Nama Lahan</th>
         <th>Nama Kebun</th>
         <th>Jenis Pupuk</th>
-        <th>Volume Pupuk</th>
-        <th>Total Waktu</th>
+        <th>Volume Pupuk (Ltr)</th>
+        <th>Total Waktu (Jam)</th>
       </tr>
     </thead>
     <tbody>

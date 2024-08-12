@@ -26,7 +26,11 @@
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 flex justify-between">
           <h1 class="text-3xl font-extrabold">Tabel Laporan Hama</h1>
-          <a href="{{ route('pest.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Data</a>
+          <div class="flex space-x-3">
+            <a href="{{ route('pest.create') }}" class="bg-indigo-500 text-white py-1.5 px-5 rounded-md">Tambah Data</a>
+            <a href="{{ route('pest-report.export') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-excel"></i> Excel</a>
+            <a href="{{ route('pest-report.export-pdf') }}" target="_blank" class="bg-red-500 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-pdf"></i> PDF</a>
+          </div>
         </div>
         <div class="overflow-x-scroll">
           <table class="w-full border-slate-400 table mb-0 text-left">
