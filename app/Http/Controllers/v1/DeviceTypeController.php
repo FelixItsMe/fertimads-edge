@@ -109,7 +109,7 @@ class DeviceTypeController extends Controller
 
         $deviceType->delete();
 
-        session()->flash('device-type-success', 'Berhasil disimpan');
+        session()->flash('device-type-success', 'Berhasil dihapus');
 
         return response()->json([
             'message' => 'Berhasil dihapus'
