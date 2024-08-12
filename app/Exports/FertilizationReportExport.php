@@ -40,9 +40,9 @@ class FertilizationReportExport implements FromCollection, WithMapping, WithHead
             'Tanggal',
             'Nama Lahan',
             'Nama Kebun',
-            'Jenis Pupuk Dasar',
-            'Volume Pupuk Dasar',
-            'Total Waktu'
+            'Jenis Pupuk',
+            'Volume Pupuk (Ltr)',
+            'Total Waktu (Jam)'
         ];
     }
 }
