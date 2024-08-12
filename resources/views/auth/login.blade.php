@@ -21,7 +21,7 @@
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password">{{ __('Password') }}<span class="text-fertimads">*</span></x-input-label>
+            <x-input-label for="password">Password<span class="text-fertimads">*</span></x-input-label>
 
             <div class="relative mt-1">
               <input id="password" type="password" name="password" class="w-full px-5 py-2 border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring focus:border-blue-300" placeholder="Enter your password">
