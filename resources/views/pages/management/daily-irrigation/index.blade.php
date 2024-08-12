@@ -36,7 +36,7 @@
                           <tr>
                               <td>{{ ($dailyIrrigations->currentPage() - 1) * $dailyIrrigations->perPage() + $loop->iteration }}</td>
                               <td class="text-center">{{ $dailyIrrigation->date }}</td>
-                              <td class="text-center">{{ $dailyIrrigation->eto }}</td>
+                              <td class="text-center">{{ number_format($dailyIrrigation->eto, 3) }}</td>
                           </tr>
                       @empty
                           <tr>
