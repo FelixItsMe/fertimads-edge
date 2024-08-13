@@ -295,6 +295,8 @@
       map.modalControl.onAdd = function(map) {
         const div = L.DomUtil.create('div', 'leaflet-control');
 
+        console.log(garden)
+
         div.innerHTML = `
           <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
             <div class="px-2 pt-5 pb-4 bg-white sm:p-3 sm:pb-4">
@@ -332,21 +334,21 @@
                               <p class="text-gray-500 font-bold">Komoditi</p>
                               </td>
                               <td class="py-1">:</td>
-                              <td class="py-1"><span class="text-gray-500 font-normal" id="komoditi">${garden?.commodity?.name ?? ''}</span></td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="komoditi">${garden?.commodity?.name}</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
                                 <p class="text-gray-500 font-bold">Total Blok</p>
                               </td>
                               <td class="py-1">:</td>
-                              <td class="py-1"><span class="text-gray-500 font-normal" id="totalBlok">${garden?.count_block ?? '-'} Blok</span></td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="totalBlok">${garden?.count_block} Blok</span></td>
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
                                 <p class="text-gray-500 font-bold">Populasi</p>
                               </td>
                               <td class="py-1">:</td>
-                              <td class="py-1"><span class="text-gray-500 font-normal" id="populasi">${garden?.populations || '-'} Tanaman</span></td>
+                              <td class="py-1"><span class="text-gray-500 font-normal" id="populasi">${garden?.population} Tanaman</span></td>
                             </tr>
                           </tbody>
                         </table>
