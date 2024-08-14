@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Disease;
 use Gemini\Data\Blob;
 use Gemini\Enums\MimeType;
 use Gemini\Laravel\Facades\Gemini;
@@ -40,12 +41,25 @@ class GeminiService
 
         $response = json_decode($geminiResponse->text());
 
-        // dd($response);
+        $diseases = Disease::query()
+            ->get();
+
+        $simhash = new SimhashService();
 
         $diseaseName = $response?->nama_penyakit ?? '-';
         $pestName = $response?->nama_hama ?? '-';
 
-        return [$template, $geminiResponse->text(), $diseaseName, $pestName];
+        foreach($diseases as $disease) {
+            if ($simhash->isSimilar($response->nama_penyakit, $disease->name)) {
+                $diseaseName = $disease->name;
+                $response->nama_penyakit = $disease->name;
+                $response->pengendalian = $disease->control;
+                $response->pengobatan = $disease->cure_name;
+                break;
+            }
+        }
+
+        return [$template, json_encode($response), $diseaseName, $pestName, $response];
     }
 
     public function convertResponseToHTML($text)
