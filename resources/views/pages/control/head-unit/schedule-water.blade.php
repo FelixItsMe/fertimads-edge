@@ -11,9 +11,6 @@
     <x-slot name="header">
         <h2 class="leading-tight">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="#">Pages</a>
-                </li>
                 <li class="breadcrumb-item breadcrumb-active">{{ __('Kendali Head Unit') }}</li>
             </ol>
         </h2>
