@@ -64,6 +64,8 @@ Route::middleware('auth')->group(function () {
             Route::post('test/import/excel', [\App\Http\Controllers\v1\Management\ActivityLogController::class, 'storeImport'])->name('test.import.excel.store');
 
             Route::resource('daily-irrigation', \App\Http\Controllers\v1\Management\DailyIrrigationController::class)->only(['index', 'create', 'store']);
+
+            Route::get('aws-device', [\App\Http\Controllers\v1\Management\AwsDeviceController::class, 'index'])->name('aws-device.index');
         });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CONTROL->value])
@@ -83,6 +85,7 @@ Route::middleware('auth')->group(function () {
             Route::post('head-unit/stop', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'stopDevice'])->name('head-unit.stop.store');
 
             Route::get('telemetry-rsc', [\App\Http\Controllers\v1\Control\TelemetryRscController::class, 'index'])->name('telemetry-rsc.index');
+            Route::get('telemetry-rsc/export/excel', [\App\Http\Controllers\v1\Control\TelemetryRscController::class, 'excelExport'])->name('telemetry-rsc.export-excel');
     });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CARE->value])->prefix('care')->group(function () {
