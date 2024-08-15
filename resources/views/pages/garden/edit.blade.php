@@ -5,6 +5,7 @@
   <style>
     #map {
       height: 100vh;
+      z-index: 50;
     }
   </style>
   @endpush
