@@ -12,7 +12,7 @@
     <x-slot name="header">
         <h2 class="leading-tight">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item breadcrumb-active">{{ __('Kendali Head Unit') }}</li>
+                <li class="breadcrumb-item breadcrumb-active">{{ __('Kontrol Head Unit') }}</li>
             </ol>
         </h2>
     </x-slot>
@@ -97,7 +97,7 @@
                                     </div>
                                 </div>
                                 <div class="grid grid-flow-row grid-cols-4">
-                                    <div>Umur Komoditi</div>
+                                    <div>Umur Komoditi (Hari)</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
                                             <input type="number" min="0" name="commodity_age"
@@ -184,8 +184,51 @@
                 })
                 .setView([-6.46958, 107.033339], 18);
 
-            L.control.zoom({
+            map.modalWether = L.control({
                 position: 'topright'
+            });
+
+            map.modalWether.onAdd = function(map) {
+                const div = L.DomUtil.create('div', 'leaflet-control');
+
+                div.innerHTML = `
+                  <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-gradient-to-br from-blue-600 to-blue-900 rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                    <div class="p-3 grid grid-cols-3 gap-2 text-white">
+                      <div>
+                        <div>
+                          <div class="text-lg font-extrabold lato-regular">Jumat</div>
+                          <div class="text-6xl font-extrabold lato-regular relative">26<span class="absolute -top-4">°</span></div>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-50/50">Last Updated 11:50</div>
+                        <div><i class="fa-solid fa-location-dot"></i>&nbsp;<span class="text-xs">AWS 01</span></div>
+                      </div>
+                      <div class="grid grid-cols-1 content-between">
+                        <div>
+                          <div><i class="fa-solid fa-wind"></i>&nbsp;28 km/h</div>
+                          <div><i class="fa-solid fa-droplet"></i>&nbsp;42%</div>
+                        </div>
+                        <div>
+                          <div>H&nbsp;30%</div>
+                          <div>L&nbsp;20%</div>
+                        </div>
+                      </div>
+                      <div class="text-center">
+                        <div><i class="fa-solid fa-moon text-8xl"></i></div>
+                        <div class="text-lg text-slate-50/50">Clear</div>
+                      </div>
+                    </div>
+                  </div>
+                `;
+
+                L.DomEvent.disableClickPropagation(div)
+                L.DomEvent.disableScrollPropagation(div)
+                return div;
+            };
+
+            map.modalWether.addTo(map);
+
+            L.control.zoom({
+                position: 'bottomleft'
             }).addTo(map);
 
             L.control.layers(baseMapOptions, null, {
@@ -224,12 +267,12 @@
                 document.querySelector('#info-body').classList.remove('hidden')
 
                 const modalData = await gardenModalData(document.querySelector(
-                        '#list-gardens input:checked').value)
+                    '#list-gardens input:checked').value)
                 openModal(map, modalData);
                 generateCalendar(currentMonth, currentYear);
 
                 const data2 = await getActiveWaterSchedule(document.querySelector(
-                        '#list-gardens input:checked').value)
+                    '#list-gardens input:checked').value)
 
                 eListWaterSchedules(data2.activeWaterSchedules)
             }
@@ -256,7 +299,7 @@
                 document.querySelector('#info-body').classList.remove('hidden')
 
                 const data2 = await getActiveWaterSchedule(document.querySelector(
-                        '#list-gardens input:checked').value)
+                    '#list-gardens input:checked').value)
 
                 eListWaterSchedules(data2.activeWaterSchedules)
             }
@@ -655,27 +698,29 @@
             }
 
             const eListWaterSchedules = listWaterSchedule => {
-              const pListSchedule = document.querySelector('#list-active-schedule')
-              pListSchedule.innerHTML = ``
+                const pListSchedule = document.querySelector('#list-active-schedule')
+                pListSchedule.innerHTML = ``
 
-              listWaterSchedule.forEach(waterSchedule => {
-                const divSchedule = document.createElement('div')
-                divSchedule.classList.add('bg-white', 'py-2', 'px-4', 'rounded-lg', 'flex', 'justify-between', 'items-center')
-                const textSchedule = document.createElement('div')
-                textSchedule.textContent = `${waterSchedule.commodity.name} | ${waterSchedule.start_date} - ${waterSchedule.end_date}`
+                listWaterSchedule.forEach(waterSchedule => {
+                    const divSchedule = document.createElement('div')
+                    divSchedule.classList.add('bg-white', 'py-2', 'px-4', 'rounded-lg', 'flex', 'justify-between',
+                        'items-center')
+                    const textSchedule = document.createElement('div')
+                    textSchedule.textContent =
+                        `${waterSchedule.commodity.name} | ${waterSchedule.start_date} - ${waterSchedule.end_date}`
 
-                const btnDelete = document.createElement('button')
-                btnDelete.setAttribute('type', 'button')
-                btnDelete.classList.add('bg-red-300', 'py-2', 'px-4', 'text-white', 'rounded-md')
-                btnDelete.textContent = 'Hapus'
-                btnDelete.onclick = e => {
-                  stopWaterSchedule(waterSchedule.id)
-                }
-                divSchedule.appendChild(textSchedule)
-                divSchedule.appendChild(btnDelete)
+                    const btnDelete = document.createElement('button')
+                    btnDelete.setAttribute('type', 'button')
+                    btnDelete.classList.add('bg-red-500', 'py-2', 'px-4', 'text-white', 'rounded-md')
+                    btnDelete.textContent = 'Hapus'
+                    btnDelete.onclick = e => {
+                        stopWaterSchedule(waterSchedule.id)
+                    }
+                    divSchedule.appendChild(textSchedule)
+                    divSchedule.appendChild(btnDelete)
 
-                pListSchedule.appendChild(divSchedule)
-              });
+                    pListSchedule.appendChild(divSchedule)
+                });
             }
 
             window.onload = () => {
