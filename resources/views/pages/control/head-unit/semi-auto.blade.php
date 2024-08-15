@@ -5,124 +5,132 @@
         <style>
             #map {
                 height: 70vh;
+                z-index: 50;
             }
         </style>
     @endpush
     <x-slot name="header">
         <h2 class="leading-tight">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item breadcrumb-active">{{ __('Kendali Head Unit') }}</li>
+                <li class="breadcrumb-item breadcrumb-active">{{ __('Kontrol Head Unit') }}</li>
             </ol>
         </h2>
     </x-slot>
 
     <div class="py-12">
-      <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
-          <div class="grid grid-flow-row grid-cols-1 gap-2">
-              <div>
-                  <div id="map" class="rounded-md"></div>
-              </div>
-              <div class="grid grid-flow-row grid-cols-1 md:grid-cols-5 gap-2">
-                  <div class="flex flex-col gap-2 pr-12">
-                      <div class="font-bold py-2">Opsi Kendali</div>
-                      @include('pages.control.head-unit.links')
-                  </div>
-                  <div class="col-span-4 flex flex-col gap-2">
-                      <div class="py-2"><span class="font-bold">Kendali Perangkat</span></div>
-                      <div class="grid grid-flow-row grid-cols-2 gap-8">
-                          <div class="flex flex-col gap-2">
-                              <div class="grid grid-flow-row grid-cols-4">
-                                  <div>Pilih Lahan</div>
-                                  <div class="col-span-3">
-                                      <div class="grid grid-flow-row grid-cols-2 gap-2">
-                                          @foreach ($lands as $id => $landName)
-                                              <div>
-                                                  <input type="radio" id="land-{{ $id }}" name="land_id"
-                                                      onchange="pickLand({{ $id }})"
-                                                      value="{{ $id }}" class="hidden output-type peer/penyiraman" />
-                                                  <label for="land-{{ $id }}" class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/penyiraman:text-blue-500 peer-checked/penyiraman:bg-primary peer-checked/penyiraman:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                                      {{ $landName }}
-                                                  </label>
-                                              </div>
-                                          @endforeach
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="grid grid-flow-row grid-cols-4">
-                                  <div>Pilih Kebun</div>
-                                  <div class="col-span-3">
-                                      <div class="grid grid-flow-row grid-cols-2 gap-2" id="list-gardens">
-                                          <button type="button"
-                                              class="bg-white rounded-md px-4 py-2 text-xs text-left"
-                                              disabled
-                                              >Pilih Lahan</button>
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="grid grid-flow-row grid-cols-4">
-                                  <div>Pilih Output</div>
-                                  <div class="col-span-3">
-                                      <div class="grid grid-flow-row grid-cols-2 gap-2">
-                                          <div>
-                                              <input type="radio" id="type-penyiraman" name="type"
-                                                  value="penyiraman" class="hidden output-type peer/penyiraman" />
-                                              <label for="type-penyiraman" class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/penyiraman:text-blue-500 peer-checked/penyiraman:bg-primary peer-checked/penyiraman:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                                  Penyiraman
-                                              </label>
-                                          </div>
-                                          <div>
-                                              <input type="radio" id="type-pemupukan-n" name="type"
-                                                  value="pemupukanN" class="hidden output-type peer/pemupukann" />
-                                              <label for="type-pemupukan-n" class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/pemupukann:text-blue-500 peer-checked/pemupukann:bg-primary peer-checked/pemupukann:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                                  Pemupukan N
-                                              </label>
-                                          </div>
-                                          <div>
-                                              <input type="radio" id="type-pemupukan-p" name="type"
-                                                  value="pemupukanP" class="hidden output-type peer/pemupukanp" />
-                                              <label for="type-pemupukan-p" class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/pemupukanp:text-blue-500 peer-checked/pemupukanp:bg-primary peer-checked/pemupukanp:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                                  Pemupukan P
-                                              </label>
-                                          </div>
-                                          <div>
-                                              <input type="radio" id="type-pemupukan-k" name="type"
-                                                  value="pemupukanK" class="hidden output-type peer/pemupukank" />
-                                              <label for="type-pemupukan-k" class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/pemupukank:text-blue-500 peer-checked/pemupukank:bg-primary peer-checked/pemupukank:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                                  Pemupukan K
-                                              </label>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="grid grid-flow-row grid-cols-4">
-                                  <div>Atur Volume (Liter)</div>
-                                  <div class="col-span-3">
-                                      <div class="grid grid-flow-row grid-cols-2 gap-2">
-                                          <input type="number" min="0" step=".01" name="volume"
-                                              class="bg-white rounded-md text-xs py-2 px-4 border-none">
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                          <div>
-                              <div class="flex flex-col gap-2">
-                                  <div>
-                                      <button type="button" onclick="storeSemiAuto()"
-                                          class="bg-primary text-white font-bold rounded-md px-4 py-2">Kirim</button>
-                                      <button type="button" onclick="storeManual()"
-                                          class="bg-red-500 text-white font-bold rounded-md px-4 py-2">Turn Off</button>
-                                  </div>
-                                  <div class="bg-sky-500 text-white w-full p-6 sm:rounded-lg flex items-center hidden" id="info-body">
-                                      <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;<span id="info-text"></span>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+        <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
+            <div class="grid grid-flow-row grid-cols-1 gap-2">
+                <div>
+                    <div id="map" class="rounded-md"></div>
+                </div>
+                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-5 gap-2">
+                    <div class="flex flex-col gap-2 pr-12">
+                        <div class="font-bold py-2">Opsi Kendali</div>
+                        @include('pages.control.head-unit.links')
+                    </div>
+                    <div class="col-span-4 flex flex-col gap-2">
+                        <div class="py-2"><span class="font-bold">Kendali Perangkat</span></div>
+                        <div class="grid grid-flow-row grid-cols-2 gap-8">
+                            <div class="flex flex-col gap-2">
+                                <div class="grid grid-flow-row grid-cols-4">
+                                    <div>Pilih Lahan</div>
+                                    <div class="col-span-3">
+                                        <div class="grid grid-flow-row grid-cols-2 gap-2">
+                                            @foreach ($lands as $id => $landName)
+                                                <div>
+                                                    <input type="radio" id="land-{{ $id }}" name="land_id"
+                                                        onchange="pickLand({{ $id }})"
+                                                        value="{{ $id }}"
+                                                        class="hidden output-type peer/penyiraman" />
+                                                    <label for="land-{{ $id }}"
+                                                        class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/penyiraman:text-blue-500 peer-checked/penyiraman:bg-primary peer-checked/penyiraman:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                        {{ $landName }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-flow-row grid-cols-4">
+                                    <div>Pilih Kebun</div>
+                                    <div class="col-span-3">
+                                        <div class="grid grid-flow-row grid-cols-2 gap-2" id="list-gardens">
+                                            <button type="button"
+                                                class="bg-white rounded-md px-4 py-2 text-xs text-left" disabled>Pilih
+                                                Lahan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-flow-row grid-cols-4">
+                                    <div>Pilih Output</div>
+                                    <div class="col-span-3">
+                                        <div class="grid grid-flow-row grid-cols-2 gap-2">
+                                            <div>
+                                                <input type="radio" id="type-penyiraman" name="type"
+                                                    value="penyiraman" class="hidden output-type peer/penyiraman" />
+                                                <label for="type-penyiraman"
+                                                    class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/penyiraman:text-blue-500 peer-checked/penyiraman:bg-primary peer-checked/penyiraman:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                    Penyiraman
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="type-pemupukan-n" name="type"
+                                                    value="pemupukanN" class="hidden output-type peer/pemupukann" />
+                                                <label for="type-pemupukan-n"
+                                                    class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/pemupukann:text-blue-500 peer-checked/pemupukann:bg-primary peer-checked/pemupukann:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                    Pemupukan N
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="type-pemupukan-p" name="type"
+                                                    value="pemupukanP" class="hidden output-type peer/pemupukanp" />
+                                                <label for="type-pemupukan-p"
+                                                    class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/pemupukanp:text-blue-500 peer-checked/pemupukanp:bg-primary peer-checked/pemupukanp:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                    Pemupukan P
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="type-pemupukan-k" name="type"
+                                                    value="pemupukanK" class="hidden output-type peer/pemupukank" />
+                                                <label for="type-pemupukan-k"
+                                                    class="inline-flex w-full px-4 py-2 bg-white rounded-md text-xs cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked/pemupukank:text-blue-500 peer-checked/pemupukank:bg-primary peer-checked/pemupukank:text-white hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                    Pemupukan K
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-flow-row grid-cols-4">
+                                    <div>Atur Volume (Liter)</div>
+                                    <div class="col-span-3">
+                                        <div class="grid grid-flow-row grid-cols-2 gap-2">
+                                            <input type="number" min="0" step=".01" name="volume"
+                                                class="bg-white rounded-md text-xs py-2 px-4 border-none">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex flex-col gap-2">
+                                    <div>
+                                        <button type="button" onclick="storeSemiAuto()"
+                                            class="bg-primary text-white font-bold rounded-md px-4 py-2">Kirim</button>
+                                        <button type="button" onclick="storeManual()"
+                                            class="bg-red-500 text-white font-bold rounded-md px-4 py-2">Matikan Pompa</button>
+                                    </div>
+                                    <div class="bg-sky-500 text-white w-full p-6 sm:rounded-lg flex items-center hidden"
+                                        id="info-body">
+                                        <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;<span
+                                            id="info-text"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @push('scripts')
         <script src="{{ asset('leaflet/leaflet.js') }}"></script>
@@ -171,6 +179,49 @@
                 })
                 .setView([-6.46958, 107.033339], 18);
 
+            map.modalWether = L.control({
+                position: 'topright'
+            });
+
+            map.modalWether.onAdd = function(map) {
+                const div = L.DomUtil.create('div', 'leaflet-control');
+
+                div.innerHTML = `
+                  <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-gradient-to-br from-blue-600 to-blue-900 rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                    <div class="p-3 grid grid-cols-3 gap-2 text-white">
+                      <div>
+                        <div>
+                          <div class="text-lg font-extrabold lato-regular">Jumat</div>
+                          <div class="text-6xl font-extrabold lato-regular relative">26<span class="absolute -top-4">°</span></div>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-50/50">Last Updated 11:50</div>
+                        <div><i class="fa-solid fa-location-dot"></i>&nbsp;<span class="text-xs">AWS 01</span></div>
+                      </div>
+                      <div class="grid grid-cols-1 content-between">
+                        <div>
+                          <div><i class="fa-solid fa-wind"></i>&nbsp;28 km/h</div>
+                          <div><i class="fa-solid fa-droplet"></i>&nbsp;42%</div>
+                        </div>
+                        <div>
+                          <div>H&nbsp;30%</div>
+                          <div>L&nbsp;20%</div>
+                        </div>
+                      </div>
+                      <div class="text-center">
+                        <div><i class="fa-solid fa-moon text-8xl"></i></div>
+                        <div class="text-lg text-slate-50/50">Clear</div>
+                      </div>
+                    </div>
+                  </div>
+                `;
+
+                L.DomEvent.disableClickPropagation(div)
+                L.DomEvent.disableScrollPropagation(div)
+                return div;
+            };
+
+            map.modalWether.addTo(map);
+
             L.control.zoom({
                 position: 'bottomleft'
             }).addTo(map);
@@ -180,6 +231,8 @@
             }).addTo(map)
 
             const storeManual = async () => {
+                showLoading()
+
                 const gardenId = document.querySelector('input[name="garden_id"]:checked')?.value
                 const data = await fetchData(
                     "{{ route('head-unit.stop.store') }}", {
@@ -195,6 +248,8 @@
                         })
                     }
                 );
+
+                hideLoading()
 
                 if (!data) {
                     document.querySelector('#info-text').textContent = 'Gagal mengirim perintah'
@@ -601,7 +656,7 @@
                 console.log('Hello world');
 
                 document.querySelector('#list-gardens').addEventListener('change', async e => {
-                  console.log('a');
+                    console.log('a');
                     const modalData = await gardenModalData(document.querySelector(
                         '#list-gardens input:checked').value)
 

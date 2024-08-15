@@ -5,13 +5,14 @@
   <style>
     #map {
       height: 70vh;
+      z-index: 50;
     }
   </style>
   @endpush
   <x-slot name="header">
     <h2 class="leading-tight">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item breadcrumb-active">{{ __('Kendali Head Unit') }}</li>
+        <li class="breadcrumb-item breadcrumb-active">{{ __('Kontrol Head Unit') }}</li>
       </ol>
     </h2>
   </x-slot>

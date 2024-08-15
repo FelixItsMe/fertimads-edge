@@ -355,6 +355,9 @@ class DeviceControlController extends Controller
                 $query->where('execute_start', '<=', $end->format('Y-m-d H:i:s'))
                 ->where('execute_end', '>=', $end->format('Y-m-d H:i:s'));
             })
+            ->whereHas('deviceSelenoid', function($query)use($device){
+                $query->where('device_id', $device->id);
+            })
             ->active()
             ->count();
 
