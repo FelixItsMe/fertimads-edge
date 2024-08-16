@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -44,7 +45,9 @@ class TelemetryRscController extends Controller
             )
             ->validate();
 
-        $deviceTelemetries = DeviceTelemetry::query()
+        $deviceTelemetries = [];
+
+        DeviceTelemetry::query()
             ->when(($queryFrom == $queryTo), function(Builder $query, $a)use($queryFrom){
                 $query->whereDate('created_at', $queryFrom);
             })
@@ -52,7 +55,11 @@ class TelemetryRscController extends Controller
                 $query->where('created_at', '>=', $queryFrom)
                 ->where('created_at', '<=', $queryTo);
             })
-            ->get();
+            ->chunk(100, function(Collection $data)use(&$deviceTelemetries){
+                $deviceTelemetries = [...$deviceTelemetries, ...$data];
+            });
+
+        $deviceTelemetries = collect($deviceTelemetries);
 
         if ($deviceTelemetries->count() == 0) {
             return back()->withErrors([
