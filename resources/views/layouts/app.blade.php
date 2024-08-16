@@ -31,7 +31,7 @@
 <body class="font-sans antialiased">
     <div id="loading-spinner" class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-primary z-50"
         style="z-index: 9999;">
-        <div class="loader border-t-4 border-b-4 border-blue-500 rounded-full w-16 h-16 animate-spin"></div>
+        <div class="loader border-t-4 border-b-4 border-slate-50 rounded-full w-16 h-16 animate-spin"></div>
     </div>
 
     <div class="fixed top-4 right-4 bg-red-500 text-white p-4 rounded-md hidden" id="error-body" style="z-index: 999">

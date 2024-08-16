@@ -23,18 +23,18 @@
                 <div>
                     <div id="map" class="rounded-md"></div>
                 </div>
-                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-5 gap-2">
-                    <div class="flex flex-col gap-2 pr-12">
+                <div class="grid grid-flow-row grid-cols-1 lg:grid-cols-5 gap-2">
+                    <div class="flex flex-col md:gap-2 md:pr-12 max-md:mx-2 max-md:space-y-2">
                         <div class="font-bold py-2">Opsi Kendali</div>
                         @include('pages.control.head-unit.links')
                     </div>
-                    <div class="col-span-4 flex flex-col gap-2">
+                    <div class="lg:col-span-4 flex flex-col gap-2 max-md:mx-2">
                         <div class="py-2"><span class="font-bold">Kendali Perangkat</span></div>
-                        <div class="grid grid-flow-row grid-cols-2 gap-8">
-                            <div class="flex flex-col gap-2">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="flex flex-col md:gap-2 max-md:space-y-2">
                                 <div class="grid grid-flow-row grid-cols-4">
-                                    <div>Pilih Output</div>
-                                    <div class="col-span-3">
+                                    <div class="max-md:col-span-4">Pilih Output</div>
+                                    <div class="col-span-4 md:col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
                                             <a href="{{ route('head-unit.schedule-water.index') }}"
                                                 @class([
@@ -59,8 +59,8 @@
                                     </div>
                                 </div>
                                 <div class="grid grid-flow-row grid-cols-4">
-                                    <div>Pilih Pupuk</div>
-                                    <div class="col-span-3">
+                                    <div class="max-md:col-span-4">Pilih Pupuk</div>
+                                    <div class="col-span-4 md:col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
                                             @foreach (\App\Enums\FertilizerScheduleTypeEnums::cases() as $fertilizerScheduleTypeEnum)
                                                 <div>
@@ -78,8 +78,8 @@
                                     </div>
                                 </div>
                                 <div class="grid grid-flow-row grid-cols-4">
-                                    <div>Pilih Lahan</div>
-                                    <div class="col-span-3">
+                                    <div class="max-md:col-span-4">Pilih Lahan</div>
+                                    <div class="col-span-4 md:col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
                                             @foreach ($lands as $id => $landName)
                                                 <div>
@@ -97,8 +97,8 @@
                                     </div>
                                 </div>
                                 <div class="grid grid-flow-row grid-cols-4">
-                                    <div>Pilih Kebun</div>
-                                    <div class="col-span-3">
+                                    <div class="max-md:col-span-4">Pilih Kebun</div>
+                                    <div class="col-span-4 md:col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2" id="list-gardens">
                                             <button type="button"
                                                 class="bg-white rounded-md px-4 py-2 text-xs text-left" disabled>Pilih
@@ -107,8 +107,8 @@
                                     </div>
                                 </div>
                                 <div class="grid grid-flow-row grid-cols-4">
-                                    <div>Volume (Liter)</div>
-                                    <div class="col-span-3">
+                                    <div class="max-md:col-span-4">Volume (Liter)</div>
+                                    <div class="col-span-4 md:col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
                                             <input type="number" min="0" step=".01" name="volume"
                                                 class="bg-white rounded-md text-xs py-2 px-4 border-none">
@@ -116,8 +116,8 @@
                                     </div>
                                 </div>
                                 <div class="grid grid-flow-row grid-cols-4">
-                                    <div>Waktu Pelaksanaan</div>
-                                    <div class="col-span-3">
+                                    <div class="max-md:col-span-4">Waktu Pelaksanaan</div>
+                                    <div class="col-span-4 md:col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
                                             <input type="time" name="execute_time"
                                                 class="bg-white rounded-md text-xs py-2 px-4 border-none">
@@ -125,8 +125,8 @@
                                     </div>
                                 </div>
                                 <div class="grid grid-flow-row grid-cols-4">
-                                    <div>Tanggal Pelaksanaan</div>
-                                    <div class="col-span-3">
+                                    <div class="max-md:col-span-4">Tanggal Pelaksanaan</div>
+                                    <div class="col-span-4 md:col-span-3">
                                         <input type="hidden" name="execute_date">
                                         <div class="py-2 px-4 bg-primary text-white flex flex-row justify-between">
                                             <button type="button" onclick="subMonth()"><i
@@ -143,12 +143,20 @@
                                 <div class="flex flex-col gap-2">
                                     <div>
                                         <button type="button" onclick="storeScheduleFertilize()"
-                                            class="bg-primary text-white font-bold rounded-md px-4 py-2">Kirim</button>
+                                            class="bg-primary text-white font-bold rounded-md px-4 py-2 max-md:w-full">Kirim</button>
                                     </div>
                                     <div class="bg-sky-500 text-white w-full p-6 sm:rounded-lg flex items-center hidden"
                                         id="info-body">
                                         <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;<span
                                             id="info-text"></span>
+                                    </div>
+                                    <div>
+                                        <h3>Jadwal Pemupukan</h3>
+                                        <div class="grid grid-cols-1 gap-2" id="list-schedule">
+                                          <div class="bg-white py-2 px-4 rounded-md grid grid-cols-1 md:grid-cols-5 md:gap-2 max-md:space-y-2 justify-between items-center">
+                                            <div class="col-span-5">Pilih tanggal di kalendar</div>
+                                          </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -165,6 +173,11 @@
         <script src="{{ asset('js/map.js') }}"></script>
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
+            const inputExecuteDate = document.querySelector('[name="execute_date"]')
+            const eInfoBody = document.querySelector('#info-body')
+            const eInfoText = document.querySelector('#info-text')
+            const eListSchedule = document.querySelector('#list-schedule')
+
             // Get current date
             let today = new Date();
             let currentDate = today.getDate();
@@ -184,6 +197,7 @@
                 markerLayer: null,
             }
             let currentGroupGarden = L.layerGroup()
+
             let baseMapOptions = {
                 'Open Street Map': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
@@ -303,7 +317,7 @@
                             cell.classList.add('text-gray-400'); // Grey out days from previous/next month
                         } else {
                             cell.textContent = currentDay;
-                            cell.setAttribute('data-date', `${year}-${(month + 1).toString().padStart(2, "0")}-${currentDay}`);
+                            cell.setAttribute('data-date', `${year}-${(month + 1).toString().padStart(2, "0")}-${currentDay.toString().padStart(2, "0")}`);
 
                             cell.onclick = (e) => {
                                 selectDate(e.target)
@@ -329,6 +343,9 @@
                 const volume = document.querySelector('input[name="volume"]')?.value
                 const executeTime = document.querySelector('input[name="execute_time"]')?.value
                 const executeDate = document.querySelector('input[name="execute_date"]')?.value
+
+                showLoading()
+
                 const data = await fetchData(
                     "{{ route('head-unit.schedule-fertilizer.store') }}", {
                         method: "POST",
@@ -348,13 +365,20 @@
                     }
                 );
 
-                if (!data) {
-                    document.querySelector('#info-text').textContent = 'Gagal menyimpan penjadwalan'
-                } else {
-                    document.querySelector('#info-text').textContent = 'Berhasil menyimpan penjadwalan!'
-                }
+                hideLoading()
 
-                document.querySelector('#info-body').classList.remove('hidden')
+                eInfo(
+                  true,
+                  data
+                    ? 'Jadwal Pemupukan Berhasil disimpan!'
+                    : 'Gagal disimpan!'
+                );
+
+                showLoadingListSchedule()
+
+                const schedules = await fetchActiveSchedule(inputExecuteDate.value)
+
+                initListSchedule(schedules)
             }
 
             const getLand = async id => {
@@ -430,14 +454,70 @@
                 initLandPolygon(landId, map)
             }
 
-            const selectDate = (e) => {
+            const selectDate = async (e) => {
                 const classes = ['bg-primary', 'text-white', 'active']
 
                 document.querySelector('#calendar td.active')?.classList.remove(...classes)
 
                 e.classList.add(...classes)
 
-                document.querySelector('[name="execute_date"]').value = e.dataset.date
+                inputExecuteDate.value = e.dataset.date
+
+                showLoadingListSchedule()
+
+                const schedules = await fetchActiveSchedule(e.dataset.date)
+
+                initListSchedule(schedules)
+            }
+
+            const fetchActiveSchedule = async date => {
+                const url = new URL("{{ route('extra.schedule.fertilizer.active') }}")
+                url.searchParams.append('date', date)
+                const data = await fetchData(
+                    url,
+                    {
+                        method: "GET",
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+                                .nodeValue,
+                            'Accept': 'application/json',
+                        },
+                    }
+                );
+
+                return data
+            }
+
+            const showLoadingListSchedule = () => {
+              eListSchedule.innerHTML = `
+                  <div class="bg-white py-2 px-4 rounded-md">
+                      Loading...
+                  </div>
+                `
+            }
+
+            const initListSchedule = schedules => {
+              if (schedules.length == 0) {
+                eListSchedule.innerHTML = `
+                  <div class="bg-white py-2 px-4 rounded-md grid grid-cols-1 md:grid-cols-5 md:gap-2 max-md:space-y-2 justify-between items-center">
+                    <div class="col-span-5 text-center">Tidak Ada</div>
+                  </div>`
+
+                return false
+              }
+
+              let eSchedules = ``
+
+              schedules.forEach(schedule => {
+                eSchedules += `
+                  <div class="bg-white py-2 px-4 rounded-md grid grid-cols-1 md:grid-cols-5 md:gap-2 max-md:space-y-2 justify-between items-center">
+                    <span class="col-span-4 break-words">${schedule.execute_start.split(' ')[1]}-${schedule.execute_end.split(' ')[1]}|${schedule.device_selenoid.device.series}|${schedule.garden.name}|${fertilizeType(schedule.type)} ${schedule.total_volume} Ltr</span>
+                    <button class="bg-red-500 text-white font-semibold py-2 px-4 rounded-md w-full" onclick="destroySchedules(${schedule.id})">Hapus</button>
+                  </div>
+                `
+              });
+
+              eListSchedule.innerHTML = eSchedules
             }
 
             const addMonth = () => {
@@ -458,6 +538,61 @@
                 }
 
                 generateCalendar(currentMonth, currentYear);
+            }
+
+            const fertilizeType = type => {
+              switch (type) {
+                case 1:
+                  return 'N'
+                  break;
+                case 2:
+                  return 'P'
+                  break;
+                case 3:
+                  return 'K'
+                  break;
+
+                default:
+                  return ''
+                  break;
+              }
+            }
+
+            const destroySchedules = async id => {
+              showLoadingListSchedule()
+
+              const data = await fetchData(
+                    "{{ route('head-unit.schedule-fertilizer.destroy', 'ID') }}".replace('ID', id),
+                    {
+                        method: "DELETE",
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+                                .nodeValue,
+                            'Accept': 'application/json',
+                        },
+                    }
+                );
+
+                const schedules = await fetchActiveSchedule(inputExecuteDate.value)
+
+                eInfo(true, 'Berhasil dihapus');
+
+                initListSchedule(schedules)
+            }
+
+            const eInfo = (show = false, message = '') => {
+                if (!show) {
+                  eInfoBody.classList.add('hidden')
+                  return false
+                }
+
+                eInfoText.textContent = message
+
+                eInfoBody.classList.remove('hidden')
+
+                setTimeout(() => {
+                  eInfoBody.classList.add('hidden')
+                }, 3000);
             }
 
             window.onload = () => {

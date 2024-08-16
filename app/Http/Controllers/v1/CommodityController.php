@@ -56,22 +56,22 @@ class CommodityController extends Controller
 
         $orderBys = [
             (object) [
-                'name' => 'Nama ASC',
+                'name' => 'Nama A-Z',
                 'id' => 'filter-name-asc',
                 'value' => 'name_asc',
             ],
             (object) [
-                'name' => 'Nama DESC',
+                'name' => 'Nama Z-A',
                 'id' => 'filter-name-desc',
                 'value' => 'name_desc',
             ],
             (object) [
-                'name' => 'Tanggal ASC',
+                'name' => 'Baru Ditambahkan',
                 'id' => 'filter-date-asc',
                 'value' => 'date_asc',
             ],
             (object) [
-                'name' => 'Tanggal DESC',
+                'name' => 'Data Terlama',
                 'id' => 'filter-date-desc',
                 'value' => 'date_desc',
             ],

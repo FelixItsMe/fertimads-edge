@@ -22,7 +22,7 @@
                 <div class="flex max-md:flex-col max-md:space-y-4 md:justify-between">
                     <div class="max-md:w-full">
                         <form action="" method="get" id="form-filter">
-                            <div class="relative">
+                            <div class="relative w-fit">
                                 <input type="text" name="search"
                                     class="w-full px-4 py-2 border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring focus:border-blue-300"
                                     placeholder="Cari" value="{{ request()->query('search') }}">

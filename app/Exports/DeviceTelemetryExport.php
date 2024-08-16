@@ -4,7 +4,7 @@ namespace App\Exports;
 
 use App\Models\DeviceTelemetry;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 

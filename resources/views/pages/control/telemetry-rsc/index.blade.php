@@ -110,7 +110,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-6">
               <div>
-                <x-input-label for="from" value="From" class="sr-only" />
+                <x-input-label for="from" value="{{ __('Tanggal Awal') }}" />
 
                 <x-text-input id="from" name="from" type="date" class="mt-1 block w-full"
                     placeholder="From" value="{{ request()->query('from', now()->format('Y-m-d')) }}" />
@@ -118,7 +118,7 @@
                 <x-input-error :messages="$errors->get('from')" class="mt-2" />
               </div>
               <div>
-                <x-input-label for="to" value="To" class="sr-only" />
+                <x-input-label for="to" value="{{ __('Tanggal Akhir') }}" />
 
                 <x-text-input id="to" name="to" type="date" class="mt-1 block w-full"
                     placeholder="To" value="{{ request()->query('to', now()->format('Y-m-d')) }}" />

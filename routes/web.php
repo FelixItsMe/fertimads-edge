@@ -82,6 +82,7 @@ Route::middleware('auth')->group(function () {
             Route::put('head-unit/schedule-water/{deviceSchedule}/stop', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'stopWaterSchedule'])->name('head-unit.schedule-water.stop');
             Route::get('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'indexControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.index');
             Route::post('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.store');
+            Route::delete('head-unit/schedule-fertilizer/{deviceFertilizerSchedule}', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'deleteActiveFertilizerSchedule'])->name('head-unit.schedule-fertilizer.destroy');
             Route::post('head-unit/stop', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'stopDevice'])->name('head-unit.stop.store');
 
             Route::get('telemetry-rsc', [\App\Http\Controllers\v1\Control\TelemetryRscController::class, 'index'])->name('telemetry-rsc.index');
@@ -116,6 +117,8 @@ Route::middleware('auth')->group(function () {
 
         // device
         Route::get('device-selenoid/{deviceSelenoid}/sensor', [\App\Http\Controllers\v1\DeviceSelenoidController::class, 'selenoidSensor'])->name('device-selenoid.sensor');
+
+        Route::get('schedule/fertilizer/active', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'activeFertilizerSchedules'])->name('schedule.fertilizer.active');
 
         Route::get('get-land/{land}', [\App\Http\Controllers\v1\LandController::class, 'getLand'])->name('land.get-land');
         Route::get('get-land-polygon-with-garden/{land}', [\App\Http\Controllers\v1\LandController::class, 'getLandPolygonWithGardens'])->name('land.get-land-polygon');
