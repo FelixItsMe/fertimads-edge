@@ -36,7 +36,7 @@
                     <span class="font-bold">{{ $sums->total_block }}&nbsp;Blok</span>
                 </x-card-info>
                 <x-card-info>
-                    <h5 class="text-xs text-slate-400">Total Population</h5>
+                    <h5 class="text-xs text-slate-400">Total Populasi</h5>
                     <span class="font-bold">{{ $sums->total_population }}</span>
                 </x-card-info>
             </div>
@@ -62,9 +62,10 @@
                       <thead>
                           <tr>
                               <th>Nama Kebun</th>
-                              <th>Luas Kebun</th>
+                              <th>Luas Kebun (m²)</th>
                               <th>Nama Komoditi</th>
                               <th>Koordinat Kebun</th>
+                              <th>Altitude (mdpl)</th>
                               <th>Total Blok</th>
                               <th>Aksi</th>
                           </tr>
@@ -75,7 +76,8 @@
                                   <td>{{ $garden->name }}</td>
                                   <td>{{ $garden->area }}&nbsp;m²</td>
                                   <td>{{ $garden->commodity->name }}</td>
-                                  <td>{{ $garden->latitude }},&nbsp;{{ $garden->longitude }},&nbsp;{{ $garden->altitude }}</td>
+                                  <td>{{ $garden->latitude }},&nbsp;{{ $garden->longitude }}</td>
+                                  <td>{{ $garden->altitude }}&nbsp;mdpl</td>
                                   <td>{{ $garden->count_block }} Blok</td>
                                   <td>
                                       <div class="flex flex-row space-x-2">
