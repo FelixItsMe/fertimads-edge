@@ -22,6 +22,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use PhpMqtt\Client\Facades\MQTT;
 
 class ControlHeadUnitController extends Controller
@@ -395,6 +396,44 @@ class ControlHeadUnitController extends Controller
 
         return response()->json([
             'message' => 'Berhasil dihentikan'
+        ]);
+    }
+
+    public function activeFertilizerSchedules() : JsonResponse {
+        $date = request()->query('date');
+
+        Validator::make(
+            ['date' => $date],
+            ['date' => 'required|date|date_format:Y-m-d'],
+            [],
+            ['date' => 'Tanggal']
+        )
+        ->validate();
+
+        $fertilizerSchedules = DeviceFertilizerSchedule::query()
+            ->with([
+                'deviceSelenoid:id,device_id',
+                'deviceSelenoid.device:id,series',
+                'garden:id,name',
+            ])
+            ->active()
+            ->whereDate('execute_start', $date)
+            ->get();
+
+        return response()->json($fertilizerSchedules);
+    }
+
+    public function deleteActiveFertilizerSchedule(DeviceFertilizerSchedule $deviceFertilizerSchedule) : JsonResponse {
+        if ($deviceFertilizerSchedule->is_finished) {
+            return response()->json([
+                'message' => 'Jadwal sudah berakhir!'
+            ], 400);
+        }
+
+        $deviceFertilizerSchedule->delete();
+
+        return response()->json([
+            'message' => 'Berhasil dihapus!'
         ]);
     }
 }
