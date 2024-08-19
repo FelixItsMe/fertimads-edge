@@ -1,9 +1,10 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
-    <div class="sm:sm:max-w-7x xl:max-w-full xl:max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="sm:sm:max-w-7x xl:max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex py-2">
-                <x-application-logo class="h-full object-cover" />
+                <img src="{{ asset('assets/logos/Logo_IPB_University_Horizontal.png') }}" alt="" srcset=""
+                  class="h-full object-cover" />
             </div>
 
             <!-- Settings Dropdown -->
