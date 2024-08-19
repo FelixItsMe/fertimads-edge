@@ -18,6 +18,6 @@
             'fa-solid',
             'fa-diamond',
             ]) ></i>
-        <div class="text-slate-400">Data Telemetry RSC</div>
+        <div class="text-slate-400">Data Telemetri RSC</div>
     </a>
 </li>

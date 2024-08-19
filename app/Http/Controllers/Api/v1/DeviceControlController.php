@@ -124,7 +124,7 @@ class DeviceControlController extends Controller
         );
 
         return response()->json([
-            'message' => 'Command Send, check the device!',
+            'message' => 'Perintah terkirim, cek perangkat anda!',
         ]);
     }
 
@@ -190,7 +190,7 @@ class DeviceControlController extends Controller
         );
 
         return response()->json([
-            'message' => 'Status Send',
+            'message' => 'Status terkirim',
         ]);
     }
 
@@ -213,7 +213,7 @@ class DeviceControlController extends Controller
         );
 
         return response()->json([
-            'message' => 'Command Send',
+            'message' => 'Perintah Terkirim',
         ]);
     }
 
@@ -282,7 +282,7 @@ class DeviceControlController extends Controller
         $garden->push();
 
         return response()->json([
-            'message' => 'Schedule Saved',
+            'message' => 'Jadwal Tersimpan!',
             'details' => [
                 'plantedDate' => $plantedDate,
                 'startDate'     => $startDate->format('Y-m-d'),
@@ -312,7 +312,7 @@ class DeviceControlController extends Controller
             ]);
 
         return response()->json([
-            'message' => 'Schedule canceled'
+            'message' => 'Jadwal penyiraman berhasil dibatalkan'
         ]);
     }
 
@@ -354,6 +354,9 @@ class DeviceControlController extends Controller
             ->orWhere(function(Builder $query)use($end){
                 $query->where('execute_start', '<=', $end->format('Y-m-d H:i:s'))
                 ->where('execute_end', '>=', $end->format('Y-m-d H:i:s'));
+            })
+            ->whereHas('deviceSelenoid', function($query)use($device){
+                $query->where('device_id', $device->id);
             })
             ->active()
             ->count();

@@ -87,6 +87,17 @@
     </a>
 </li>
 <li class="menu-item">
+    <a href="{{ route('aws-device.index') }}" class="menu-link">
+        <i @class([
+            'menu-icon',
+            'active-icon' => request()->routeIs('aws-device.*'),
+            'fa-solid',
+            'fa-cloud-moon',
+            ]) ></i>
+        <div class="text-slate-400">Manajemen Perangkat AWS</div>
+    </a>
+</li>
+<li class="menu-item">
     <a href="{{ route('user.index') }}" class="menu-link">
         <i @class([
             'menu-icon',

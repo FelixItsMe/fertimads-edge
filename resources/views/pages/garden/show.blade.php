@@ -5,6 +5,7 @@
   <style>
     #map {
       height: 50vh;
+      z-index: 50;
     }
   </style>
   @endpush
@@ -31,20 +32,28 @@
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
             <div class="flex flex-col gap-y-4">
               <div class="w-full">
-                <x-input-label class="text-slate-400" for="name">{{ __('Nama Lahan') }}</x-input-label>
+                <x-input-label class="text-slate-400" for="name">{{ __('Nama Kebun') }}</x-input-label>
                 <span>{{ $garden->name }}</span>
               </div>
               <div class="w-full">
-                <x-input-label class="text-slate-400" for="name">{{ __('Luas Lahan') }}</x-input-label>
+                <x-input-label class="text-slate-400" for="name">{{ __('Luas Kebun') }}</x-input-label>
                 <span>{{ $garden->area }} m2</span>
+              </div>
+              <div class="w-full">
+                <x-input-label class="text-slate-400" for="name">{{ __('Koordinat Kebun') }}</x-input-label>
+                <span>{{ $garden->latitude }}, {{ $garden->longitude }}, {{ $garden->altitude }}</span>
               </div>
               <div class="w-full">
                 <x-input-label class="text-slate-400" for="name">{{ __('Nama Komoditi') }}</x-input-label>
                 <span>{{ $garden->commodity->name }}</span>
               </div>
               <div class="w-full">
-                <x-input-label class="text-slate-400" for="name">{{ __('Koordinat Lahan') }}</x-input-label>
-                <span>{{ $garden->latitude }}, {{ $garden->longitude }}, {{ $garden->altitude }}</span>
+                <x-input-label class="text-slate-400" for="name">{{ __('Blok') }}</x-input-label>
+                <span>{{ $garden->count_block }}</span>
+              </div>
+              <div class="w-full">
+                <x-input-label class="text-slate-400" for="name">{{ __('Populasi') }}</x-input-label>
+                <span>{{ $garden->population }}</span>
               </div>
               <div class="w-full">
                 <x-input-label class="text-slate-400" for="name">{{ __('Nama Lahan') }}</x-input-label>
