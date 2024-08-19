@@ -36,7 +36,7 @@
   <div class="py-12">
     <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
       <div class="flex space-x-5">
-        <div class="w-8/12">
+        <div class="w-4/12">
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-full">
             <img src="/{{ $pest->file }}" class="w-full aspect-square rounded-lg object-cover" alt="">
             <div class="mt-5">
@@ -64,7 +64,7 @@
           <h2 class="gemini-header">Nama Penyakit</h2>
           <p>{!! $response->nama_penyakit !!}</p>
           <h2 class="gemini-subhead">Nama Hama</h2>
-          <p>{!! $response->nama_hama !!}</p>
+          <p>{!! $response->nama_hama ?? '-' !!}</p>
           <h2 class="gemini-subhead">Gejala</h2>
           @if (gettype($response->gejala) === 'array')
           <ul class="gemini-list">
@@ -95,6 +95,12 @@
           @else
           <p>{!! $response->pengobatan !!}</p>
           @endif
+          <h2 class="gemini-subhead">Jenis Pestisida</h2>
+          <p>{!! $response->pestisida ?? '-' !!}</p>
+          <h2 class="gemini-subhead">Cara Kerja</h2>
+          <p>{!! $response->cara_kerja ?? '-' !!}</p>
+          <h2 class="gemini-subhead">Golongan Senyawa Kimia Aktif</h2>
+          <p>{!! $response->senyawa_kimia ?? '-' !!}</p>
           <h2 class="gemini-subhead">Pengendalian</h2>
           @if (gettype($response->pengendalian) === 'array')
           <ul class="gemini-list">

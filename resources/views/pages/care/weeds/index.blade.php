@@ -23,8 +23,10 @@
           <h1 class="text-3xl font-extrabold">Tabel Laporan Gulma</h1>
           <div class="flex space-x-3">
             <a href="{{ route('weeds.create') }}" class="bg-indigo-500 text-white py-1.5 px-5 rounded-md">Tambah Data</a>
+            @if ($weeds->total() > 0)
             <a href="{{ route('weeds-report.export') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-excel"></i> Excel</a>
             <a href="{{ route('weeds-report.export-pdf') }}" target="_blank" class="bg-red-500 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-pdf"></i> PDF</a>
+            @endif
           </div>
         </div>
         <div class="overflow-x-scroll">
