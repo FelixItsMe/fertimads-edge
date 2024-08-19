@@ -1,4 +1,13 @@
 <li class="menu-item">
+  <a href="{{ route('care.index') }}" class="menu-link">
+    <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('care.index*'),
+      'fa-solid',
+      'fa-house',
+      ]) ></i>
+    <div class="text-slate-400">Dashboard</div>
+  </a>
+</li>
+<li class="menu-item">
   <a href="{{ route('fertilization-report.index') }}" class="menu-link">
     <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('fertilization-report.*'),
       'fa-solid',

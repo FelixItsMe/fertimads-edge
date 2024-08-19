@@ -37,6 +37,9 @@ class AuthenticatedSessionController extends Controller
             case UserRoleEnums::CONTROL->value:
                 $routeName = 'head-unit.manual.index';
                 break;
+            case UserRoleEnums::CARE->value:
+                $routeName = 'care.index';
+                break;
 
             default:
                 $routeName = 'dashboard.index';

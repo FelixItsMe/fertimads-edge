@@ -3,6 +3,7 @@
 use App\Enums\UserRoleEnums;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\v1\Care\ActivityScheduleController;
+use App\Http\Controllers\v1\Care\DashboardController;
 use App\Http\Controllers\v1\Care\DiseaseController;
 use App\Http\Controllers\v1\Care\FeritilizerReportController;
 use App\Http\Controllers\v1\Care\HarvestReportController;
@@ -20,6 +21,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard-care', [DashboardController::class, 'index'])->name('care.index');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

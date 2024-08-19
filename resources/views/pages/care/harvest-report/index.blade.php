@@ -67,9 +67,9 @@
                     <div class="text-teal-400 font-bold">Laba Bersih</div>
                   </div>
                   <div class="w-1/2 flex flex-col space-y-2 ">
-                    <div class="">Rp. 1,000,000</div>
-                    <div class="">Rp. 1,000,000</div>
-                    <div class="font-bold">Rp. 1,000,000</div>
+                    <div class="">Rp. 1.000.000,-</div>
+                    <div class="">Rp. 1.000.000,-</div>
+                    <div class="font-bold">Rp. 1.000.000,-</div>
                   </div>
                 </div>
               </div>
