@@ -4,15 +4,15 @@
         <a href="#" class="flex items-center">
             @switch(Auth::user()->role)
                 @case('management')
-                    <img src="{{ asset('assets/logos/logo-management.png') }}" alt="" srcset="" class="object-cover">
+                    <img src="{{ asset('assets/logos/logo-kasamak.png') }}" alt="" srcset="" class="object-cover">
                 @break
 
                 @case('control')
-                    <img src="{{ asset('assets/logos/logo-control.png') }}" alt="" srcset="" class="object-cover">
+                    <img src="{{ asset('assets/logos/logo-kasamak.png') }}" alt="" srcset="" class="object-cover">
                 @break
 
                 @default
-                    <img src="{{ asset('assets/logos/logo-management.png') }}" alt="" srcset=""
+                    <img src="{{ asset('assets/logos/logo-kasamak.png') }}" alt="" srcset=""
                         class="object-cover">
             @endswitch
         </a>

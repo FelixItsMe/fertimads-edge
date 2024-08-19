@@ -27,6 +27,7 @@ class ActivityScheduleController extends Controller
 
     public function scheduleInMonth(int $year, int $month): JsonResponse
     {
+        $queryGarden = request()->query('garden_id');
         $now = now()->parse("$year-$month-01");
 
         $startMonth = $now->copy()->startOfMonth()->format('Y-m-d');
@@ -44,9 +45,9 @@ class ActivityScheduleController extends Controller
             })
             ->whereYear('start_time', $year)
             ->whereMonth('start_time', $month)
-            ->when(request('garden_id'), function ($query) {
-                $query->whereHas('deviceSchedule', function ($query) {
-                    $query->where('garden_id', request('garden_id'));
+            ->when($queryGarden, function ($query)use($queryGarden) {
+                $query->whereHas('deviceSchedule', function ($query)use($queryGarden) {
+                    $query->where('garden_id', $queryGarden);
                 });
             })
             ->get();
@@ -54,8 +55,8 @@ class ActivityScheduleController extends Controller
         $fertilizerSchedules = DeviceFertilizerSchedule::query()
             ->whereYear('execute_start', $year)
             ->whereMonth('execute_start', $month)
-            ->when(request('garden_id'), function ($query) {
-                $query->where('garden_id', request('garden_id'));
+            ->when($queryGarden, function ($query)use($queryGarden) {
+                $query->where('garden_id', $queryGarden);
             })
             ->get();
 

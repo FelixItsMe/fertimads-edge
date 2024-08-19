@@ -6,6 +6,10 @@
         @csrf
 
         <div class="mb-12">
+          <img src="{{ asset('assets/logos/Logo_IPB_University_Horizontal.png') }}" alt="logo_ipb" srcset="" class="w-full object-cover">
+        </div>
+
+        <div class="mb-12">
             <h2 class="text-3xl font-bold mb-3" style="color: #740101;">Sign In</h2>
             <span class="text-slate-400">Enter your email and password to sign in!</span>
         </div>
@@ -43,7 +47,7 @@
                     name="remember">
                 <span class="ms-2 text-sm text-gray-600">{{ __('Keep me logged in') }}</span>
             </label>
-            @if (Route::has('password.request'))
+            @if (false)
                 <a class="underline text-sm text-fertimads hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     href="{{ route('password.request') }}">
                     {{ __('Forgot password?') }}
