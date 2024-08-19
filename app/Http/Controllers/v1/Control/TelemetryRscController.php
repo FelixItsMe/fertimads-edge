@@ -55,8 +55,30 @@ class TelemetryRscController extends Controller
                 $query->where('created_at', '>=', $queryFrom)
                 ->where('created_at', '<=', $queryTo);
             })
-            ->chunk(100, function(Collection $data)use(&$deviceTelemetries){
-                $deviceTelemetries = [...$deviceTelemetries, ...$data];
+            ->chunk(200, function(Collection $data)use(&$deviceTelemetries){
+                $formatData = [];
+                foreach ($data as $val) {
+                    $telemetry = (array) $val->telemetry;
+                    for ($i=1; $i <= 4; $i++) {
+                        $formatData[] = (object) [
+                            'created_at' => $val->created_at,
+                            'selenoid' => $i,
+                            'N' => number_format($telemetry['SS' . $i]->N, 2) . ' mg/kg',
+                            'P' => number_format($telemetry['SS' . $i]->P, 2) . ' mg/kg',
+                            'K' => number_format($telemetry['SS' . $i]->K, 2) . ' mg/kg',
+                            'EC' => number_format($telemetry['SS' . $i]->EC, 2) . ' uS/cm',
+                            'pH' => number_format($telemetry['SS' . $i]->pH, 2),
+                            'T' => number_format($telemetry['SS' . $i]->T, 2) . "°C",
+                            'H' => number_format($telemetry['SS' . $i]->H, 2) . "%",
+                            'dhtT' => number_format($telemetry['DHT1']->T, 2) . "°C",
+                            'dhtH' => number_format($telemetry['DHT1']->H, 2) . "%",
+                        ];
+                    }
+                }
+                $deviceTelemetries = [
+                    ...$deviceTelemetries,
+                    ...$formatData
+                ];
             });
 
         $deviceTelemetries = collect($deviceTelemetries);
