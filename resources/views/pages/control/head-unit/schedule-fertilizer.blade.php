@@ -153,9 +153,10 @@
                                     <div>
                                         <h3>Jadwal Pemupukan</h3>
                                         <div class="grid grid-cols-1 gap-2" id="list-schedule">
-                                          <div class="bg-white py-2 px-4 rounded-md grid grid-cols-1 md:grid-cols-5 md:gap-2 max-md:space-y-2 justify-between items-center">
-                                            <div class="col-span-5">Pilih tanggal di kalendar</div>
-                                          </div>
+                                            <div
+                                                class="bg-white py-2 px-4 rounded-md grid grid-cols-1 md:grid-cols-5 md:gap-2 max-md:space-y-2 justify-between items-center">
+                                                <div class="col-span-5">Pilih tanggal di kalendar</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -172,6 +173,7 @@
         <script src="{{ asset('js/extend.js') }}"></script>
         <script src="{{ asset('js/map.js') }}"></script>
         <script src="{{ asset('js/api.js') }}"></script>
+        <script src="{{ asset('js/weather.js') }}"></script>
         <script>
             const inputExecuteDate = document.querySelector('[name="execute_date"]')
             const eInfoBody = document.querySelector('#info-body')
@@ -227,34 +229,7 @@
             map.modalWether.onAdd = function(map) {
                 const div = L.DomUtil.create('div', 'leaflet-control');
 
-                div.innerHTML = `
-                  <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-gradient-to-br from-blue-600 to-blue-900 rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                    <div class="p-3 grid grid-cols-3 gap-2 text-white">
-                      <div>
-                        <div>
-                          <div class="text-lg font-extrabold lato-regular">Jumat</div>
-                          <div class="text-6xl font-extrabold lato-regular relative">26<span class="absolute -top-4">°</span></div>
-                        </div>
-                        <div class="text-xs font-semibold text-slate-50/50">Last Updated 11:50</div>
-                        <div><i class="fa-solid fa-location-dot"></i>&nbsp;<span class="text-xs">AWS 01</span></div>
-                      </div>
-                      <div class="grid grid-cols-1 content-between">
-                        <div>
-                          <div><i class="fa-solid fa-wind"></i>&nbsp;28 km/h</div>
-                          <div><i class="fa-solid fa-droplet"></i>&nbsp;42%</div>
-                        </div>
-                        <div>
-                          <div>H&nbsp;30%</div>
-                          <div>L&nbsp;20%</div>
-                        </div>
-                      </div>
-                      <div class="text-center">
-                        <div><i class="fa-solid fa-moon text-8xl"></i></div>
-                        <div class="text-lg text-slate-50/50">Clear</div>
-                      </div>
-                    </div>
-                  </div>
-                `;
+                div.innerHTML = weatherHtml()
 
                 L.DomEvent.disableClickPropagation(div)
                 L.DomEvent.disableScrollPropagation(div)
@@ -317,7 +292,9 @@
                             cell.classList.add('text-gray-400'); // Grey out days from previous/next month
                         } else {
                             cell.textContent = currentDay;
-                            cell.setAttribute('data-date', `${year}-${(month + 1).toString().padStart(2, "0")}-${currentDay.toString().padStart(2, "0")}`);
+                            cell.setAttribute('data-date',
+                                `${year}-${(month + 1).toString().padStart(2, "0")}-${currentDay.toString().padStart(2, "0")}`
+                                );
 
                             cell.onclick = (e) => {
                                 selectDate(e.target)
@@ -368,10 +345,10 @@
                 hideLoading()
 
                 eInfo(
-                  true,
-                  data
-                    ? 'Jadwal Pemupukan Berhasil disimpan!'
-                    : 'Gagal disimpan!'
+                    true,
+                    data ?
+                    'Jadwal Pemupukan Berhasil disimpan!' :
+                    'Gagal disimpan!'
                 );
 
                 showLoadingListSchedule()
@@ -474,8 +451,7 @@
                 const url = new URL("{{ route('extra.schedule.fertilizer.active') }}")
                 url.searchParams.append('date', date)
                 const data = await fetchData(
-                    url,
-                    {
+                    url, {
                         method: "GET",
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
@@ -489,7 +465,7 @@
             }
 
             const showLoadingListSchedule = () => {
-              eListSchedule.innerHTML = `
+                eListSchedule.innerHTML = `
                   <div class="bg-white py-2 px-4 rounded-md">
                       Loading...
                   </div>
@@ -497,27 +473,27 @@
             }
 
             const initListSchedule = schedules => {
-              if (schedules.length == 0) {
-                eListSchedule.innerHTML = `
+                if (schedules.length == 0) {
+                    eListSchedule.innerHTML = `
                   <div class="bg-white py-2 px-4 rounded-md grid grid-cols-1 md:grid-cols-5 md:gap-2 max-md:space-y-2 justify-between items-center">
                     <div class="col-span-5 text-center">Tidak Ada</div>
                   </div>`
 
-                return false
-              }
+                    return false
+                }
 
-              let eSchedules = ``
+                let eSchedules = ``
 
-              schedules.forEach(schedule => {
-                eSchedules += `
+                schedules.forEach(schedule => {
+                    eSchedules += `
                   <div class="bg-white py-2 px-4 rounded-md grid grid-cols-1 md:grid-cols-5 md:gap-2 max-md:space-y-2 justify-between items-center">
                     <span class="col-span-4 break-words">${schedule.execute_start.split(' ')[1]}-${schedule.execute_end.split(' ')[1]}|${schedule.device_selenoid.device.series}|${schedule.garden.name}|${fertilizeType(schedule.type)} ${schedule.total_volume} Ltr</span>
                     <button class="bg-red-500 text-white font-semibold py-2 px-4 rounded-md w-full" onclick="destroySchedules(${schedule.id})">Hapus</button>
                   </div>
                 `
-              });
+                });
 
-              eListSchedule.innerHTML = eSchedules
+                eListSchedule.innerHTML = eSchedules
             }
 
             const addMonth = () => {
@@ -541,29 +517,28 @@
             }
 
             const fertilizeType = type => {
-              switch (type) {
-                case 1:
-                  return 'N'
-                  break;
-                case 2:
-                  return 'P'
-                  break;
-                case 3:
-                  return 'K'
-                  break;
+                switch (type) {
+                    case 1:
+                        return 'N'
+                        break;
+                    case 2:
+                        return 'P'
+                        break;
+                    case 3:
+                        return 'K'
+                        break;
 
-                default:
-                  return ''
-                  break;
-              }
+                    default:
+                        return ''
+                        break;
+                }
             }
 
             const destroySchedules = async id => {
-              showLoadingListSchedule()
+                showLoadingListSchedule()
 
-              const data = await fetchData(
-                    "{{ route('head-unit.schedule-fertilizer.destroy', 'ID') }}".replace('ID', id),
-                    {
+                const data = await fetchData(
+                    "{{ route('head-unit.schedule-fertilizer.destroy', 'ID') }}".replace('ID', id), {
                         method: "DELETE",
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
@@ -582,8 +557,8 @@
 
             const eInfo = (show = false, message = '') => {
                 if (!show) {
-                  eInfoBody.classList.add('hidden')
-                  return false
+                    eInfoBody.classList.add('hidden')
+                    return false
                 }
 
                 eInfoText.textContent = message
@@ -591,7 +566,7 @@
                 eInfoBody.classList.remove('hidden')
 
                 setTimeout(() => {
-                  eInfoBody.classList.add('hidden')
+                    eInfoBody.classList.add('hidden')
                 }, 3000);
             }
 
@@ -600,6 +575,24 @@
 
                 // Generate and display the calendar
                 generateCalendar(currentMonth, currentYear);
+
+                const weatherElements = {
+                    eTemp: document.querySelector('#bmkg-temp'),
+                    eHumid: document.querySelector('#bmkg-humid'),
+                    eMaxT: document.querySelector('#bmkg-max-t'),
+                    eMinT: document.querySelector('#bmkg-min-t'),
+                    eWindSpeed: document.querySelector('#bmkg-ws'),
+                    eWeatherName: document.querySelector('#bmkg-weather-name'),
+                    eWeatherIcon: document.querySelector('#bmkg-weather-icon'),
+                    eTime: document.querySelector('#bmkg-times'),
+                    eDay: document.querySelector('#bmkg-day'),
+                }
+
+                bmkgWether(weatherElements)
+
+                setInterval(() => {
+                    bmkgWether(weatherElements)
+                }, 1000 * 10);
             }
         </script>
     @endpush
