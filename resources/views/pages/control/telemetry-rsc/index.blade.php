@@ -127,14 +127,20 @@
               </div>
             </div>
 
-            <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">
-                    {{ __('Batalkan') }}
-                </x-secondary-button>
+            <div class="mt-6 flex justify-between">
+                <div>
+                  <div id="export-status">
+                  </div>
+                </div>
+                <div>
+                  <x-secondary-button x-on:click="$dispatch('close')">
+                      {{ __('Batalkan') }}
+                  </x-secondary-button>
 
-                <x-primary-button class="ms-3">
-                    {{ __('Export Excel') }}
-                </x-primary-button>
+                  <x-primary-button class="ms-3" type="button" x-on:click="exportTelemetry()">
+                      {{ __('Export Excel') }}
+                  </x-primary-button>
+                </div>
             </div>
         </form>
     </x-modal>
@@ -146,6 +152,7 @@
         <script src="{{ asset('js/api.js') }}"></script>
         <script src="{{ asset('js/weather.js') }}"></script>
         <script>
+            const eExportStatus = document.getElementById('export-status')
             let stateData = {
                 polygon: null,
                 layerPolygon: null,
@@ -260,8 +267,41 @@
                 initLandPolygon(landId, map)
             }
 
+            const exportTelemetry = async () => {
+              const eQueryFrom = document.querySelector('input#from'),
+                eQueryTo = document.querySelector('input#to'),
+                exportUrl = new URL("{{ route('telemetry-rsc.export-excel') }}")
+
+              exportUrl.searchParams.append('from', eQueryFrom.value)
+              exportUrl.searchParams.append('to', eQueryTo.value)
+
+              const data = await fetchData(
+                    exportUrl, {
+                        method: "GET",
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+                                .nodeValue,
+                            'Accept': 'application/json',
+                        },
+                    }
+                );
+
+              if (!data) {
+                eExportStatus.textContent = ''
+                return false
+              }
+
+              eExportStatus.textContent = `Export sedang berlangsung!`
+            }
+
             window.onload = () => {
                 console.log('Hello world');
+                window.Echo.private('export-completed.{{ auth()->user()->id }}')
+                  .listen('ExportCompletedEvent', (event) => {
+                      eExportStatus.innerHTML = `Export Selesai... <a href="{{ route('telemetry-rsc.download-excel') }}"
+                        target="_blank" class="text-sky-400 hover:text-blue-600 underline">Klik untuk mengunduh!</a>`
+                  })
+
                 initLandPolygon(1, map)
 
                 const weatherElements = {

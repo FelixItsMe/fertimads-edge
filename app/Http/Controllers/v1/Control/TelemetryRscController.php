@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\v1\Control;
 
-use App\Exports\DeviceTelemetryExport;
 use App\Http\Controllers\Controller;
+use App\Jobs\ExportRscTelemetryJob;
+use App\Jobs\NotifyUserOfCompletedExport;
 use App\Models\DeviceTelemetry;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class TelemetryRscController extends Controller
 {
@@ -24,7 +23,7 @@ class TelemetryRscController extends Controller
         return view('pages.control.telemetry-rsc.index', compact('deviceTelemetries'));
     }
 
-    public function excelExport() : BinaryFileResponse|RedirectResponse {
+    public function excelExport() : JsonResponse {
         $queryFrom = request()->query('from');
         $queryTo = request()->query('to');
 
@@ -45,9 +44,7 @@ class TelemetryRscController extends Controller
             )
             ->validate();
 
-        $deviceTelemetries = [];
-
-        DeviceTelemetry::query()
+        $deviceTelemetriesCount = DeviceTelemetry::query()
             ->when(($queryFrom == $queryTo), function(Builder $query, $a)use($queryFrom){
                 $query->whereDate('created_at', $queryFrom);
             })
@@ -55,42 +52,37 @@ class TelemetryRscController extends Controller
                 $query->where('created_at', '>=', $queryFrom)
                 ->where('created_at', '<=', $queryTo);
             })
-            ->chunk(200, function(Collection $data)use(&$deviceTelemetries){
-                $formatData = [];
-                foreach ($data as $val) {
-                    $telemetry = (array) $val->telemetry;
-                    for ($i=1; $i <= 4; $i++) {
-                        $formatData[] = (object) [
-                            'created_at' => $val->created_at,
-                            'selenoid' => $i,
-                            'N' => number_format($telemetry['SS' . $i]->N, 2) . ' mg/kg',
-                            'P' => number_format($telemetry['SS' . $i]->P, 2) . ' mg/kg',
-                            'K' => number_format($telemetry['SS' . $i]->K, 2) . ' mg/kg',
-                            'EC' => number_format($telemetry['SS' . $i]->EC, 2) . ' uS/cm',
-                            'pH' => number_format($telemetry['SS' . $i]->pH, 2),
-                            'T' => number_format($telemetry['SS' . $i]->T, 2) . "°C",
-                            'H' => number_format($telemetry['SS' . $i]->H, 2) . "%",
-                            'dhtT' => number_format($telemetry['DHT1']->T, 2) . "°C",
-                            'dhtH' => number_format($telemetry['DHT1']->H, 2) . "%",
-                        ];
-                    }
-                }
-                $deviceTelemetries = [
-                    ...$deviceTelemetries,
-                    ...$formatData
-                ];
-            });
+            ->count();
 
-        $deviceTelemetries = collect($deviceTelemetries);
-
-        if ($deviceTelemetries->count() == 0) {
-            return back()->withErrors([
-                'deviceTelemetries' => [
-                    'Data tidak ada untuk range tanggal yang dipilih'
+        if ($deviceTelemetriesCount == 0) {
+            return response()->json([
+                'message' => 'Data tidak ada untuk range tanggal yang dipilih',
+                'errors' => [
+                    'deviceTelemetries' => [
+                        'Data tidak ada untuk range tanggal yang dipilih'
+                    ]
                 ]
-            ]);
+            ], 400);
         }
 
-        return Excel::download(new DeviceTelemetryExport($deviceTelemetries), 'rsc-telemetri.xlsx');
+        ExportRscTelemetryJob::dispatch($queryFrom, $queryTo, request()->user())
+            ->onQueue('export-telemetry-rsc');
+            // ->chain([
+            //     new NotifyUserOfCompletedExport(request()->user()),
+            // ]);
+
+        // Excel::queue(new DeviceTelemetryExport($deviceTelemetries), 'export/excel/invoices-1.xlsx')
+        //     ->onQueue('export-telemetry-rsc')
+        //     ->chain([
+        //         new NotifyUserOfCompletedExport(request()->user()),
+        //     ]);
+
+        return response()->json([
+            'message' => 'Export sedang berlangsung!'
+        ]);
+    }
+
+    public function downloadCompletedExport() {
+        return Storage::download('export/excel/rsc-telemetri-'. request()->user()->id .'.xlsx');
     }
 }
