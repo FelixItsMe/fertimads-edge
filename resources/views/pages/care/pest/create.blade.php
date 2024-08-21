@@ -27,7 +27,7 @@
             <div class="relative h-[400px] w-[400px]">
               <div id="holder" class="z-0 text-center absolute grid place-items-center text-gray-800 bg-slate-400 top-0 bottom-0 right-0 left-0 border-2 border-dashed">
                 Upload File disini <br>
-                (Maksimal Ukuran foto 2mb, dengan dimensi 2048x2048)
+                (Maksimal Ukuran foto 2mb, dengan dimensi 2048x2048, dan fomat JPEG, JPG, PNG)
               </div>
               <img id='preview_img' class="z-10 h-[400px] w-[400px] object-cover rounded-lg absolute top-0 bottom-0 right-0 left-0" src="" />
               <label class="z-50 block mt-5 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full h-full opacity-0">

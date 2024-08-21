@@ -47,7 +47,7 @@ class GeminiService
         $simhash = new SimhashService();
 
         $diseaseName = $response?->nama_penyakit ?? '-';
-        $pestName = $response?->nama_hama ?? '-';
+        $pestName = $response?->nama_hama === "" || $response->nama_hama === null ? '-' : $response->nama_hama;
 
         foreach($diseases as $disease) {
             if ($simhash->isSimilar($response->nama_penyakit, $disease->name)) {
@@ -55,6 +55,9 @@ class GeminiService
                 $response->nama_penyakit = $disease->name;
                 $response->pengendalian = $disease->control;
                 $response->pengobatan = $disease->cure_name;
+                $response->pestisida = $disease->pestisida;
+                $response->cara_kerja = $disease->works_category;
+                $response->senyawa_kimia = $disease->chemical;
                 break;
             }
         }

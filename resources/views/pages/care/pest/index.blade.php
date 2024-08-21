@@ -28,8 +28,10 @@
           <h1 class="text-3xl font-extrabold">Tabel Laporan Hama</h1>
           <div class="flex space-x-3">
             <a href="{{ route('pest.create') }}" class="bg-indigo-500 text-white py-1.5 px-5 rounded-md">Tambah Data</a>
+            @if ($pests->total() > 0)
             <a href="{{ route('pest-report.export') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-excel"></i> Excel</a>
             <a href="{{ route('pest-report.export-pdf') }}" target="_blank" class="bg-red-500 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-pdf"></i> PDF</a>
+            @endif
           </div>
         </div>
         <div class="overflow-x-scroll">
