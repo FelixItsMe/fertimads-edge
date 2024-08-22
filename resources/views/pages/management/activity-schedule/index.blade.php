@@ -28,12 +28,12 @@
                         </div>
                         <div id="calendar"></div>
                         <div class="grid grid-cols-1 mt-3">
-                          <div class="flex items-center space-x-2">
-                            <div class="bg-primary w-10 h-1"></div> <span>Penyiraman</span>
-                          </div>
-                          <div class="flex items-center space-x-2">
-                            <div class="bg-yellow-400 w-10 h-1"></div> <span>Pemupukan</span>
-                          </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="bg-primary w-10 h-1"></div> <span>Penyiraman</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="bg-yellow-400 w-10 h-1"></div> <span>Pemupukan</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -195,11 +195,11 @@
                 let eDetail = ``
 
                 data.waterSchedules.forEach(waterSchedule => {
-                  eDetail += initWaterSchedules(waterSchedule)
+                    eDetail += initWaterSchedules(waterSchedule)
                 });
 
                 data.fertilizerSchedules.forEach(fertilizerSchedule => {
-                  eDetail += initFertilizerSchedules(fertilizerSchedule)
+                    eDetail += initFertilizerSchedules(fertilizerSchedule)
                 });
 
                 eListDetailSchedules.innerHTML = eDetail
@@ -213,6 +213,17 @@
 
                 const diffInMinutes = diffInMiliseconds / (1000 * 60)
                 let actualDiffInMinutes = null
+
+                console.log(waterSchedule);
+
+                const diffDay = calculateDayDifference(
+                  new Date(waterSchedule.device_schedule.start_date),
+                  date1,
+                )
+
+                console.log(diffDay);
+
+                const newCommAge = diffDay + waterSchedule.device_schedule.commodity_age
 
                 let eActual = ``
 
@@ -241,7 +252,23 @@
                 }
 
                 return `<div class="bg-white p-4 rounded-md shadow-md">
-                            <h3 class="text-3xl font-bold mb-4">Detail Informasi Jadwal Penyiraman</h3>
+                            <h3 class="text-2xl font-bold mb-4">Detail Informasi Jadwal Penyiraman</h3>
+                            <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
+                                <div class="col-span-2">
+                                    <span class="text-xl font-bold text-slate-400">Komoditi</span>
+                                </div>
+                                <div class="col-span-3">
+                                    <span class="col-span-3 text-xl text-slate-400" id="text-water-times">${waterSchedule.device_schedule.commodity.name}</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
+                                <div class="col-span-2">
+                                    <span class="text-xl font-bold text-slate-400">Umur</span>
+                                </div>
+                                <div class="col-span-3">
+                                    <span class="col-span-3 text-xl text-slate-400" id="text-water-times">${newCommAge} Hari</span>
+                                </div>
+                            </div>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
                                     <span class="text-xl font-bold text-slate-400">Volume</span>
@@ -306,7 +333,7 @@
                 }
 
                 return `<div class="bg-white p-4 rounded-md shadow-md">
-                            <h3 class="text-3xl font-bold mb-4">Detail Informasi Jadwal Pemupukan</h3>
+                            <h3 class="text-2xl font-bold mb-4">Detail Informasi Jadwal Pemupukan</h3>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
                                     <span class="text-xl font-bold text-slate-400">Volume</span>
@@ -486,6 +513,17 @@
                 const data = await getSchedules(currentYear, currentMonth + 1)
 
                 generateCalendar(currentMonth, currentYear, data.schedules);
+            }
+
+            const calculateDayDifference = (d1, d2) => {
+
+                // Calculate the time difference in milliseconds
+                const timeDiff = Math.abs(d2 - d1);
+
+                // Convert milliseconds to days
+                const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+                return dayDiff;
             }
 
             window.onload = async () => {
