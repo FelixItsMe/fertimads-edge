@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
 
             Route::resource('daily-irrigation', \App\Http\Controllers\v1\Management\DailyIrrigationController::class)->only(['index', 'create', 'store']);
 
-            Route::get('aws-device', [\App\Http\Controllers\v1\Management\AwsDeviceController::class, 'index'])->name('aws-device.index');
+            Route::resource('aws-device', \App\Http\Controllers\v1\Management\AwsDeviceController::class)->except('show');
         });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CONTROL->value])
