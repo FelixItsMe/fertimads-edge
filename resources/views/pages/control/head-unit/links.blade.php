@@ -17,7 +17,7 @@
         'px-4',
         'py-2',
         'text-xs',
-    ])>Auto (Sensor RSC)</a>
+    ])>Auto (Sensor SMS)</a>
 <a href="{{ route('head-unit.schedule-water.index') }}"
     @class([
         'bg-white' => !request()->routeIs('head-unit.schedule-water.index') && !request()->routeIs('head-unit.schedule-fertilizer.index'),
