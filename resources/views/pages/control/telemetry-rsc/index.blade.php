@@ -12,7 +12,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Data Telemetri RSC') }}
+            {{ __('Data Telemetri SMS') }}
         </h2>
     </x-slot>
 
@@ -23,7 +23,7 @@
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 flex justify-between">
-                    <h1 class="text-3xl font-extrabold">Tabel Data RSC</h1>
+                    <h1 class="text-3xl font-extrabold">Tabel Data SMS</h1>
                     <div>
                         <input type="text" placeholder="Search" aria-placeholder="Search" class="rounded-full">
 
