@@ -145,6 +145,8 @@ class ActivityScheduleController extends Controller
         $now = now()->parse($date)->format('Y-m-d');
         $waterSchedules = DeviceScheduleRun::query()
             ->with([
+                'deviceSchedule:id,commodity_id,commodity_age,start_date',
+                'deviceSchedule.commodity:id,name',
                 'deviceScheduleExecute' => function($query){
                     $query->whereNotNull('end_time');
                 }

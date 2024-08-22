@@ -127,14 +127,20 @@
               </div>
             </div>
 
-            <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">
-                    {{ __('Batalkan') }}
-                </x-secondary-button>
+            <div class="mt-6 flex justify-between">
+                <div>
+                  <div id="export-status">
+                  </div>
+                </div>
+                <div>
+                  <x-secondary-button x-on:click="$dispatch('close')">
+                      {{ __('Batalkan') }}
+                  </x-secondary-button>
 
-                <x-primary-button class="ms-3">
-                    {{ __('Export Excel') }}
-                </x-primary-button>
+                  <x-primary-button class="ms-3" type="button" x-on:click="exportTelemetry()">
+                      {{ __('Export Excel') }}
+                  </x-primary-button>
+                </div>
             </div>
         </form>
     </x-modal>
@@ -144,7 +150,9 @@
         <script src="{{ asset('js/extend.js') }}"></script>
         <script src="{{ asset('js/map.js') }}"></script>
         <script src="{{ asset('js/api.js') }}"></script>
+        <script src="{{ asset('js/weather.js') }}"></script>
         <script>
+            const eExportStatus = document.getElementById('export-status')
             let stateData = {
                 polygon: null,
                 layerPolygon: null,
@@ -186,34 +194,7 @@
             map.modalWether.onAdd = function(map) {
                 const div = L.DomUtil.create('div', 'leaflet-control');
 
-                div.innerHTML = `
-                  <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-gradient-to-br from-blue-600 to-blue-900 rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                    <div class="p-3 grid grid-cols-3 gap-2 text-white">
-                      <div>
-                        <div>
-                          <div class="text-lg font-extrabold lato-regular">Jumat</div>
-                          <div class="text-6xl font-extrabold lato-regular relative">26<span class="absolute -top-4">°</span></div>
-                        </div>
-                        <div class="text-xs font-semibold text-slate-50/50">Last Updated 11:50</div>
-                        <div><i class="fa-solid fa-location-dot"></i>&nbsp;<span class="text-xs">AWS 01</span></div>
-                      </div>
-                      <div class="grid grid-cols-1 content-between">
-                        <div>
-                          <div><i class="fa-solid fa-wind"></i>&nbsp;28 km/h</div>
-                          <div><i class="fa-solid fa-droplet"></i>&nbsp;42%</div>
-                        </div>
-                        <div>
-                          <div>H&nbsp;30%</div>
-                          <div>L&nbsp;20%</div>
-                        </div>
-                      </div>
-                      <div class="text-center">
-                        <div><i class="fa-solid fa-moon text-8xl"></i></div>
-                        <div class="text-lg text-slate-50/50">Clear</div>
-                      </div>
-                    </div>
-                  </div>
-                `;
+                div.innerHTML = weatherHtml()
 
                 L.DomEvent.disableClickPropagation(div)
                 L.DomEvent.disableScrollPropagation(div)
@@ -286,9 +267,60 @@
                 initLandPolygon(landId, map)
             }
 
+            const exportTelemetry = async () => {
+              const eQueryFrom = document.querySelector('input#from'),
+                eQueryTo = document.querySelector('input#to'),
+                exportUrl = new URL("{{ route('telemetry-rsc.export-excel') }}")
+
+              exportUrl.searchParams.append('from', eQueryFrom.value)
+              exportUrl.searchParams.append('to', eQueryTo.value)
+
+              const data = await fetchData(
+                    exportUrl, {
+                        method: "GET",
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+                                .nodeValue,
+                            'Accept': 'application/json',
+                        },
+                    }
+                );
+
+              if (!data) {
+                eExportStatus.textContent = ''
+                return false
+              }
+
+              eExportStatus.textContent = `Export sedang berlangsung!`
+            }
+
             window.onload = () => {
                 console.log('Hello world');
+                window.Echo.private('export-completed.{{ auth()->user()->id }}')
+                  .listen('ExportCompletedEvent', (event) => {
+                      eExportStatus.innerHTML = `Export Selesai... <a href="{{ route('telemetry-rsc.download-excel') }}"
+                        target="_blank" class="text-sky-400 hover:text-blue-600 underline">Klik untuk mengunduh!</a>`
+                  })
+
                 initLandPolygon(1, map)
+
+                const weatherElements = {
+                  eTemp: document.querySelector('#bmkg-temp'),
+                  eHumid: document.querySelector('#bmkg-humid'),
+                  eMaxT: document.querySelector('#bmkg-max-t'),
+                  eMinT: document.querySelector('#bmkg-min-t'),
+                  eWindSpeed: document.querySelector('#bmkg-ws'),
+                  eWeatherName: document.querySelector('#bmkg-weather-name'),
+                  eWeatherIcon: document.querySelector('#bmkg-weather-icon'),
+                  eTime: document.querySelector('#bmkg-times'),
+                  eDay: document.querySelector('#bmkg-day'),
+                }
+
+                bmkgWether(weatherElements)
+
+                setInterval(() => {
+                  bmkgWether(weatherElements)
+                }, 1000 * 10);
             }
         </script>
     @endpush

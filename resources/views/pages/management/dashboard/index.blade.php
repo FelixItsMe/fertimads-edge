@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
         <style>
             #map {
-                height: 90vh;
+                /* height: 90vh; */
                 z-index: 50;
             }
         </style>
@@ -41,7 +41,7 @@
                 </x-card-info>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div id="map"></div>
+                <div id="map" class="h-96 md:h-dvh max-sm:mx-6"></div>
             </div>
             <div class="grid grid-flow-row grid-cols-1 md:grid-cols-3 max-sm:gap-y-4 md:gap-4">
                 <div class="col-span-2">
@@ -147,6 +147,7 @@
         <script src="{{ asset('js/extend.js') }}"></script>
         <script src="{{ asset('js/map.js') }}"></script>
         <script src="{{ asset('js/api.js') }}"></script>
+        <script src="{{ asset('js/weather.js') }}"></script>
         <script>
             // Get current date
             let today = new Date();
@@ -195,11 +196,11 @@
                 .setView([-6.46958, 107.033339], 18);
 
             L.control.layers(baseMapOptions, null, {
-                position: 'bottomright'
+                position: 'topleft'
             }).addTo(map)
 
             L.control.zoom({
-                position: 'bottomright'
+                position: 'topleft'
             }).addTo(map);
 
             map.modalWether = L.control({
@@ -208,34 +209,7 @@
             map.modalWether.onAdd = function(map) {
                 const div = L.DomUtil.create('div', 'leaflet-control');
 
-                div.innerHTML = `
-                  <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-gradient-to-br from-blue-600 to-blue-900 rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                    <div class="p-3 grid grid-cols-3 gap-2 text-white">
-                      <div>
-                        <div>
-                          <div class="text-lg font-extrabold lato-regular">Jumat</div>
-                          <div class="text-6xl font-extrabold lato-regular relative">26<span class="absolute -top-4">°</span></div>
-                        </div>
-                        <div class="text-xs font-semibold text-slate-50/50">Last Updated 11:50</div>
-                        <div><i class="fa-solid fa-location-dot"></i>&nbsp;<span class="text-xs">AWS 01</span></div>
-                      </div>
-                      <div class="grid grid-cols-1 content-between">
-                        <div>
-                          <div><i class="fa-solid fa-wind"></i>&nbsp;28 km/h</div>
-                          <div><i class="fa-solid fa-droplet"></i>&nbsp;42%</div>
-                        </div>
-                        <div>
-                          <div>H&nbsp;30%</div>
-                          <div>L&nbsp;20%</div>
-                        </div>
-                      </div>
-                      <div class="text-center">
-                        <div><i class="fa-solid fa-moon text-8xl"></i></div>
-                        <div class="text-lg text-slate-50/50">Clear</div>
-                      </div>
-                    </div>
-                  </div>
-                `;
+                div.innerHTML = weatherHtml()
 
                 L.DomEvent.disableClickPropagation(div)
                 L.DomEvent.disableScrollPropagation(div)
@@ -244,7 +218,7 @@
             map.modalWether.addTo(map);
 
             map.modalControl = L.control({
-                position: 'topleft'
+                position: 'topright'
             });
 
             map.modalControl.onAdd = function(map) {
@@ -254,14 +228,14 @@
                 let latestTelemetry = null
 
                 div.innerHTML = `
-                  <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                    <div class="px-2 pt-5 pb-4 bg-white sm:p-3 sm:pb-4">
+                  <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full hidden" id="garden-detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                    <div class="px-2 pt-2 pb-2 bg-white sm:p-3 sm:pb-4 max-h-48 md:max-h-96 overflow-y-scroll">
                       <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:text-left">
                           <div class="mt-2">
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4">
                               <div>
-                                <h4 class="text-lg font-medium leading-6 text-gray-900 mb-2">Informasi Kebun <span id="nama-kebun"></span></h4>
+                                <h4 class="text-sm md:text-lg font-medium leading-6 text-gray-900 mb-2">Informasi Kebun <span id="nama-kebun"></span></h4>
                                 <table class="w-full">
                                   <tbody>
                                     <tr class="py-3">
@@ -296,7 +270,7 @@
                                 </table>
                               </div>
                               <div>
-                                <h4 class="text-lg font-medium leading-6 text-gray-900 mb-2">Unsur Hara Terbaru</h4>
+                                <h4 class="text-xs md:text-lg font-medium leading-6 text-gray-900 mb-2">Unsur Hara Terbaru</h4>
                                 <div class="flex w-full flex-wrap gap-5">
                                   <div>
                                     <div class="font-bold text-gray-500">Nitrogen</div>
@@ -337,18 +311,18 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="grid grid-cols-2 gap-4 mt-3 h-fit">
+                            <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4 mt-3">
                               <div>
-                                <h4 class="text-lg font-medium leading-6 text-gray-900 mb-2">Jadwal Fertigasi</h4>
+                                <h4 class="text-xs md:text-lg font-medium leading-6 text-gray-900 mb-2">Jadwal Fertigasi</h4>
                                 <div class="overflow-y-hidden">
                                   <input type="hidden" name="execute_date">
                                   <div class="py-2 px-4 bg-primary text-white flex flex-row justify-between">
                                     <div id="month-year-text" class="font-extrabold"></div>
                                     <div class="flex gap-2">
                                       <button type="button" class="hover:text-slate-400"
-                                      id="subMonthButton"><i class="fa-solid fa-chevron-left"></i></button>
+                                       onclick="subMonth(this)" id="calendar-add-month" data-garden-id=""><i class="fa-solid fa-chevron-left"></i></button>
                                       <button type="button" class="hover:text-slate-400"
-                                      id="addMonthButton"><i class="fa-solid fa-chevron-right"></i></button>
+                                       onclick="addMonth(this)" id="calendar-sub-month" data-garden-id=""><i class="fa-solid fa-chevron-right"></i></button>
                                     </div>
                                   </div>
                                   <div id="calendar"></div>
@@ -357,17 +331,17 @@
                                 <div class="flex items-center space-x-4 mt-3">
                                   <div class="flex items-center space-x-2">
                                     <span class="w-4 rounded-full aspect-square bg-yellow-300"></span>
-                                    <span class="">Pemupukan</span>
+                                    <span class="text-xs md:text-base">Pemupukan</span>
                                   </div>
 
                                   <div class="flex items-center space-x-2">
                                     <span class="w-4 rounded-full aspect-square bg-primary"></span>
-                                    <span class="">Penyiraman</span>
+                                    <span class="text-xs md:text-base">Penyiraman</span>
                                   </div>
                                 </div>
                               </div>
-                              <div class="h-3/6 overflow-y-scroll">
-                                <h4 class="text-lg font-medium leading-6 text-gray-900 mb-2">Detail Informasi Jadwal</h4>
+                              <div class="">
+                                <h4 class="text-xs md:text-lg font-medium leading-6 text-gray-900 mb-2">Detail Informasi Jadwal</h4>
 
                                 <div id="list-detail-schedule" class="flex flex-col space-y-2">
                                 </div>
@@ -378,7 +352,7 @@
                       </div>
                     </div>
                     <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
-                      <button type="button" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-teal-700 hover:text-white sm:ml-3 sm:w-auto sm:text-sm" onclick="map.removeControl(map.modalControl)">Tutup</button>
+                      <button type="button" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-teal-700 hover:text-white sm:ml-3 sm:w-auto sm:text-sm" onclick="document.querySelector('#garden-detail-modal').classList.add('hidden')">Tutup</button>
                     </div>
                   </div>
                 `;
@@ -720,10 +694,15 @@
                 document.querySelector('#telemetry-h-dht').textContent = parseFloat(data.telemetry.dht1.H).toFixed(2) +
                     "%"
 
+                document.querySelector('#calendar-add-month').dataset.gardenId = data.garden.id
+                document.querySelector('#calendar-sub-month').dataset.gardenId = data.garden.id
+
                 const calendarSchedules = await getSchedules(data.garden.id, currentYear, currentMonth + 1)
 
                 // Generate and display the calendar
                 generateCalendar(currentMonth, currentYear, data.garden.id, calendarSchedules.schedules);
+
+                document.querySelector('#garden-detail-modal').classList.remove('hidden')
             }
 
             const generateCalendar = (month, year, gardenId, availableSchedules) => {
@@ -924,83 +903,29 @@
                 }
 
                 return `<div class="bg-white p-4 rounded-md shadow-md">
-                            <h3 class="text-base font-bold mb-4">Detail Informasi Jadwal Penyiraman</h3>
+                            <h3 class="text-xs md:text-base font-bold mb-4">Detail Informasi Jadwal Penyiraman</h3>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Volume</span>
+                                    <span class="text-xs md:text-sm font-bold text-slate-400">Volume</span>
                                 </div>
                                 <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${waterSchedule.total_volume.toFixed(2)} Liter</span>
+                                    <span class="col-span-3 text-xs md:text-sm text-slate-400" id="text-water-times">${waterSchedule.total_volume.toFixed(2)} Liter</span>
                                 </div>
                             </div>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Durasi</span>
+                                    <span class="text-xs md:text-sm font-bold text-slate-400">Durasi</span>
                                 </div>
                                 <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${diffInMinutes.toFixed(2)} Menit</span>
+                                    <span class="col-span-3 text-xs md:text-sm text-slate-400" id="text-water-times">${diffInMinutes.toFixed(2)} Menit</span>
                                 </div>
                             </div>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Waktu</span>
+                                    <span class="text-xs md:text-sm font-bold text-slate-400">Waktu</span>
                                 </div>
                                 <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${waterSchedule.start_time}</span>
-                                </div>
-                            </div>
-                            ${eActual}
-                          </div><div class="bg-white p-4 rounded-md shadow-md">
-                            <h3 class="text-base font-bold mb-4">Detail Informasi Jadwal Penyiraman</h3>
-                            <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
-                                <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Volume</span>
-                                </div>
-                                <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${waterSchedule.total_volume.toFixed(2)} Liter</span>
-                                </div>
-                            </div>
-                            <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
-                                <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Durasi</span>
-                                </div>
-                                <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${diffInMinutes.toFixed(2)} Menit</span>
-                                </div>
-                            </div>
-                            <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
-                                <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Waktu</span>
-                                </div>
-                                <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${waterSchedule.start_time}</span>
-                                </div>
-                            </div>
-                            ${eActual}
-                          </div><div class="bg-white p-4 rounded-md shadow-md">
-                            <h3 class="text-base font-bold mb-4">Detail Informasi Jadwal Penyiraman</h3>
-                            <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
-                                <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Volume</span>
-                                </div>
-                                <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${waterSchedule.total_volume.toFixed(2)} Liter</span>
-                                </div>
-                            </div>
-                            <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
-                                <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Durasi</span>
-                                </div>
-                                <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${diffInMinutes.toFixed(2)} Menit</span>
-                                </div>
-                            </div>
-                            <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
-                                <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Waktu</span>
-                                </div>
-                                <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${waterSchedule.start_time}</span>
+                                    <span class="col-span-3 text-xs md:text-sm text-slate-400" id="text-water-times">${waterSchedule.start_time}</span>
                                 </div>
                             </div>
                             ${eActual}
@@ -1026,46 +951,46 @@
 
                     eActual = `<div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Aktual Volume</span>
+                                    <span class="text-xs md:text-sm font-bold text-slate-400">Aktual Volume</span>
                                 </div>
                                 <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${fertilizerSchedules.schedule_execute?.total_volume.toFixed(2)} Liter</span>
+                                    <span class="col-span-3 text-xs md:text-sm text-slate-400" id="text-water-times">${fertilizerSchedules.schedule_execute?.total_volume.toFixed(2)} Liter</span>
                                 </div>
                             </div>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Aktual Durasi</span>
+                                    <span class="text-xs md:text-sm font-bold text-slate-400">Aktual Durasi</span>
                                 </div>
                                 <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${actualDiffInMinutes.toFixed(2)} Menit</span>
+                                    <span class="col-span-3 text-xs md:text-sm text-slate-400" id="text-water-times">${actualDiffInMinutes.toFixed(2)} Menit</span>
                                 </div>
                             </div>`
                 }
 
                 return `<div class="bg-white p-4 rounded-md shadow-md">
-                            <h3 class="text-base font-bold mb-4">Detail Informasi Jadwal Pemupukan</h3>
+                            <h3 class="text-xs md:text-base font-bold mb-4">Detail Informasi Jadwal Pemupukan</h3>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Volume</span>
+                                    <span class="text-xs md:text-sm font-bold text-slate-400">Volume</span>
                                 </div>
                                 <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${fertilizerSchedules.total_volume.toFixed(2)} Liter</span>
+                                    <span class="col-span-3 text-xs md:text-sm text-slate-400" id="text-water-times">${fertilizerSchedules.total_volume.toFixed(2)} Liter</span>
                                 </div>
                             </div>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Durasi</span>
+                                    <span class="text-xs md:text-sm font-bold text-slate-400">Durasi</span>
                                 </div>
                                 <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${diffInMinutes.toFixed(2)} Menit</span>
+                                    <span class="col-span-3 text-xs md:text-sm text-slate-400" id="text-water-times">${diffInMinutes.toFixed(2)} Menit</span>
                                 </div>
                             </div>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
-                                    <span class="text-sm font-bold text-slate-400">Waktu</span>
+                                    <span class="text-xs md:text-sm font-bold text-slate-400">Waktu</span>
                                 </div>
                                 <div class="col-span-3">
-                                    <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${fertilizerSchedules.execute_start}</span>
+                                    <span class="col-span-3 text-xs md:text-sm text-slate-400" id="text-water-times">${fertilizerSchedules.execute_start}</span>
                                 </div>
                             </div>
                             ${eActual}
@@ -1120,9 +1045,51 @@
                 return data
             }
 
+            const addMonth = async e => {
+                currentMonth++
+                if (currentMonth > 11) {
+                    currentMonth = 0
+                    currentYear++
+                }
+
+                const data = await getSchedules(e.dataset.gardenId, currentYear, currentMonth + 1)
+
+                generateCalendar(currentMonth, currentYear, e.dataset.gardenId, data.schedules);
+            }
+
+            const subMonth = async e => {
+                currentMonth--
+                if (currentMonth < 0) {
+                    currentMonth = 11
+                    currentYear--
+                }
+
+                const data = await getSchedules(e.dataset.gardenId, currentYear, currentMonth + 1)
+
+                generateCalendar(currentMonth, currentYear, e.dataset.gardenId, data.schedules);
+            }
+
             window.onload = () => {
                 console.log('Hello world');
                 initLandPolygon(1, map)
+
+                const weatherElements = {
+                    eTemp: document.querySelector('#bmkg-temp'),
+                    eHumid: document.querySelector('#bmkg-humid'),
+                    eMaxT: document.querySelector('#bmkg-max-t'),
+                    eMinT: document.querySelector('#bmkg-min-t'),
+                    eWindSpeed: document.querySelector('#bmkg-ws'),
+                    eWeatherName: document.querySelector('#bmkg-weather-name'),
+                    eWeatherIcon: document.querySelector('#bmkg-weather-icon'),
+                    eTime: document.querySelector('#bmkg-times'),
+                    eDay: document.querySelector('#bmkg-day'),
+                  }
+
+                bmkgWether(weatherElements)
+
+                setInterval(() => {
+                  bmkgWether(weatherElements)
+                }, 1000 * 10);
             }
         </script>
     @endpush
