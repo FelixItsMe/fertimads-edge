@@ -3,7 +3,6 @@
   <style>
     .gemini-header {
       color: #333;
-      border-bottom: 2px solid #ddd;
       padding-bottom: 5px;
     }
 
@@ -66,17 +65,26 @@
           </div>
         </div>
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-full">
-          <h2 class="gemini-header">Deskripsi</h2>
-          <p>{{ $weeds->deskripsi }}</p>
+          <div class="mb-3">
+            <h2 class="gemini-header">Deskripsi</h2>
+            <p>{{ $weeds->deskripsi }}</p>
 
-          <h2 class="gemini-header">Pengendalian</h2>
-          <p>{{ $weeds->pengendalian }}</p>
+          </div>
 
-          <h2 class="gemini-header">Klasifikasi Berdasarkan Cara Kerja</h2>
-          <p>{{ $weeds->klasifikasi_berdasarkan_cara_kerja }}</p>
+          <div class="mb-3">
+            <h2 class="gemini-header">Pengendalian</h2>
+            <p>{{ $weeds->pengendalian }}</p>
+          </div>
 
-          <h2 class="gemini-subhead">Golongan Senyawa Kimia</h2>
-          <p>{{ $weeds->golongan_senyawa_kimia }}</p>
+          <div class="mb-3">
+            <h2 class="gemini-header">Klasifikasi Berdasarkan Cara Kerja</h2>
+            <p>{{ $weeds->klasifikasi_berdasarkan_cara_kerja }}</p>
+          </div>
+
+          <div class="mb-3">
+            <h2 class="gemini-header">Golongan Senyawa Kimia</h2>
+            <p>{{ $weeds->golongan_senyawa_kimia }}</p>
+          </div>
         </div>
       </div>
     </div>

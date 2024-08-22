@@ -9,7 +9,7 @@
     <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8 flex flex-col gap-4">
       @if (session()->has('success'))
       <div class="bg-sky-500 text-white w-full p-6 sm:rounded-lg flex items-center">
-        <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;{{ session()->get('user-success') }}
+        <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;{{ session()->get('success') }}
       </div>
       @endif
       <div class="grid grid-flow-row grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -38,6 +38,8 @@
                 <th>Kelompok Penyakit</th>
                 <th>Jenis Pestisida</th>
                 <th>Cara Kerja</th>
+                <th>Bahan Kimia</th>
+                <th>Bahan Aktif</th>
                 <th>Aksi</th>
               </tr>
             </thead>
@@ -49,6 +51,8 @@
                 <td>{{ $disease->category }}</td>
                 <td>{{ $disease->pestisida }}</td>
                 <td>{{ $disease->works_category }}</td>
+                <td>{{ $disease->chemical }}</td>
+                <td>{{ $disease->active_materials }}</td>
                 <td>
                   <div class="flex flex-row space-x-2">
                     <a href="{{ route('disease.show', $disease->id) }}" title="Lihat Penyakit" class="text-sm text-warning">

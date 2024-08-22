@@ -8,8 +8,13 @@
   @endpush
 
   <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-      {{ __('Laporan Penyakit') }}
+    <h2 class="leading-tight">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{{ route('disease.index') }}">Laporan Penyakit</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-active">{{ __('Tambah Penyakit') }}</li>
+      </ol>
     </h2>
   </x-slot>
 
@@ -89,11 +94,6 @@
               <label for="active_materials" class="block">Bahan Aktif</label>
               <x-textarea class="w-full h-full block" name="active_materials" id="active_materials"></x-textarea>
               <x-input-error :messages="$errors->get('active_materials')" class="mt-2" />
-            </div>
-            <div class="w-full mt-5">
-              <label for="cure_name" class="block">Nama Obat</label>
-              <x-text-input class="w-full" name="cure_name" id="cure_name"></x-text-input>
-              <x-input-error :messages="$errors->get('cure_name')" class="mt-2" />
             </div>
             <div class="block mt-5">
               <x-primary-button>Kirim</x-primary-button>

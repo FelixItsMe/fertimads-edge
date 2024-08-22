@@ -7,7 +7,7 @@
 
   <div class="py-12">
     <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8 flex flex-col gap-4">
-      @if (session()->has('user-success'))
+      @if (session()->has('weeds-success'))
       <div class="bg-sky-500 text-white w-full p-6 sm:rounded-lg flex items-center">
         <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;{{ session()->get('user-success') }}
       </div>
