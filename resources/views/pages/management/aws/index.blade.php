@@ -15,7 +15,7 @@
             <div class="flex flex-col sm:flex-row gap-4">
                 <x-card-info class="w-full md:w-1/2 lg:w-1/4">
                     <h5 class="text-xs text-slate-400">Total Perangkat AWS</h5>
-                    <span class="font-bold">1</span>
+                    <span class="font-bold">{{ $awsDevices->total() }}</span>
                 </x-card-info>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
