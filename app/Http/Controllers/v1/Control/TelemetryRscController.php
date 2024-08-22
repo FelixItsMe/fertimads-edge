@@ -83,6 +83,12 @@ class TelemetryRscController extends Controller
     }
 
     public function downloadCompletedExport() {
-        return Storage::download(storage_path('app/export/excel/rsc-telemetri-'. request()->user()->id .'.xlsx'));
+        $filePath = 'export/excel/rsc-telemetri-'. request()->user()->id .'.xlsx';
+        if (!Storage::exists($filePath)) {
+            return back()->withErrors([
+                'download' => ['File tidak ditemukan!']
+            ]);
+        }
+        return Storage::download($filePath);
     }
 }
