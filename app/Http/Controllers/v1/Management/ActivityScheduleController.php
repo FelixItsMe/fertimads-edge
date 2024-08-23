@@ -34,22 +34,24 @@ class ActivityScheduleController extends Controller
         $endMonth = $now->copy()->endOfMonth()->format('Y-m-d');
 
         $waterSchedules = DeviceScheduleRun::query()
-            ->whereHas('deviceSchedule', function(Builder $query){
-                $query->where('is_finished', 0);
-            })
-            ->orWhere(function(Builder $query){
-                $query->whereHas('deviceSchedule', function(Builder $query){
-                    $query->where('is_finished', 1);
-                })
-                ->has('deviceScheduleExecute');
-            })
-            ->whereYear('start_time', $year)
-            ->whereMonth('start_time', $month)
             ->when($queryGarden, function ($query)use($queryGarden) {
                 $query->whereHas('deviceSchedule', function ($query)use($queryGarden) {
                     $query->where('garden_id', $queryGarden);
                 });
             })
+            ->where(function($query){
+                $query->whereHas('deviceSchedule', function(Builder $query){
+                    $query->where('is_finished', 0);
+                })
+                ->orWhere(function(Builder $query){
+                    $query->whereHas('deviceSchedule', function(Builder $query){
+                        $query->where('is_finished', 1);
+                    })
+                    ->has('deviceScheduleExecute');
+                });
+            })
+            ->whereYear('start_time', $year)
+            ->whereMonth('start_time', $month)
             ->get();
 
         $fertilizerSchedules = DeviceFertilizerSchedule::query()
@@ -99,6 +101,7 @@ class ActivityScheduleController extends Controller
         }
 
         return response()->json([
+            'garden' => $queryGarden,
             'message' => 'Schedule',
             'time' => [
                 $startMonth, $endMonth

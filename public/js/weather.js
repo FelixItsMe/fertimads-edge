@@ -57,7 +57,9 @@ const bmkgWether = async ({ eTemp, eHumid, eWindSpeed, eMaxT, eMinT, eWeatherNam
     }
     for (const weather of weathers.children) {
       if (weather.attributes.h.nodeValue == currentHours) {
-        eWeatherName.textContent = weatherNames(parseInt(weather.children[0].textContent))
+        const [weatherName, weatherIcon] = weatherNames(parseInt(weather.children[0].textContent))
+        eWeatherName.textContent = weatherName
+        eWeatherIcon.innerHTML = `<i class="fa-solid fa-${weatherIcon}"></i>`
       }
     }
 }
@@ -65,50 +67,50 @@ const bmkgWether = async ({ eTemp, eHumid, eWindSpeed, eMaxT, eMinT, eWeatherNam
 const weatherNames = code => {
     switch (code) {
         case 0:
-            return "Cerah"
+            return ["Cerah", "sun"]
             break;
         case 1:
-            return "Cerah Berawan"
+            return ["Cerah Berawan", "cloud-sun"]
             break;
         case 2:
-            return "Cerah Berawan"
+            return ["Cerah Berawan", "cloud-sun"]
             break;
         case 3:
-            return "Berawan"
+            return ["Berawan", "cloud"]
             break;
         case 4:
-            return "Berawan Tebal"
+            return ["Berawan Tebal", "cloud"]
             break;
         case 5:
-            return "CerahUdara Kabur"
+            return ["Udara Kabur", "smog"]
             break;
         case 10:
-            return "Asap"
+            return ["Asap", "smog"]
             break;
         case 45:
-            return "Kabut"
+            return ["Kabut", "smog"]
             break;
         case 60:
-            return "Hujan Ringan"
+            return ["Hujan Ringan", "cloud-rain"]
             break;
         case 61:
-            return "Hujan Sedang"
+            return ["Hujan Sedang", "cloud-showers-heavy"]
             break;
         case 63:
-            return "Hujan Lebat"
+            return ["Hujan Lebat", "cloud-showers-heavy"]
             break;
         case 80:
-            return "Hujan Lokal"
+            return ["Hujan Lokal", "cloud-showers-heavy"]
             break;
         case 95:
-            return "Hujan Petir"
+            return ["Hujan Petir", "cloud-bolt"]
             break;
         case 97:
-            return "Hujan Petir"
+            return ["Hujan Petir", "cloud-bolt"]
             break;
 
         default:
-            return ""
+            return ["", ""]
             break;
     }
 }

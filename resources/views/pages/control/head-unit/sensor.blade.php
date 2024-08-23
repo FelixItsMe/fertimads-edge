@@ -62,6 +62,11 @@
                                     </div>
                                 </div>
                                 <div class="grid grid-flow-row grid-cols-4">
+                                    <div class="font-semibold">Atur Threshold</div>
+                                    <div class="col-span-3">
+                                    </div>
+                                </div>
+                                <div class="grid grid-flow-row grid-cols-4">
                                     <div>Kelembapan (%)</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
