@@ -32,7 +32,6 @@ class StoreDiseaseRequest extends FormRequest
             'works_category' => 'required|string|max:255',
             'chemical' => 'required|string',
             'active_materials' => 'required|string',
-            'cure_name' => 'required|string',
         ];
     }
 }

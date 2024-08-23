@@ -35,7 +35,7 @@ class DiseaseController extends Controller
     public function store(StoreDiseaseRequest $request)
     {
         // Access the validated data
-        $validatedData = $request->safe()->except('image');
+        $validatedData = $request->safe()->except('image') + ['cure_name' => '-'];
 
         if ($request->hasFile('image')) {
             $filePath = $this->imageService->image_intervention($request->file('image'), 'fertimads/images/disease/', 1/1);
@@ -45,7 +45,6 @@ class DiseaseController extends Controller
         } else {
             Disease::create($validatedData + ['image' => '-']);
         }
-
 
         // Redirect with a success message
         return redirect()->route('disease.index')->with('success', 'Disease data has been added successfully.');
@@ -80,6 +79,8 @@ class DiseaseController extends Controller
         $this->imageService->deleteImage($disease->image);
 
         $disease->delete();
+
+        session()->flash('success', 'Berhasil dihapus!');
 
         return response()->json([
             'message' => 'Berhasil dihapus!'

@@ -85,6 +85,8 @@ class WeedsController extends Controller
 
         $weeds->delete();
 
+        session()->flash('weeds-success', 'Berhasil dihapus!');
+
         return response()->json([
             'message' => 'Berhasil dihapus!'
         ]);
