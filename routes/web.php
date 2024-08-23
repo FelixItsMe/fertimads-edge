@@ -17,7 +17,22 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    switch (auth()->user()->role) {
+        case UserRoleEnums::MANAGEMENT->value:
+            $routeName = 'dashboard.index';
+            break;
+        case UserRoleEnums::CONTROL->value:
+            $routeName = 'head-unit.semi-auto.index';
+            break;
+        case UserRoleEnums::CARE->value:
+            $routeName = 'care.index';
+            break;
+
+        default:
+            $routeName = 'profile.edit';
+            break;
+    }
+    return redirect()->route($routeName);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
