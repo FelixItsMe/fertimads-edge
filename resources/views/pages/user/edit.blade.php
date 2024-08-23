@@ -45,7 +45,7 @@
                         </div>
                         <div class="grid grid-flow-col sm:grid-flow-row sm:grid-cols-2 gap-2">
                             <div>
-                                <x-input-label for="password">{{ __('Password') }} <span class="text-danger">*Tidak wajib</span></x-input-label>
+                                <x-input-label for="password">Password <span class="text-danger">*Tidak wajib</span></x-input-label>
                                 <x-text-input id="password" class="block mt-1 w-full rounded-xl" type="password"
                                     name="password" :value="old('password')" autocomplete="password" />
                                 <x-input-error :messages="$errors->get('password')" class="mt-2" />

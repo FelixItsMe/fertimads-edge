@@ -33,9 +33,6 @@
                 <i class="fa-regular fa-eye" id="eye-icon"></i>
               </button>
             </div>
-            {{-- <x-text-input id="password" class="block mt-1 px-5 w-full rounded-xl" type="password" name="password"
-                placeholder="Min. 8 characters" aria-placeholder="Min. 8 characters" required
-                autocomplete="current-password" /> --}}
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
