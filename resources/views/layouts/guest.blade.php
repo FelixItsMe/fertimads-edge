@@ -19,21 +19,21 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="container mx-auto px-4 py-16 flex items-center justify-center min-h-screen">
-            <div class="flex-1 flex justify-center">
+    <body class="min-h-screen flex flex-col font-sans text-gray-900 antialiased">
+        <div class="flex-grow container mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 items-center justify-center">
+            <div class="flex justify-center">
                 <div class="w-full sm:max-w-md mt-6 px-6 py-4">
                     {{ $slot }}
                 </div>
             </div>
 
-            <div class="flex-1 flex justify-center">
+            <div class="flex justify-center max-md:order-first">
                 <a href="/">
                     <x-application-logo class="w-full object-cover" />
                 </a>
             </div>
         </div>
-        <div class="absolute bottom-0 left-1/2 -translate-x-1/2">
+        <div class="w-full text-center pb-2">
             Copyright © 2024 IPB UNIVERSITY. All Right Reserved.
         </div>
         @stack('scripts')
