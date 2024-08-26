@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Exports\CommodityExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Commodity\StoreCommodityRequest;
 use App\Http\Requests\Commodity\UpdateCommodityRequest;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class CommodityController extends Controller
 {
@@ -172,5 +175,47 @@ class CommodityController extends Controller
         return response()->json([
             'message' => 'Berhasil dihapus!'
         ]);
+    }
+
+    public function exportExcel() : BinaryFileResponse {
+        $collect = [];
+
+        foreach (
+            Commodity::query()
+                ->withCount('gardens')
+                ->when(request()->query('order_by'), function(Builder $query, $orderBy){
+                    switch ($orderBy) {
+                        case 'name_asc':
+                            $query->orderBy('name');
+                            break;
+                        case 'name_desc':
+                            $query->orderByDesc('name');
+                            break;
+                        case 'date_asc':
+                            $query->orderBy('created_at');
+                            break;
+                        case 'date_desc':
+                            $query->orderByDesc('created_at');
+                            break;
+
+                        default:
+                            $query->orderBy('name');
+                            break;
+                    }
+                })
+                ->lazy() as $commodity
+        ) {
+            $collect[] = (object) [
+                "name"          => $commodity->name,
+                "description"   => $commodity->description,
+                "gardens_count" => $commodity->gardens_count,
+                "created_at"    => $commodity->created_at->format('Y-m-d H:i:s'),
+                "updated_at"    => $commodity->updated_at->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        $collect = collect($collect);
+
+        return Excel::download(new CommodityExport($collect), now()->format('YmdHis') . '-komoditi.xlsx');
     }
 }
