@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Exports\LandExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Land\StoreLandRequest;
 use App\Http\Requests\Land\UpdateLandRequest;
@@ -10,6 +11,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class LandController extends Controller
 {
@@ -154,5 +157,31 @@ class LandController extends Controller
             'message' => 'Data Polygon lahan dan kebun',
             'lands' => $lands,
         ]);
+    }
+
+    public function exportExcel() : BinaryFileResponse {
+        $collect = [];
+
+        foreach (
+            Land::query()
+                ->withCount('gardens')
+                ->lazy() as $land
+        ) {
+            $collect[] = (object) [
+                "name"      => $land->name,
+                "address"   => $land->address,
+                "latitude"  => $land->latitude,
+                "longitude"  => $land->longitude,
+                "altitude"  => $land->altitude,
+                "area"  => $land->area,
+                "gardens_count"  => $land->gardens_count ?? 0,
+                "created_at"  => $land->created_at->format('Y-m-d H:i:s'),
+                "updated_at"  => $land->updated_at->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        $collect = collect($collect);
+
+        return Excel::download(new LandExport($collect), now()->format('YmdHis') . '-lahan.xlsx');
     }
 }

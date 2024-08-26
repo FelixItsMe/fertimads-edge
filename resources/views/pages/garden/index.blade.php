@@ -55,6 +55,8 @@
                     </div>
                     <div>
                       <a href="{{ route('garden.create') }}" class="bg-fertimads-2 text-white py-2 px-4 rounded-md">Tambah Kebun</a>
+                      <a href="{{ route('garden.export-excel') }}" target="_blank"
+                        class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export Excel</a>
                     </div>
                 </div>
                 <div class="overflow-x-scroll">

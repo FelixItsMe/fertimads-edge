@@ -47,6 +47,7 @@
                     </div>
                     <div class="items-center">
                       <a href="{{ route('land.create') }}" class="bg-fertimads-2 text-white py-2 px-4 rounded-md text-center">Tambah Lahan</a>
+                      <a href="{{ route('land.export-excel') }}" target="_blank" class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export Excel</a>
                     </div>
                 </div>
                 <div class="overflow-x-scroll">
@@ -70,7 +71,7 @@
                                   <td>{{ Str::limit($land->address, 25) }}</td>
                                   <td>{{ $land->latitude }},&nbsp;{{ $land->longitude }}</td>
                                   <td>{{ $land->altitude }}&nbsp;mdpl</td>
-                                  <td>{{ $land->gardens_count }}</td>
+                                  <td class="text-center">{{ $land->gardens_count }}</td>
                                   <td>
                                       <div class="flex flex-row space-x-2">
                                           <a href="{{ route('land.show', $land->id) }}" title="Detail Lahan" class="text-sm text-info">

@@ -53,10 +53,13 @@ Route::middleware('auth')->group(function () {
 
             // Land Route
             Route::resource('land', \App\Http\Controllers\v1\LandController::class);
+            Route::get('land/export/excel', [\App\Http\Controllers\v1\LandController::class, 'exportExcel'])->name('land.export-excel');
 
             Route::resource('garden', \App\Http\Controllers\v1\GardenController::class);
+            Route::get('garden/export/excel', [\App\Http\Controllers\v1\GardenController::class, 'exportExcel'])->name('garden.export-excel');
 
             Route::resource('commodity', \App\Http\Controllers\v1\CommodityController::class);
+            Route::get('commodity/export/excel', [\App\Http\Controllers\v1\CommodityController::class, 'exportExcel'])->name('commodity.export-excel');
 
             Route::resource('device-type', \App\Http\Controllers\v1\DeviceTypeController::class);
 
