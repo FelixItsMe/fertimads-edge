@@ -205,9 +205,6 @@
             map.modalControl.onAdd = function(map) {
                 const div = L.DomUtil.create('div', 'leaflet-control');
 
-                let garden = null
-                let latestTelemetry = null
-
                 div.innerHTML = `
                   <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full hidden" id="garden-detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
                     <div class="px-2 pt-2 pb-2 bg-white sm:p-3 sm:pb-4 max-h-48 md:max-h-96 overflow-y-scroll">
@@ -224,28 +221,28 @@
                                         <p class="text-gray-500 font-bold">Luas Kebun</p>
                                       </td>
                                       <td class="pb-1">:</td>
-                                      <td class="pb-1"><span class="text-gray-500 font-normal" id="luasKebun">${garden?.area ?? '-'} m²</span></td>
+                                      <td class="pb-1"><span class="text-gray-500 font-normal" id="luasKebun"> m²</span></td>
                                     </tr>
                                     <tr class="py-3">
                                       <td class="py-1">
                                       <p class="text-gray-500 font-bold">Komoditi</p>
                                       </td>
                                       <td class="py-1">:</td>
-                                      <td class="py-1"><span class="text-gray-500 font-normal" id="komoditi">${garden?.commodity?.name ?? ''}</span></td>
+                                      <td class="py-1"><span class="text-gray-500 font-normal" id="komoditi"></span></td>
                                     </tr>
                                     <tr class="py-3">
                                       <td class="py-1">
                                         <p class="text-gray-500 font-bold">Total Blok</p>
                                       </td>
                                       <td class="py-1">:</td>
-                                      <td class="py-1"><span class="text-gray-500 font-normal" id="totalBlok">${garden?.count_block ?? '-'} Blok</span></td>
+                                      <td class="py-1"><span class="text-gray-500 font-normal" id="totalBlok"> Blok</span></td>
                                     </tr>
                                     <tr class="py-3">
                                       <td class="py-1">
                                         <p class="text-gray-500 font-bold">Populasi</p>
                                       </td>
                                       <td class="py-1">:</td>
-                                      <td class="py-1"><span class="text-gray-500 font-normal" id="populasi">${garden?.populations || '-'} Tanaman</span></td>
+                                      <td class="py-1"><span class="text-gray-500 font-normal" id="populasi"> Tanaman</span></td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -255,39 +252,39 @@
                                 <div class="flex w-full flex-wrap gap-5">
                                   <div>
                                     <div class="font-bold text-gray-500">Nitrogen</div>
-                                    <div class="text-gray-500 font-normal" id="telemetry-n">${(latestTelemetry?.telemetry?.soil_sensor.N ?? 0)} mg/kg</div>
+                                    <div class="text-gray-500 font-normal" id="telemetry-n"> mg/kg</div>
                                   </div>
                                   <div>
                                     <div class="font-bold text-gray-500">Fosfor</div>
-                                    <div class="text-gray-500 font-normal" id="telemetry-f">${(latestTelemetry?.telemetry?.soil_sensor.P ?? 0)} mg/kg</div>
+                                    <div class="text-gray-500 font-normal" id="telemetry-f"> mg/kg</div>
                                   </div>
                                   <div>
                                     <div class="font-bold text-gray-500">Kalium</div>
-                                    <div class="text-gray-500 font-normal" id="telemetry-k">${(latestTelemetry?.telemetry?.soil_sensor.K ?? 0)} mg/kg</div>
+                                    <div class="text-gray-500 font-normal" id="telemetry-k"> mg/kg</div>
                                   </div>
                                   <div>
                                     <div class="font-bold text-gray-500">EC</div>
-                                    <div class="text-gray-500 font-normal" id="telemetry-ec">${(latestTelemetry?.telemetry?.soil_sensor.EC ?? 0)} uS/cm</div>
+                                    <div class="text-gray-500 font-normal" id="telemetry-ec"> uS/cm</div>
                                   </div>
                                   <div>
                                     <div class="font-bold text-gray-500">pH Tanah</div>
-                                    <div class="text-gray-500 font-normal" id="telemetry-ph">${(latestTelemetry?.telemetry?.soil_sensor.pH ?? 0)}</div>
+                                    <div class="text-gray-500 font-normal" id="telemetry-ph"></div>
                                   </div>
                                   <div>
                                     <div class="font-bold text-gray-500">Suhu Tanah</div>
-                                    <div class="text-gray-500 font-normal" id="telemetry-t-tanah">${(latestTelemetry?.telemetry?.soil_sensor.T ?? 0)}<sup>o</sup>C</div>
+                                    <div class="text-gray-500 font-normal" id="telemetry-t-tanah"><sup>o</sup>C</div>
                                   </div>
                                   <div>
                                     <div class="font-bold text-gray-500">Kelembapan Tanah</div>
-                                    <div class="text-gray-500 font-normal" id="telemetry-h-tanah">${(latestTelemetry?.telemetry?.soil_sensor.H ?? 0)}%</div>
+                                    <div class="text-gray-500 font-normal" id="telemetry-h-tanah">%</div>
                                   </div>
                                   <div>
                                     <div class="font-bold text-gray-500">Suhu Lingkungan</div>
-                                    <div class="text-gray-500 font-normal" id="telemetry-t-dht">${(latestTelemetry?.telemetry?.dht1.T ?? 0).toFixed(2)}<sup>o</sup>C</div>
+                                    <div class="text-gray-500 font-normal" id="telemetry-t-dht"><sup>o</sup>C</div>
                                   </div>
                                   <div>
                                     <div class="font-bold text-gray-500">Kelembapan Lingkungan</div>
-                                    <div class="text-gray-500 font-normal" id="telemetry-h-dht">${(latestTelemetry?.telemetry?.dht1.H ?? 0).toFixed(2)}%</div>
+                                    <div class="text-gray-500 font-normal" id="telemetry-h-dht">%</div>
                                   </div>
                                 </div>
                               </div>
