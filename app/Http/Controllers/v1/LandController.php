@@ -175,8 +175,8 @@ class LandController extends Controller
                 "altitude"  => $land->altitude,
                 "area"  => $land->area,
                 "gardens_count"  => $land->gardens_count ?? 0,
-                "created_at"  => $land->created_at->format('Y-m-d'),
-                "updated_at"  => $land->updated_at->format('Y-m-d'),
+                "created_at"  => $land->created_at->format('Y-m-d H:i:s'),
+                "updated_at"  => $land->updated_at->format('Y-m-d H:i:s'),
             ];
         }
 
