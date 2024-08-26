@@ -72,9 +72,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('infrastructure', \App\Http\Controllers\v1\Management\InfrastructureController::class);
 
             Route::get('activity-schedule', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'index'])->name('activity-schedule.index');
-            Route::get('activity-schedule/year/{year}/month/{month}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'scheduleInMonth'])->name('activity-schedule.schedule-in-month');
             Route::get('activity-schedule/date/{date}/garden', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'gardensScheduleDay'])->name('activity-schedule.date');
-            Route::get('activity-schedule/date/{date}/garden/{garden}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'detailGardenScheduleDay'])->name('activity-schedule.detail');
 
             Route::get('activity-log', [\App\Http\Controllers\v1\Management\ActivityLogController::class, 'index'])->name('activity-log.index');
 
@@ -85,6 +83,8 @@ Route::middleware('auth')->group(function () {
 
             Route::resource('aws-device', \App\Http\Controllers\v1\Management\AwsDeviceController::class)->except('show');
         });
+    Route::get('activity-schedule/year/{year}/month/{month}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'scheduleInMonth'])->name('activity-schedule.schedule-in-month');
+    Route::get('activity-schedule/date/{date}/garden/{garden}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'detailGardenScheduleDay'])->name('activity-schedule.detail');
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CONTROL->value])
         ->prefix('control')
