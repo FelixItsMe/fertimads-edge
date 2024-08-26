@@ -103,6 +103,12 @@
               }
           }
 
+          const preventOnNumber = e => {
+                  if (!/[0-9.]/.test(e.key)) {
+                      e.preventDefault();
+                  }
+          }
+
           document.addEventListener("DOMContentLoaded", () => {
               console.log("Hello World!");
 
@@ -114,6 +120,9 @@
                       eventFile(e.target);
                   }
               })
+
+              document.getElementById('latitude').addEventListener('keypress', preventOnNumber);
+              document.getElementById('longitude').addEventListener('keypress', preventOnNumber);
 
           })
       </script>

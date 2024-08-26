@@ -116,6 +116,9 @@
                   }
               })
 
+              document.getElementById('latitude').addEventListener('keypress', preventOnNumber);
+              document.getElementById('longitude').addEventListener('keypress', preventOnNumber);
+
           })
       </script>
   @endpush

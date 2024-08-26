@@ -61,7 +61,7 @@
                             <div class="mt-2 flex flex-row justify-between items-center">
                                 <span class="font-light">{{ $awsDevice->series }}</span>
                                 <div class="flex flex-row-reverse gap-2">
-                                    <a href="javascript:void(0);" onclick="deleteData({{ $awsDevice->id }})"
+                                    <a href="javascript:void(0);" onclick="deleteData({{ $awsDevice->id }}, '{{ $awsDevice->series }}')"
                                         title="{{ __('Hapus Perangkat AWS') }}" class="text-xs text-danger">
                                         <i class="fa-solid fa-trash-can pointer-events-none"></i>
                                     </a>
@@ -87,8 +87,8 @@
     @push('scripts')
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
-            const deleteData = async (id) => {
-                const isDelete = confirm(`Apakah anda yakin ingin menghapus perangkat IoT ${name}?`)
+            const deleteData = async (id, name) => {
+                const isDelete = confirm(`Apakah anda yakin ingin menghapus perangkat AWS ${name}?`)
 
                 if (!isDelete) {
                     return false
