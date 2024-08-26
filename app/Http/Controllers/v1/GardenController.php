@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Exports\GardenExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Garden\StoreGardenRequest;
 use App\Http\Requests\Garden\UpdateGardenRequest;
@@ -22,6 +23,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class GardenController extends Controller
 {
@@ -235,5 +238,36 @@ class GardenController extends Controller
             'message' => 'List jadwal penyiraman aktif',
             'activeWaterSchedules' => $activeWaterSchedules,
         ]);
+    }
+
+    public function exportExcel() : BinaryFileResponse {
+        $collect = [];
+
+        foreach (
+            Garden::query()
+                ->with([
+                    'commodity:id,name',
+                    'land:id,name'
+                ])
+                ->lazy() as $garden
+        ) {
+            $collect[] = (object) [
+                "name"          => $garden->name,
+                "area"          => $garden->area,
+                "latitude"      => $garden->latitude,
+                "longitude"     => $garden->longitude,
+                "altitude"      => $garden->altitude,
+                "count_block"   => $garden->count_block,
+                "popularity"    => $garden->population,
+                "commodity"     => $garden->commodity->name,
+                "land"          => $garden->land->name,
+                "created_at"    => $garden->created_at->format('Y-m-d H:i:s'),
+                "updated_at"    => $garden->updated_at->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        $collect = collect($collect);
+
+        return Excel::download(new GardenExport($collect), now()->format('YmdHis') . '-kebun.xlsx');
     }
 }

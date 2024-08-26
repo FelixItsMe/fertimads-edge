@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
             Route::get('land/export/excel', [\App\Http\Controllers\v1\LandController::class, 'exportExcel'])->name('land.export-excel');
 
             Route::resource('garden', \App\Http\Controllers\v1\GardenController::class);
+            Route::get('garden/export/excel', [\App\Http\Controllers\v1\GardenController::class, 'exportExcel'])->name('garden.export-excel');
 
             Route::resource('commodity', \App\Http\Controllers\v1\CommodityController::class);
 
