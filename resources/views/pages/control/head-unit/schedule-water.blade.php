@@ -755,6 +755,13 @@
                 const diffInMinutes = diffInMiliseconds / (1000 * 60)
                 let actualDiffInMinutes = null
 
+                const diffDay = calculateDayDifference(
+                    new Date(waterSchedule.device_schedule.start_date),
+                    date1,
+                )
+
+                const newCommAge = diffDay + waterSchedule.device_schedule.commodity_age
+
                 let eActual = ``
 
                 if (waterSchedule.device_schedule_execute) {
@@ -783,6 +790,22 @@
 
                 return `<div class="bg-white p-4 rounded-md shadow-md">
                             <h3 class="text-xs md:text-base font-bold mb-4">Detail Informasi Jadwal Penyiraman</h3>
+                            <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
+                                <div class="col-span-2">
+                                    <span class="text-xs md:text-sm font-bold text-slate-400">Komoditi</span>
+                                </div>
+                                <div class="col-span-3">
+                                    <span class="col-span-3 text-xs md:text-sm text-slate-400" id="text-water-times">${waterSchedule.device_schedule.commodity.name}</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
+                                <div class="col-span-2">
+                                    <span class="text-xs md:text-sm font-bold text-slate-400">Umur</span>
+                                </div>
+                                <div class="col-span-3">
+                                    <span class="col-span-3 text-xs md:text-sm text-slate-400" id="text-water-times">${newCommAge} Hari</span>
+                                </div>
+                            </div>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
                                     <span class="text-xs md:text-sm font-bold text-slate-400">Volume</span>
@@ -913,6 +936,17 @@
 
                 generateCalendar(currentMonth, currentYear, e.dataset.gardenId, data.schedules);
             }
+
+            const calculateDayDifference = (d1, d2) => {
+
+                // Calculate the time difference in milliseconds
+                const timeDiff = Math.abs(d2 - d1);
+
+                // Convert milliseconds to days
+                const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+                return dayDiff;
+            }
             // end modal garden
 
             const getActiveWaterSchedule = async id => {
@@ -983,13 +1017,13 @@
                 }
 
                 if (!weatherWidgetMode) {
-                  bmkgWether(weatherElements)
-
-                  setInterval(() => {
                     bmkgWether(weatherElements)
-                  }, 1000 * 10);
+
+                    setInterval(() => {
+                        bmkgWether(weatherElements)
+                    }, 1000 * 10);
                 } else if (weatherWidgetMode != null) {
-                  awsWether(weatherWidgetMode, weatherElements)
+                    awsWether(weatherWidgetMode, weatherElements)
                 }
             }
         </script>
