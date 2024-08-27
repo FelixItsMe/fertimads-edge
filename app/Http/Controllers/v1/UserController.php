@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
@@ -11,6 +12,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class UserController extends Controller
 {
@@ -114,5 +117,27 @@ class UserController extends Controller
         }
 
         return redirect()->route('user.index');
+    }
+
+    public function exportExcel() : BinaryFileResponse {
+        $collect = [];
+
+        foreach (
+            User::query()
+                ->whereNot('role', 'su')
+                ->lazy() as $user
+        ) {
+            $collect[] = (object) [
+                "name"          => $user->name,
+                "email"         => $user->email,
+                "role"          => ucfirst($user->role),
+                "created_at"    => $user->created_at->format('Y-m-d H:i:s'),
+                "updated_at"    => $user->updated_at->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        $collect = collect($collect);
+
+        return Excel::download(new UserExport($collect), now()->format('YmdHis') . '-anggota.xlsx');
     }
 }
