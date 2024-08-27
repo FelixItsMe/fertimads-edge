@@ -177,7 +177,7 @@ class CommodityController extends Controller
         ]);
     }
 
-    public function exportExcel() : BinaryFileResponse {
+    public function exportExcel() : BinaryFileResponse|RedirectResponse {
         $collect = [];
 
         foreach (
@@ -215,6 +215,10 @@ class CommodityController extends Controller
         }
 
         $collect = collect($collect);
+
+        if ($collect->count() == 0) {
+            return back()->with('commodity-success', 'Tidak ada data komoditi!');
+        }
 
         return Excel::download(new CommodityExport($collect), now()->format('YmdHis') . '-komoditi.xlsx');
     }

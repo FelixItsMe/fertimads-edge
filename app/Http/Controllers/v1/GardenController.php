@@ -240,7 +240,7 @@ class GardenController extends Controller
         ]);
     }
 
-    public function exportExcel() : BinaryFileResponse {
+    public function exportExcel() : BinaryFileResponse|RedirectResponse {
         $collect = [];
 
         foreach (
@@ -267,6 +267,10 @@ class GardenController extends Controller
         }
 
         $collect = collect($collect);
+
+        if ($collect->count() == 0) {
+            return back()->with('garden-success', 'Tidak ada data kebun!');
+        }
 
         return Excel::download(new GardenExport($collect), now()->format('YmdHis') . '-kebun.xlsx');
     }

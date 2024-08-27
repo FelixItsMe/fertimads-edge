@@ -28,7 +28,7 @@
                       <tr>
                           <th class="w-2">#</th>
                           <th>Waktu</th>
-                          <th>ET<sup>o</sup></th>
+                          <th>ETo</th>
                       </tr>
                   </thead>
                   <tbody class="table-border-bottom-0">
