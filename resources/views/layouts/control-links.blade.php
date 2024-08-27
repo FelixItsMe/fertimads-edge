@@ -18,6 +18,6 @@
             'fa-solid',
             'fa-diamond',
             ]) ></i>
-        <div class="text-slate-400">Data Telemetri SMS</div>
+        <div class="text-slate-400">Data Telemetri Soil Monitoring System (SMS)</div>
     </a>
 </li>

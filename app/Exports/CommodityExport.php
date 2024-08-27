@@ -24,11 +24,11 @@ class CommodityExport implements FromCollection, ShouldAutoSize, WithHeadings
     public function headings(): array
     {
         return [
-            'Name',
-            'Description',
-            'Garden Count',
-            'Created At',
-            'Updated At',
+            'Nama',
+            'Deskripsi',
+            'Total Kebun',
+            'Tanggal Dibuat',
+            'Tanggal Diupdate',
         ];
     }
 }

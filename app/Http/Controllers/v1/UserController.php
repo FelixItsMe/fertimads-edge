@@ -129,8 +129,8 @@ class UserController extends Controller
         ) {
             $collect[] = (object) [
                 "name"          => $user->name,
-                "email"         => $user->email,
                 "role"          => ucfirst($user->role),
+                "email"         => $user->email,
                 "created_at"    => $user->created_at->format('Y-m-d H:i:s'),
                 "updated_at"    => $user->updated_at->format('Y-m-d H:i:s'),
             ];

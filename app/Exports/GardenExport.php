@@ -24,17 +24,17 @@ class GardenExport implements FromCollection, ShouldAutoSize, WithHeadings
     public function headings(): array
     {
         return [
-            'Name',
-            'Area (m²)',
+            'Nama Kebun',
+            'Luas Kebun (m²)',
+            'Nama Komoditi',
             'Latitude',
             'Longitude',
             'Altitude (mdpl)',
             'Total Block',
-            'Total Population',
-            'Komoditi',
-            'Lahan',
-            'Created At',
-            'Updated At',
+            'Total Populasi',
+            'Nama Lahan',
+            'Tanggal Dibuat',
+            'Tanggal Diupdate',
         ];
     }
 }

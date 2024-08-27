@@ -1,15 +1,4 @@
 <li class="menu-item">
-    <a href="{{ route('dashboard.index') }}" class="menu-link">
-        <i @class([
-            'menu-icon',
-            'active-icon' => request()->routeIs('dashboard.index'),
-            'fa-solid',
-            'fa-house',
-            ]) ></i>
-        <div class="text-slate-400">Dashboard</div>
-    </a>
-</li>
-<li class="menu-item">
     <a href="{{ route('activity-schedule.index') }}" class="menu-link">
         <i @class([
             'menu-icon',
