@@ -24,11 +24,11 @@ class InfrastructureExport implements FromCollection, ShouldAutoSize, WithHeadin
     public function headings(): array
     {
         return [
-            'Name',
-            'Description',
-            'Quantity',
-            'Created At',
-            'Updated At',
+            'Nama',
+            'Deskripsi',
+            'Jumlah',
+            'Tanggal Dibuat',
+            'Tanggal Diupdate',
         ];
     }
 }

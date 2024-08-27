@@ -24,15 +24,15 @@ class LandExport implements FromCollection, ShouldAutoSize, WithHeadings
     public function headings(): array
     {
         return [
-            'Name',
-            'Address',
+            'Nama',
+            'Luas Lahan (m²)',
+            'Lokasi Lahan',
             'Latitude',
             'Longitude',
             'Altitude (mdpl)',
-            'Area (m²)',
-            'Gardens Count',
-            'Created At',
-            'Updated At',
+            'Jumlah Kebun',
+            'Tanggal Dibuat',
+            'Tanggal Diupdate',
         ];
     }
 }

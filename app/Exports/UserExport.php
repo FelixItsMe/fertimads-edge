@@ -24,11 +24,11 @@ class UserExport implements FromCollection, ShouldAutoSize, WithHeadings
     public function headings(): array
     {
         return [
-            'Name',
-            'Email',
+            'Nama',
             'Role',
-            'Created At',
-            'Updated At',
+            'Email',
+            'Tanggal Dibuat',
+            'Tanggal Diupdate',
         ];
     }
 }

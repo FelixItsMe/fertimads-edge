@@ -169,11 +169,11 @@ class LandController extends Controller
         ) {
             $collect[] = (object) [
                 "name"      => $land->name,
+                "area"  => $land->area,
                 "address"   => $land->address,
                 "latitude"  => $land->latitude,
                 "longitude"  => $land->longitude,
                 "altitude"  => $land->altitude,
-                "area"  => $land->area,
                 "gardens_count"  => $land->gardens_count ?? 0,
                 "created_at"  => $land->created_at->format('Y-m-d H:i:s'),
                 "updated_at"  => $land->updated_at->format('Y-m-d H:i:s'),

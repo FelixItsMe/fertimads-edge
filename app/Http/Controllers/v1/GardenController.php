@@ -254,12 +254,12 @@ class GardenController extends Controller
             $collect[] = (object) [
                 "name"          => $garden->name,
                 "area"          => $garden->area,
+                "commodity"     => $garden->commodity->name,
                 "latitude"      => $garden->latitude,
                 "longitude"     => $garden->longitude,
                 "altitude"      => $garden->altitude,
                 "count_block"   => $garden->count_block,
                 "popularity"    => $garden->population,
-                "commodity"     => $garden->commodity->name,
                 "land"          => $garden->land->name,
                 "created_at"    => $garden->created_at->format('Y-m-d H:i:s'),
                 "updated_at"    => $garden->updated_at->format('Y-m-d H:i:s'),

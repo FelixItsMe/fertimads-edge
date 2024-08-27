@@ -42,14 +42,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('dashboard/', [\App\Http\Controllers\v1\Management\DashboardController::class, 'index'])->name('dashboard.index');
+    // Route::group([
+    //     'prefix' => 'dashboard',
+    // ], function () {
+    // });
+
     Route::middleware(['roleAccess:' . UserRoleEnums::MANAGEMENT->value])
         ->prefix('management')
         ->group(function () {
-            Route::group([
-                'prefix' => 'dashboard',
-            ], function () {
-                Route::get('/', [\App\Http\Controllers\v1\Management\DashboardController::class, 'index'])->name('dashboard.index');
-            });
 
             // Land Route
             Route::resource('land', \App\Http\Controllers\v1\LandController::class);

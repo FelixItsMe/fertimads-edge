@@ -24,11 +24,11 @@ class ToolExport implements FromCollection, ShouldAutoSize, WithHeadings
     public function headings(): array
     {
         return [
-            'Name',
-            'Description',
-            'Quantity',
-            'Created At',
-            'Updated At',
+            'Nama',
+            'Deskripsi',
+            'Jumlah',
+            'Tanggal Dibuat',
+            'Tanggal Diupdate',
         ];
     }
 }

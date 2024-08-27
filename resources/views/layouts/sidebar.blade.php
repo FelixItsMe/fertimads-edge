@@ -19,6 +19,17 @@
     </div>
     <ul id="menu-inner"
         class="flex flex-col flex-auto items-center justify-start m-0 p-0 pt-6 relative overflow-hidden touch-auto pb-6">
+          <li class="menu-item">
+            <a href="{{ route('dashboard.index') }}" class="menu-link">
+                <i @class([
+                    'menu-icon',
+                    'active-icon' => request()->routeIs('dashboard.index'),
+                    'fa-solid',
+                    'fa-house',
+                    ]) ></i>
+                <div class="text-slate-400">Dashboard</div>
+            </a>
+        </li>
         @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::MANAGEMENT->value || Auth::user()->role == 'su',
             'layouts.management-links')
         @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::CONTROL->value || Auth::user()->role == 'su',
