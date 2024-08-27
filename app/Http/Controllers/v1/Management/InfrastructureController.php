@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1\Management;
 
+use App\Exports\InfrastructureExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Management\Infrastructure\StoreInfrastructureRequest;
 use App\Http\Requests\Management\Infrastructure\UpdateInfrastructureRequest;
@@ -11,6 +12,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class InfrastructureController extends Controller
 {
@@ -110,5 +113,26 @@ class InfrastructureController extends Controller
         }
 
         return redirect()->route('infrastructure.index');
+    }
+
+    public function exportExcel() : BinaryFileResponse {
+        $collect = [];
+
+        foreach (
+            Infrastructure::query()
+                ->lazy() as $infrastructure
+        ) {
+            $collect[] = (object) [
+                "name"          => $infrastructure->name,
+                "description"   => $infrastructure->description,
+                "quantity"      => $infrastructure->quantity,
+                "created_at"    => $infrastructure->created_at->format('Y-m-d H:i:s'),
+                "updated_at"    => $infrastructure->updated_at->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        $collect = collect($collect);
+
+        return Excel::download(new InfrastructureExport($collect), now()->format('YmdHis') . '-infrastruktur.xlsx');
     }
 }
