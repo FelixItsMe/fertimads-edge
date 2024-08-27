@@ -72,6 +72,8 @@ Route::middleware('auth')->group(function () {
             Route::resource('user', \App\Http\Controllers\v1\UserController::class);
 
             Route::resource('tool', \App\Http\Controllers\v1\Management\ToolController::class);
+            Route::get('tool/export/excel', [\App\Http\Controllers\v1\Management\ToolController::class, 'exportExcel'])->name('tool.export-excel');
+
             Route::resource('infrastructure', \App\Http\Controllers\v1\Management\InfrastructureController::class);
 
             Route::get('activity-schedule', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'index'])->name('activity-schedule.index');
