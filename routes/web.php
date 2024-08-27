@@ -134,6 +134,12 @@ Route::middleware('auth')->group(function () {
         Route::resource('weeds', WeedsController::class);
     });
 
+    Route::prefix('setting')
+    ->group(function(){
+        Route::get('weather', [\App\Http\Controllers\v1\Setting\WeatherController::class, 'index'])->name('weather.index');
+        Route::put('weather', [\App\Http\Controllers\v1\Setting\WeatherController::class, 'update'])->name('weather.update');
+    });
+
     // extra to get data
     Route::prefix('extra')->name('extra.')->group(function () {
         // garden

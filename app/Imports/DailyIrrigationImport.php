@@ -58,7 +58,7 @@ class DailyIrrigationImport implements ToModel, WithUpserts, WithUpsertColumns
         }
 
         return new DailyIrrigation([
-            'date' => $year . "-" . ($month + 1) . "-" . $date,
+            'date' => $year . "-" . str_pad(($month + 1),2,"0", STR_PAD_LEFT) . "-" . $date,
             'eto' => $row[3],
         ]);
     }

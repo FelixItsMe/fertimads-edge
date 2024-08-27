@@ -159,6 +159,7 @@
             let controller
             let controllerDetailGardenSchedules
             let pickedDate = currentFullDate
+            const weatherWidgetMode = "{{ getWeatherWidgetMode()->aws_device_id }}"
 
             let stateData = {
                 polygon: null,
@@ -1083,13 +1084,17 @@
                     eWeatherIcon: document.querySelector('#bmkg-weather-icon'),
                     eTime: document.querySelector('#bmkg-times'),
                     eDay: document.querySelector('#bmkg-day'),
-                  }
+                }
 
-                bmkgWether(weatherElements)
-
-                setInterval(() => {
+                if (!weatherWidgetMode) {
                   bmkgWether(weatherElements)
-                }, 1000 * 10);
+
+                  setInterval(() => {
+                    bmkgWether(weatherElements)
+                  }, 1000 * 10);
+                } else if (weatherWidgetMode != null) {
+                  awsWether(weatherWidgetMode, weatherElements)
+                }
             }
         </script>
     @endpush
