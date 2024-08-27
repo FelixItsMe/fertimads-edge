@@ -115,7 +115,7 @@ class InfrastructureController extends Controller
         return redirect()->route('infrastructure.index');
     }
 
-    public function exportExcel() : BinaryFileResponse {
+    public function exportExcel() : BinaryFileResponse|RedirectResponse {
         $collect = [];
 
         foreach (
@@ -132,6 +132,10 @@ class InfrastructureController extends Controller
         }
 
         $collect = collect($collect);
+
+        if ($collect->count() == 0) {
+            return back()->with('infrastructure-success', 'Tidak ada data infrastruktur!');
+        }
 
         return Excel::download(new InfrastructureExport($collect), now()->format('YmdHis') . '-infrastruktur.xlsx');
     }

@@ -137,7 +137,7 @@ class ToolController extends Controller
         return redirect()->route('tool.index');
     }
 
-    public function exportExcel() : BinaryFileResponse {
+    public function exportExcel() : BinaryFileResponse|RedirectResponse {
         $collect = [];
 
         foreach (
@@ -154,6 +154,10 @@ class ToolController extends Controller
         }
 
         $collect = collect($collect);
+
+        if ($collect->count() == 0) {
+            return back()->with('tool-success', 'Tidak ada data peralatan!');
+        }
 
         return Excel::download(new ToolExport($collect), now()->format('YmdHis') . '-peralatan.xlsx');
     }

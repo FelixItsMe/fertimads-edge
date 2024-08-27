@@ -119,7 +119,7 @@ class UserController extends Controller
         return redirect()->route('user.index');
     }
 
-    public function exportExcel() : BinaryFileResponse {
+    public function exportExcel() : BinaryFileResponse|RedirectResponse {
         $collect = [];
 
         foreach (
@@ -137,6 +137,10 @@ class UserController extends Controller
         }
 
         $collect = collect($collect);
+
+        if ($collect->count() == 0) {
+            return back()->with('user-success', 'Tidak ada data user!');
+        }
 
         return Excel::download(new UserExport($collect), now()->format('YmdHis') . '-anggota.xlsx');
     }

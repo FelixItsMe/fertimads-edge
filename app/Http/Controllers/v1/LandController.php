@@ -10,6 +10,7 @@ use App\Models\Land;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -159,7 +160,7 @@ class LandController extends Controller
         ]);
     }
 
-    public function exportExcel() : BinaryFileResponse {
+    public function exportExcel() : BinaryFileResponse|RedirectResponse {
         $collect = [];
 
         foreach (
@@ -181,6 +182,10 @@ class LandController extends Controller
         }
 
         $collect = collect($collect);
+
+        if ($collect->count() == 0) {
+            return back()->with('land-success', 'Tidak ada data lahan!');
+        }
 
         return Excel::download(new LandExport($collect), now()->format('YmdHis') . '-lahan.xlsx');
     }
