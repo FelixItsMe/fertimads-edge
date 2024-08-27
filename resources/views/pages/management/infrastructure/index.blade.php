@@ -21,7 +21,11 @@
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
               <div class="p-6 flex justify-between">
                   <h1 class="text-3xl font-extrabold">List Infrastruktur</h1>
-                  <a href="{{ route('infrastructure.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Infrastruktur</a>
+                  <div class="flex space-x-2 items-center">
+                    <a href="{{ route('infrastructure.create') }}" class="bg-fertimads-2 text-white py-2 px-4 rounded-md">Tambah Infrastruktur</a>
+                    <a href="{{ route('infrastructure.export-excel') }}" target="_blank"
+                      class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export Excel</a>
+                  </div>
               </div>
           </div>
           <div class="grid grid-flow-row grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">

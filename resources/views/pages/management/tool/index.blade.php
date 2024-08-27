@@ -32,7 +32,9 @@
                     </form>
                   </div>
                   <div>
-                    <a href="{{ route('tool.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Alat</a>
+                    <a href="{{ route('tool.create') }}" class="bg-fertimads-2 text-white py-2 px-4 rounded-md">Tambah Alat</a>
+                    <a href="{{ route('tool.export-excel') }}" target="_blank"
+                      class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export Excel</a>
                   </div>
               </div>
           </div>

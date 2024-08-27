@@ -70,9 +70,13 @@ Route::middleware('auth')->group(function () {
             Route::put('/commodity/{commodity}/phase/update', [\App\Http\Controllers\v1\CommodityPhaseController::class, 'update'])->name('commodity.phase.update');
 
             Route::resource('user', \App\Http\Controllers\v1\UserController::class);
+            Route::get('user/export/excel', [\App\Http\Controllers\v1\UserController::class, 'exportExcel'])->name('user.export-excel');
 
             Route::resource('tool', \App\Http\Controllers\v1\Management\ToolController::class);
+            Route::get('tool/export/excel', [\App\Http\Controllers\v1\Management\ToolController::class, 'exportExcel'])->name('tool.export-excel');
+
             Route::resource('infrastructure', \App\Http\Controllers\v1\Management\InfrastructureController::class);
+            Route::get('infrastructure/export/excel', [\App\Http\Controllers\v1\Management\InfrastructureController::class, 'exportExcel'])->name('infrastructure.export-excel');
 
             Route::get('activity-schedule', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'index'])->name('activity-schedule.index');
             Route::get('activity-schedule/date/{date}/garden', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'gardensScheduleDay'])->name('activity-schedule.date');

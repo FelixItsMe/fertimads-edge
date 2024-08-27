@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1\Management;
 
+use App\Exports\ToolExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Management\Tool\StoreToolRequest;
 use App\Http\Requests\Management\Tool\UpdateToolRequest;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ToolController extends Controller
 {
@@ -132,5 +135,26 @@ class ToolController extends Controller
             ->log('Peralatan dihapus');
 
         return redirect()->route('tool.index');
+    }
+
+    public function exportExcel() : BinaryFileResponse {
+        $collect = [];
+
+        foreach (
+            Tool::query()
+                ->lazy() as $tool
+        ) {
+            $collect[] = (object) [
+                "name"          => $tool->name,
+                "description"   => $tool->description,
+                "quantity"      => $tool->quantity,
+                "created_at"    => $tool->created_at->format('Y-m-d H:i:s'),
+                "updated_at"    => $tool->updated_at->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        $collect = collect($collect);
+
+        return Excel::download(new ToolExport($collect), now()->format('YmdHis') . '-peralatan.xlsx');
     }
 }

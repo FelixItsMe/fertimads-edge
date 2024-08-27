@@ -21,7 +21,11 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 flex justify-between">
                     <h1 class="text-3xl font-extrabold">Daftar Anggota</h1>
-                    <a href="{{ route('user.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Anggota</a>
+                    <div>
+                      <a href="{{ route('user.create') }}" class="bg-fertimads-2 text-white py-2 px-4 rounded-md">Tambah Anggota</a>
+                      <a href="{{ route('user.export-excel') }}" target="_blank"
+                        class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export Excel</a>
+                    </div>
                 </div>
                 <table class="w-full align-middle border-slate-400 table mb-0">
                     <thead>
