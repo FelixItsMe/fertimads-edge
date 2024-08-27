@@ -64,6 +64,23 @@ const bmkgWether = async ({ eTemp, eHumid, eWindSpeed, eMaxT, eMinT, eWeatherNam
     }
 }
 
+const awsWether = async (awsDeviceId, { eTemp, eHumid, eWindSpeed, eMaxT, eMinT, eWeatherName, eWeatherIcon, eTime, eDay }) => {
+    const now = new Date()
+
+    eTime.textContent = now.getHours() + ":" + now.getMinutes()
+    eDay.textContent = dayNames[now.getDay()]
+
+    eHumid.textContent = "-"
+    eTemp.textContent = "-"
+
+    eMaxT.textContent = "-"
+    eMinT.textContent = "-"
+
+    eWindSpeed.textContent = "-"
+    eWeatherName.textContent = "-"
+    eWeatherIcon.innerHTML = `<i class="fa-solid fa-moon"></i>`
+}
+
 const weatherNames = code => {
     switch (code) {
         case 0:
@@ -121,7 +138,7 @@ const weatherHtml = () => {
             <div>
             <div>
                 <div class="text-xs md:text-lg font-extrabold lato-regular" id="bmkg-day">Jumat</div>
-                <div class="text-xs md:text-6xl lato-regular relative"><span class="font-extrabold" id="bmkg-temp">26</span><span class="absolute md:-top-4">°</span></div>
+                <div class="text-xs md:text-6xl lato-regular mt-2 relative"><span class="font-extrabold" id="bmkg-temp">26</span><span class="absolute md:-top-4">°</span></div>
             </div>
             <div class="text-xs font-semibold text-slate-50/50">Last Updated <span id="bmkg-times">11:50</span></div>
             <div><i class="fa-solid fa-location-dot"></i>&nbsp;<span class="text-xs">Kota Bogor</span></div>

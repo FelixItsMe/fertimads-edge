@@ -27,6 +27,23 @@
             'layouts.care-links')
     </ul>
     <div class="px-8 font-bold">
+        Pengaturan Aplikasi
+    </div>
+    <ul id="menu-inner"
+        class="flex flex-col flex-auto items-center justify-start m-0 p-0 pt-6 relative overflow-hidden touch-auto pb-6">
+        <li class="menu-item">
+            <a href="{{ route('weather.index') }}" class="menu-link">
+                <i @class([
+                    'menu-icon',
+                    'active-icon' => request()->routeIs('weather.*'),
+                    'fa-solid',
+                    'fa-gear',
+                ])></i>
+                <div class="text-slate-400">Cuaca</div>
+            </a>
+        </li>
+    </ul>
+    <div class="px-8 font-bold">
         Pengaturan Akun
     </div>
     <ul id="menu-inner"
