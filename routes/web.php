@@ -110,10 +110,12 @@ Route::middleware('auth')->group(function () {
             Route::post('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.store');
             Route::delete('head-unit/schedule-fertilizer/{deviceFertilizerSchedule}', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'deleteActiveFertilizerSchedule'])->name('head-unit.schedule-fertilizer.destroy');
             Route::post('head-unit/stop', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'stopDevice'])->name('head-unit.stop.store');
+    });
 
-            Route::get('telemetry-rsc', [\App\Http\Controllers\v1\Control\TelemetryRscController::class, 'index'])->name('telemetry-rsc.index');
-            Route::get('telemetry-rsc/export/excel', [\App\Http\Controllers\v1\Control\TelemetryRscController::class, 'excelExport'])->name('telemetry-rsc.export-excel');
-            Route::get('telemetry-rsc/export/excel/download', [\App\Http\Controllers\v1\Control\TelemetryRscController::class, 'downloadCompletedExport'])->name('telemetry-rsc.download-excel');
+    Route::middleware(['roleAccess:' . UserRoleEnums::CARE->value . ',' . UserRoleEnums::CONTROL->value])->prefix('control')->group(function () {
+        Route::get('telemetry-rsc', [\App\Http\Controllers\v1\Control\TelemetryRscController::class, 'index'])->name('telemetry-rsc.index');
+        Route::get('telemetry-rsc/export/excel', [\App\Http\Controllers\v1\Control\TelemetryRscController::class, 'excelExport'])->name('telemetry-rsc.export-excel');
+        Route::get('telemetry-rsc/export/excel/download', [\App\Http\Controllers\v1\Control\TelemetryRscController::class, 'downloadCompletedExport'])->name('telemetry-rsc.download-excel');
     });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CARE->value])->prefix('care')->group(function () {

@@ -1,3 +1,4 @@
+@if (Auth::user()->role == \App\Enums\UserRoleEnums::CARE->value)
 <li class="menu-item">
   <a href="{{ route('care.index') }}" class="menu-link">
     <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('care.index*'),
@@ -7,6 +8,18 @@
     <div class="text-slate-400">Dashboard</div>
   </a>
 </li>
+<li class="menu-item">
+    <a href="{{ route('telemetry-rsc.index') }}" class="menu-link">
+        <i @class([
+            'menu-icon',
+            'active-icon' => request()->routeIs('telemetry-rsc.*'),
+            'fa-solid',
+            'fa-diamond',
+            ]) ></i>
+        <div class="text-slate-400">Data Telemetri Soil Monitoring System (SMS)</div>
+    </a>
+</li>
+@endif
 <li class="menu-item">
   <a href="{{ route('fertilization-report.index') }}" class="menu-link">
     <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('fertilization-report.*'),
@@ -50,14 +63,5 @@
       'fa-apple-whole',
       ]) ></i>
     <div class="text-slate-400">Laporan Gulma</div>
-  </a>
-</li>
-<li class="menu-item">
-  <a href="{{ route('rsc.index') }}" class="menu-link">
-    <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('rsc.*'),
-      'fa-solid',
-      'fa-map',
-      ]) ></i>
-    <div class="text-slate-400">RSC Data</div>
   </a>
 </li>

@@ -36,12 +36,12 @@ class PestReportExport implements FromCollection, WithMapping, WithHeadings, Sho
     public function headings(): array
     {
         return [
-            'Tanggal',
+            'Waktu',
             'Nama Penyakit',
             'Nama Hama',
             'Nama Kebun',
-            'Nama Komoditas',
-            'Total Terinfeksi'
+            'Komoditi',
+            'Populasi Terinfeksi'
         ];
     }
 }

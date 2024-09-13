@@ -76,54 +76,52 @@
           @if (is_array($disease->symptoms))
           <ul class="gemini-list">
             @foreach ($disease->symptoms as $symptom)
-            <li class="gemini-list-item">{{ $symptom }}</li>
+            <li class="gemini-list-item">{!! $symptom !!}</li>
             @endforeach
           </ul>
           @else
-          <p>{{ $disease->symptoms }}</p>
+          <p>{!! $disease->symptoms !!}</p>
           @endif
           <h2 class="gemini-subhead">Penyebab</h2>
           @if (is_array($disease->cause))
           <ul class="gemini-list">
             @foreach ($disease->cause as $cause)
-            <li class="gemini-list-item">{{ $cause }}</li>
+            <li class="gemini-list-item">{!! $cause !!}</li>
             @endforeach
           </ul>
           @else
-          <p>{{ $disease->cause }}</p>
+          <p>{!! $disease->cause !!}</p>
           @endif
           <h2 class="gemini-subhead">Pengendalian</h2>
           @if (is_array($disease->control))
           <ul class="gemini-list">
             @foreach ($disease->control as $control)
-            <li class="gemini-list-item">{{ $control }}</li>
+            <li class="gemini-list-item">{!! $control !!}</li>
             @endforeach
           </ul>
           @else
-          <p>{{ $disease->control }}</p>
+          <p>{!! $disease->control !!}</p>
           @endif
           <h2 class="gemini-subhead">Bahan Kimia</h2>
           @if (is_array($disease->chemical))
           <ul class="gemini-list">
             @foreach ($disease->chemical as $chemical)
-            <li class="gemini-list-item">{{ $chemical }}</li>
+            <li class="gemini-list-item">{!! $chemical !!}</li>
             @endforeach
           </ul>
           @else
-          <p>{{ $disease->chemical }}</p>
+          <p>{!! $disease->chemical !!}</p>
           @endif
           <h2 class="gemini-subhead">Bahan Aktif</h2>
           @if (is_array($disease->active_materials))
           <ul class="gemini-list">
             @foreach ($disease->active_materials as $active_material)
-            <li class="gemini-list-item">{{ $active_material }}</li>
+            <li class="gemini-list-item">{!! $active_material !!}</li>
             @endforeach
           </ul>
           @else
-          <p>{{ $disease->active_materials }}</p>
+          <p>{!! $disease->active_materials !!}</p>
           @endif
-          <h2 class="gemini-subhead">Nama Obat</h2>
-          <p>{{ $disease->cure_name }}</p>
         </div>
       </div>
     </div>

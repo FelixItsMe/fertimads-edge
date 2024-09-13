@@ -2,13 +2,13 @@
   @push('styles')
   <style>
     .gemini-header {
-      color: #333;
+      font-weight: bold;
       border-bottom: 2px solid #ddd;
       padding-bottom: 5px;
     }
 
     .gemini-subhead {
-      color: #666;
+      font-weight: bold;
       margin-top: 15px;
     }
 
@@ -96,11 +96,53 @@
           <p>{!! $response->pengobatan !!}</p>
           @endif
           <h2 class="gemini-subhead">Jenis Pestisida</h2>
-          <p>{!! $response->pestisida ?? '-' !!}</p>
+          @isset($response->jenis_pestisida)
+          @if (gettype($response->jenis_pestisida) === 'array')
+          <ul class="gemini-list">
+            @foreach ($response->jenis_pestisida as $jenis_pestisida)
+            <li class="gemini-list-item">{!! $jenis_pestisida !!}</li>
+            @endforeach
+          </ul>
+          @else
+          <p>{!! $response->jenis_pestisida ?? '-' !!}</p>
+          @endif
+          @endisset
           <h2 class="gemini-subhead">Cara Kerja</h2>
+          @isset($response->cara_kerja)
+          @if (gettype($response->cara_kerja) === 'array')
+          <ul class="gemini-list">
+            @foreach ($response->cara_kerja as $cara_kerja)
+            <li class="gemini-list-item">{!! $cara_kerja !!}</li>
+            @endforeach
+          </ul>
+          @else
           <p>{!! $response->cara_kerja ?? '-' !!}</p>
-          <h2 class="gemini-subhead">Golongan Senyawa Kimia Aktif</h2>
+          @endif
+          @endisset
+          @isset ($response->senyawa_kimia)
+          <h2 class="gemini-subhead">Golongan Senyawa Kimia</h2>
+          @if (gettype($response->senyawa_kimia) === 'array')
+          <ul class="gemini-list">
+            @foreach ($response->senyawa_kimia as $senyawa_kimia)
+            <li class="gemini-list-item">{!! $senyawa_kimia !!}</li>
+            @endforeach
+          </ul>
+          @else
           <p>{!! $response->senyawa_kimia ?? '-' !!}</p>
+          @endif
+          @endisset
+          @isset($response->bahan_aktif)
+          <h2 class="gemini-subhead">Bahan Aktif</h2>
+          @if (gettype($response->bahan_aktif) === 'array')
+          <ul class="gemini-list">
+            @foreach ($response->bahan_aktif as $bahan_aktif)
+            <li class="gemini-list-item">{!! $bahan_aktif !!}</li>
+            @endforeach
+          </ul>
+          @else
+          <p>{!! $response->bahan_aktif === "" ? '-' :($response->bahan_aktif ?? '-') !!}</p>
+          @endif
+          @endisset
           <h2 class="gemini-subhead">Pengendalian</h2>
           @if (gettype($response->pengendalian) === 'array')
           <ul class="gemini-list">

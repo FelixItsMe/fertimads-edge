@@ -25,7 +25,11 @@ class GeminiService
             \"gejala\": \"<gejalan<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
             \"penyebab\": \"<Penyebab<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
             \"pengobatan\": \"<Pengobatan<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
-            \"pengendalian\": \"<pengendalian<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\"
+            \"pengendalian\": \"<pengendalian<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
+            \"jenis_pestisida\": \"<pengendalian<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
+            \"cara_kerja\": \"<cara_kerja<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
+            \"senyawa_kimia\": \"<senyawa_kimia<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
+            \"bahan_aktif\": \"<bahan_aktif<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
             }
         ";
 
@@ -49,17 +53,36 @@ class GeminiService
         $diseaseName = $response?->nama_penyakit ?? '-';
         $pestName = $response?->nama_hama === "" || $response->nama_hama === null ? '-' : $response->nama_hama;
 
+        $flag = false;
+
         foreach($diseases as $disease) {
             if ($simhash->isSimilar($response->nama_penyakit, $disease->name)) {
                 $diseaseName = $disease->name;
                 $response->nama_penyakit = $disease->name;
                 $response->pengendalian = $disease->control;
                 $response->pengobatan = $disease->cure_name;
-                $response->pestisida = $disease->pestisida;
+                $response->jenis_pestisida = $disease->pestisida;
                 $response->cara_kerja = $disease->works_category;
                 $response->senyawa_kimia = $disease->chemical;
+                $response->bahan_aktif = $disease->active_materials;
+                $flag = true;
                 break;
             }
+        }
+
+        if (!$flag) {
+            Disease::query()
+                ->create([
+                    'symptoms' => $response->gejala,
+                    'cause' => $response->penyebab,
+                    'name' => $response->nama_penyakit,
+                    'control' => $response->pengendalian,
+                    'pestisida' => $response->jenis_pestisida,
+                    'works_category' => $response->cara_kerja,
+                    'chemical' => $response->senyawa_kimia,
+                    'active_materials' => $response->bahan_aktif,
+                    'cure_name' => '-'
+                ]);
         }
 
         return [$template, json_encode($response), $diseaseName, $pestName, $response];

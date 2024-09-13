@@ -42,8 +42,8 @@
                 <th>Nama Penyakit</th>
                 <th>Nama Hama</th>
                 <th>Kebun</th>
-                <th>Komoditi</th>
-                <th>Populasi Terinfeksi</th>
+                <th class="text-center">Komoditi</th>
+                <th class="text-center">Populasi Terinfeksi</th>
                 <th>Aksi</th>
               </tr>
             </thead>
@@ -54,8 +54,8 @@
                 <td>{{ $pest->disease_name }}</td>
                 <td>{{ $pest->pest_name }}</td>
                 <td>{{ $pest->garden->name }}</td>
-                <td>{{ $pest->commodity->name }}</td>
-                <td>{{ $pest->infected_count }}</td>
+                <td class="text-center">{{ $pest->commodity->name }}</td>
+                <td class="text-center">{{ $pest->infected_count }}</td>
                 <td>
                   <div class="flex flex-row space-x-2">
                     <a href="{{ route('pest.show', $pest->id) }}" title="Lihat Hama" class="text-sm text-warning">

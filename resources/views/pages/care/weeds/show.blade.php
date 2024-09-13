@@ -53,12 +53,12 @@
                 <tr>
                   <td class="font-bold">Bahan Aktif</td>
                   <td>:</td>
-                  <td>{{ $weeds->bahan_aktif }}</td>
+                  <td>{!! $weeds->bahan_aktif !!}</td>
                 </tr>
                 <tr>
-                  <td class="font-bold">Nama Obat</td>
+                  <td class="font-bold">Golongan Senyawa</td>
                   <td>:</td>
-                  <td>{{ $weeds->nama_obat }}</td>
+                  <td>{!! $weeds->golongan_senyawa_kimia !!}</td>
                 </tr>
               </table>
             </div>
@@ -67,13 +67,13 @@
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-full">
           <div class="mb-3">
             <h2 class="gemini-header">Deskripsi</h2>
-            <p>{{ $weeds->deskripsi }}</p>
+            <p>{!! $weeds->deskripsi !!}</p>
 
           </div>
 
           <div class="mb-3">
             <h2 class="gemini-header">Pengendalian</h2>
-            <p>{{ $weeds->pengendalian }}</p>
+            <p>{!! $weeds->pengendalian !!}</p>
           </div>
 
           <div class="mb-3">

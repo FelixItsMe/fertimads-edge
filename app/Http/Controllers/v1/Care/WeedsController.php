@@ -48,7 +48,7 @@ class WeedsController extends Controller
 
 
         // Redirect with a success message
-        return redirect()->route('weeds.index')->with('success', 'Weeds data has been added successfully.');
+        return redirect()->route('weeds.index')->with('weeds-success', 'Data gulma telah berhasil ditambahkan');
     }
 
     public function show(Weeds $weed)
@@ -85,7 +85,7 @@ class WeedsController extends Controller
 
         $weeds->delete();
 
-        session()->flash('weeds-success', 'Berhasil dihapus!');
+        session()->flash('weeds-success', 'Data Gulma Berhasil dihapus!');
 
         return response()->json([
             'message' => 'Berhasil dihapus!'

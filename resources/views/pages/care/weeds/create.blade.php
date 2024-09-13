@@ -1,5 +1,7 @@
 <x-app-layout>
   @push('styles')
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+
   <style>
     #holder.hover {
       border: 10px dashed #0c0 !important;
@@ -20,7 +22,7 @@
         <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;{{ session()->get('user-success') }}
       </div>
       @endif
-      <form action="{{ route('weeds.store') }}" method="post" enctype="multipart/form-data">
+      <form action="{{ route('weeds.store') }}" method="post" enctype="multipart/form-data" id="form">
         @csrf
         <div class="flex space-x-5">
           <div class="w-1/3">
@@ -52,12 +54,16 @@
             </div>
             <div class="w-full mt-5">
               <label for="deskripsi" class="block">Deskripsi</label>
-              <x-textarea class="w-full h-full block" name="deskripsi" id="deskripsi"></x-textarea>
+              <x-text-input class="w-full h-full block" name="deskripsi" id="deskripsi" type="hidden" />
+              <div id="description-editor">
+              </div>
               <x-input-error :messages="$errors->get('deskripsi')" class="mt-2" />
             </div>
             <div class="w-full mt-5">
               <label for="pengendalian" class="block">Pengendalian</label>
-              <x-textarea class="w-full h-full block" name="pengendalian" id="pengendalian"></x-textarea>
+              <x-text-input class="w-full h-full block" name="pengendalian" id="pengendalian" type="hidden"></x-text-input>
+              <div id="control-editor">
+              </div>
               <x-input-error :messages="$errors->get('pengendalian')" class="mt-2" />
             </div>
             <div class="w-full mt-5">
@@ -72,17 +78,20 @@
             </div>
             <div class="w-full mt-5">
               <label for="golongan_senyawa_kimia" class="block">Golongan Senyawa Kimia</label>
-              <x-textarea class="w-full h-full block" name="golongan_senyawa_kimia" id="golongan_senyawa_kimia"></x-textarea>
+              <x-text-input type="hidden" class="w-full h-full block" name="golongan_senyawa_kimia" id="golongan_senyawa_kimia"></x-text-input>
+              <div id="chemical-editor">
+              </div>
               <x-input-error :messages="$errors->get('golongan_senyawa_kimia')" class="mt-2" />
             </div>
             <div class="w-full mt-5">
               <label for="bahan_aktif" class="block">Bahan Aktif</label>
-              <x-textarea class="w-full h-full block" name="bahan_aktif" id="bahan_aktif"></x-textarea>
+              <x-text-input type="hidden" class="w-full h-full block" name="bahan_aktif" id="bahan_aktif"></x-text-input>
+              <div id="active-editor">
+              </div>
               <x-input-error :messages="$errors->get('bahan_aktif')" class="mt-2" />
             </div>
             <div class="w-full mt-5">
-              <label for="nama_obat" class="block">Nama Obat</label>
-              <x-text-input class="w-full" name="nama_obat" id="nama_obat"></x-text-input>
+              <x-text-input class="w-full" name="nama_obat" id="nama_obat" type="hidden" value="-"></x-text-input>
               <x-input-error :messages="$errors->get('nama_obat')" class="mt-2" />
             </div>
             <div class="block mt-5">
@@ -96,6 +105,24 @@
   </div>
 
   @push('scripts')
+  <!-- Script untuk memuat quill.js editor -->
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+  <script>
+    const descriptionEditor = new Quill('#description-editor', {theme: 'snow'});
+    const controlEditor = new Quill('#control-editor', {theme: 'snow'});
+    const chemicalEditor = new Quill('#chemical-editor', {theme: 'snow'});
+    const activeEditor = new Quill('#active-editor', {theme: 'snow'});
+
+    const form = document.querySelector('#form')
+
+    form.onsubmit = function(e) {
+      document.querySelector("#deskripsi").value = descriptionEditor.root.innerHTML
+      document.querySelector("#pengendalian").value = controlEditor.root.innerHTML
+      document.querySelector("#golongan_senyawa_kimia").value = chemicalEditor.root.innerHTML
+      document.querySelector("#bahan_aktif").value = activeEditor.root.innerHTML
+    }
+  </script>
+
   <script>
     var output = document.getElementById('preview_img');
     var holder = document.getElementById('holder');

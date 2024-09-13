@@ -298,13 +298,6 @@
                             </tr>
                             <tr class="py-3">
                               <td class="py-1">
-                                <p class="text-gray-500 font-bold">Mandor</p>
-                              </td>
-                              <td class="py-1">:</td>
-                              <td class="py-1"><span class="text-gray-500 font-normal" id="mandor">Jhon Doe</span></td>
-                            </tr>
-                            <tr class="py-3">
-                              <td class="py-1">
                               <p class="text-gray-500 font-bold">Komoditi</p>
                               </td>
                               <td class="py-1">:</td>

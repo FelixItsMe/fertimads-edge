@@ -9,7 +9,7 @@
     <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8 flex flex-col gap-4">
       @if (session()->has('weeds-success'))
       <div class="bg-sky-500 text-white w-full p-6 sm:rounded-lg flex items-center">
-        <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;{{ session()->get('user-success') }}
+        <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;{{ session()->get('weeds-success') }}
       </div>
       @endif
       <div class="grid grid-flow-row grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -37,7 +37,7 @@
                 <th>Nama Gulma</th>
                 <th>Klasifikasi Kerja</th>
                 <th>Golongan Senyawa</th>
-                <th>Nama Obat</th>
+                <th>Bahan Aktif</th>
                 <th>Aksi</th>
               </tr>
             </thead>
@@ -47,8 +47,8 @@
                 <td>{{ $weed->created_at->format('d M Y H:i:s') }}</td>
                 <td>{{ $weed->nama_gulma }}</td>
                 <td>{{ $weed->klasifikasi_berdasarkan_cara_kerja }}</td>
-                <td>{{ $weed->golongan_senyawa_kimia }}</td>
-                <td>{{ $weed->nama_obat }}</td>
+                <td>{!! $weed->golongan_senyawa_kimia !!}</td>
+                <td>{!! $weed->bahan_aktif !!}</td>
                 <td>
                   <div class="flex flex-row space-x-2">
                     <a href="{{ route('weeds.show', $weed->id) }}" title="Lihat Gulma" class="text-sm text-warning">

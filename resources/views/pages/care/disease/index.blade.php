@@ -38,7 +38,7 @@
                 <th>Kelompok Penyakit</th>
                 <th>Jenis Pestisida</th>
                 <th>Cara Kerja</th>
-                <th>Bahan Kimia</th>
+                <th>Golongan Senyawa Kimia</th>
                 <th>Bahan Aktif</th>
                 <th>Aksi</th>
               </tr>
@@ -51,8 +51,8 @@
                 <td>{{ $disease->category }}</td>
                 <td>{{ $disease->pestisida }}</td>
                 <td>{{ $disease->works_category }}</td>
-                <td>{{ $disease->chemical }}</td>
-                <td>{{ $disease->active_materials }}</td>
+                <td>{!! $disease->chemical !!}</td>
+                <td>{!! $disease->active_materials !!}</td>
                 <td>
                   <div class="flex flex-row space-x-2">
                     <a href="{{ route('disease.show', $disease->id) }}" title="Lihat Penyakit" class="text-sm text-warning">
