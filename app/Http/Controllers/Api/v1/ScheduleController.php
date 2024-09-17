@@ -99,11 +99,26 @@ class ScheduleController extends Controller
             ->whereHas('deviceSchedule', function(Builder $query)use($garden){
                 $query->where('garden_id', $garden->id);
             })
+            ->where(function($query){
+                $query->whereHas('deviceSchedule', function(Builder $query){
+                    $query->where('is_finished', 0);
+                })
+                ->orWhere(function(Builder $query){
+                    $query->whereHas('deviceSchedule', function(Builder $query){
+                        $query->where('is_finished', 1);
+                    })
+                    ->has('deviceScheduleExecute');
+                });
+            })
             ->whereDate('start_time', $now->format('Y-m-d'))
             ->get();
 
         $fertilizerSchedules = DeviceFertilizerSchedule::query()
-            ->with('scheduleExecute')
+            ->with([
+                'scheduleExecute' => function($query){
+                    $query->whereNotNull('execute_end');
+                }
+            ])
             ->where('garden_id', $garden->id)
             ->whereDate('execute_start', $now->copy()->format('Y-m-d'))
             ->get();
