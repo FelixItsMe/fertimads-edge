@@ -92,7 +92,10 @@ class ScheduleController extends Controller
         $fertilizerTimes = collect();
 
         $waterSchedule = DeviceScheduleRun::query()
-            ->with('deviceScheduleExecute')
+            ->with([
+                'deviceScheduleExecute',
+                'deviceSchedule:id,commodity_age,start_date,is_finished',
+            ])
             ->whereHas('deviceSchedule', function(Builder $query)use($garden){
                 $query->where('garden_id', $garden->id);
             })
