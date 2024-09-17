@@ -47,7 +47,7 @@ class DiseaseController extends Controller
         }
 
         // Redirect with a success message
-        return redirect()->route('disease.index')->with('success', 'Disease data has been added successfully.');
+        return redirect()->route('disease.index')->with('success', 'Data penyakit berhasil disimpan.');
     }
 
     public function show(Disease $disease)

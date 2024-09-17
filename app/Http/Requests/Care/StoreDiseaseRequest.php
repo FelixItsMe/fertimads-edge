@@ -22,7 +22,7 @@ class StoreDiseaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'sometimes|file',
+            'image' => 'required|file',
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:255',
             'symptoms' => 'required|string',

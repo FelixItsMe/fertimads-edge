@@ -6,7 +6,6 @@ use App\Models\Disease;
 use Gemini\Data\Blob;
 use Gemini\Enums\MimeType;
 use Gemini\Laravel\Facades\Gemini;
-use Illuminate\Http\UploadedFile;
 
 class GeminiService
 {
@@ -28,8 +27,9 @@ class GeminiService
             \"pengendalian\": \"<pengendalian<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
             \"jenis_pestisida\": \"<pengendalian<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
             \"cara_kerja\": \"<cara_kerja<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
-            \"senyawa_kimia\": \"<senyawa_kimia<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
+            \"senyawa_kimia\": \"<golongan_senyawa_kimia<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
             \"bahan_aktif\": \"<bahan_aktif<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
+            \"kelompok_penyakit\": \"<kelompok_penyakit<string | array>> {ini opsional bisa array atau string, tergantung jawabanmu}\",
             }
         ";
 
@@ -55,7 +55,7 @@ class GeminiService
 
         $flag = false;
 
-        foreach($diseases as $disease) {
+        foreach ($diseases as $disease) {
             if ($simhash->isSimilar($response->nama_penyakit, $disease->name)) {
                 $diseaseName = $disease->name;
                 $response->nama_penyakit = $disease->name;
@@ -73,15 +73,17 @@ class GeminiService
         if (!$flag) {
             Disease::query()
                 ->create([
-                    'symptoms' => $response->gejala,
-                    'cause' => $response->penyebab,
-                    'name' => $response->nama_penyakit,
-                    'control' => $response->pengendalian,
-                    'pestisida' => $response->jenis_pestisida,
-                    'works_category' => $response->cara_kerja,
-                    'chemical' => $response->senyawa_kimia,
-                    'active_materials' => $response->bahan_aktif,
-                    'cure_name' => '-'
+                    'symptoms' => json_encode($response->gejala),
+                    'cause' => json_encode($response->penyebab),
+                    'name' => json_encode($response->nama_penyakit),
+                    'control' => json_encode($response->pengendalian),
+                    'pestisida' => json_encode($response->jenis_pestisida),
+                    'works_category' => json_encode($response->cara_kerja),
+                    'chemical' => json_encode($response->senyawa_kimia),
+                    'active_materials' => json_encode($response->bahan_aktif),
+                    'cure_name' => '-',
+                    'image' => $file,
+                    'category' => json_encode($response->kelompok_penyakit)
                 ]);
         }
 

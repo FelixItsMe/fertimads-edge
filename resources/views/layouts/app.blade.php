@@ -46,7 +46,7 @@
                 <!-- Page Heading -->
                 @isset($header)
                     <header class="bg-white shadow">
-                        <div class="sm:sm:max-w-7x xl:max-w-full xl:max-w-full mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        <div class="sm:sm:max-w-7x xl:max-w-full mx-auto py-6 px-4 sm:px-6 lg:px-8">
                             {{ $header }}
                         </div>
                     </header>
@@ -64,7 +64,7 @@
     </div>
 
     {{-- Export Modal --}}
-    <x-modal name="sign-out" style="z-index: 9999;" focusable>
+    <x-modal name="sign-out" style="z-index: 999999999;" focusable>
         <form method="post" action="{{ route('logout') }}" class="p-6">
             @csrf
             <h2 class="text-lg font-medium text-gray-900">

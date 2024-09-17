@@ -20,7 +20,7 @@
         <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;{{ session()->get('user-success') }}
       </div>
       @endif
-      <form action="{{ route('pest.store') }}" method="post" enctype="multipart/form-data">
+      <form action="{{ route('pest.store') }}" method="post" enctype="multipart/form-data" id="form">
         @csrf
         <div class="flex space-x-5">
           <div class="w-1/3">
@@ -40,6 +40,7 @@
                         hover:file:bg-violet-100
                         " />
               </label>
+              <x-input-error :messages="$errors->get('file')" class="mt-2" />
             </div>
           </div>
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-full">
@@ -51,7 +52,7 @@
                   <option value="{{ $garden->id }}">{{ $garden->name }}</option>
                   @endforeach
                 </x-select-input>
-                <x-input-error :messages="$errors->get('garden_Id')" class="mt-2" />
+                <x-input-error :messages="$errors->get('garden_id')" class="mt-2" />
               </div>
               <div class="w-full">
                 <label for="" class="block">Komoditi</label>
@@ -85,9 +86,8 @@
 
   @push('scripts')
   <script>
-    var output = document.getElementById('preview_img');
-
-    var holder = document.getElementById('holder');
+    let output = document.getElementById('preview_img');
+    let holder = document.getElementById('holder');
 
     holder.ondragover = function() {
       this.className = 'hover';
@@ -111,7 +111,7 @@
       output.style.opacity = 0;
     }
 
-    var loadFile = function(event) {
+    let loadFile = function(event) {
 
       var input = event.target;
       var file = input.files[0];

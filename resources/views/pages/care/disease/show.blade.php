@@ -50,22 +50,12 @@
                 <tr>
                   <td class="font-bold">Nama Penyakit</td>
                   <td>:</td>
-                  <td>{{ $disease->name }}</td>
+                  <td>{{ json_decode($disease->name) }}</td>
                 </tr>
                 <tr>
                   <td class="font-bold">Kategori</td>
                   <td>:</td>
-                  <td>{{ $disease->category }}</td>
-                </tr>
-                <tr>
-                  <td class="font-bold">Pestisida</td>
-                  <td>:</td>
-                  <td>{{ $disease->pestisida }}</td>
-                </tr>
-                <tr>
-                  <td class="font-bold">Kategori Kerja</td>
-                  <td>:</td>
-                  <td>{{ $disease->works_category }}</td>
+                  <td>{{ json_decode($disease->category) }}</td>
                 </tr>
               </table>
             </div>
@@ -73,54 +63,88 @@
         </div>
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-1/2">
           <h2 class="gemini-header">Gejala</h2>
-          @if (is_array($disease->symptoms))
+          @if (is_array(json_decode($disease->symptoms)))
           <ul class="gemini-list">
-            @foreach ($disease->symptoms as $symptom)
+            @forelse (json_decode($disease->symptoms) as $symptom)
             <li class="gemini-list-item">{!! $symptom !!}</li>
-            @endforeach
+            @empty
+            <p>-</p>
+            @endforelse
           </ul>
           @else
-          <p>{!! $disease->symptoms !!}</p>
+          <p>{!! json_decode($disease->symptoms) !!}</p>
           @endif
           <h2 class="gemini-subhead">Penyebab</h2>
-          @if (is_array($disease->cause))
+          @if (is_array(json_decode($disease->cause)))
           <ul class="gemini-list">
-            @foreach ($disease->cause as $cause)
+            @forelse (json_decode($disease->cause) as $cause)
             <li class="gemini-list-item">{!! $cause !!}</li>
-            @endforeach
+            @empty
+            <p>-</p>
+            @endforelse
           </ul>
           @else
-          <p>{!! $disease->cause !!}</p>
+          <p>{!! json_decode($disease->cause) !!}</p>
           @endif
           <h2 class="gemini-subhead">Pengendalian</h2>
-          @if (is_array($disease->control))
+          @if (is_array(json_decode($disease->control)))
           <ul class="gemini-list">
-            @foreach ($disease->control as $control)
+            @forelse (json_decode($disease->control) as $control)
             <li class="gemini-list-item">{!! $control !!}</li>
-            @endforeach
+            @empty
+            <p>-</p>
+            @endforelse
           </ul>
           @else
-          <p>{!! $disease->control !!}</p>
+          <p>{!! json_decode($disease->control) !!}</p>
           @endif
-          <h2 class="gemini-subhead">Bahan Kimia</h2>
-          @if (is_array($disease->chemical))
+          <h2 class="gemini-subhead">Pestisida</h2>
+          @if (is_array(json_decode($disease->pestisida)))
           <ul class="gemini-list">
-            @foreach ($disease->chemical as $chemical)
-            <li class="gemini-list-item">{!! $chemical !!}</li>
-            @endforeach
+            @forelse (json_decode($disease->pestisida) as $pestisida)
+            <li class="gemini-list-item">{!! $pestisida !!}</li>
+            @empty
+            <p>-</p>
+            @endforelse
           </ul>
           @else
-          <p>{!! $disease->chemical !!}</p>
+          <p>{!! json_decode($disease->pestisida) !!}</p>
+          @endif
+          <h2 class="gemini-subhead">Cara Kerja</h2>
+          @if (is_array(json_decode($disease->works_category)))
+          <ul class="gemini-list">
+            @forelse (json_decode($disease->works_category) as $works_category)
+            <li class="gemini-list-item">{!! $works_category !!}</li>
+            @empty
+            <p>-</p>
+            @endforelse
+          </ul>
+          @else
+          <p>{!! json_decode($disease->works_category) !!}</p>
+          @endif
+          <h2 class="gemini-subhead">Golongan Senyawa Kimia</h2>
+          @if (is_array(json_decode($disease->chemical)))
+          <ul class="gemini-list">
+            @forelse (json_decode($disease->chemical) as $chemical)
+            <li class="gemini-list-item">{!! $chemical !!}</li>
+            @empty
+            <p>-</p>
+            @endforelse
+          </ul>
+          @else
+          <p>{!! json_decode($disease->chemical) !!}</p>
           @endif
           <h2 class="gemini-subhead">Bahan Aktif</h2>
-          @if (is_array($disease->active_materials))
+          @if (is_array(json_decode($disease->active_materials)))
           <ul class="gemini-list">
-            @foreach ($disease->active_materials as $active_material)
+            @forelse (json_decode($disease->active_materials) as $active_material)
             <li class="gemini-list-item">{!! $active_material !!}</li>
-            @endforeach
+            @empty
+            <p>-</p>
+            @endforelse
           </ul>
           @else
-          <p>{!! $disease->active_materials !!}</p>
+          <p>{!! json_decode($disease->active_materials) !!}</p>
           @endif
         </div>
       </div>
