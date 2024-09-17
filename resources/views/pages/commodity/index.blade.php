@@ -49,12 +49,14 @@
                             </div>
                         </form>
                     </div>
-                    <div class="max-md:w-full flex flex-row space-x-2">
+                    <div>
+                      <div class="max-md:w-full flex flex-row space-x-2">
                         <a href="{{ route('commodity.create') }}"
                             class="bg-fertimads-2 text-white py-2 px-4 rounded-md box-border">Tambah Komoditi</a>
                         <a href="{{ route('commodity.export-excel', ['order_by' => request()->query('order_by')]) }}"
                             target="_blank" class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export
                             Excel</a>
+                      </div>
                     </div>
                 </div>
             </div>

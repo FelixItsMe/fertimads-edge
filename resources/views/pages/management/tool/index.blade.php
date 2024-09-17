@@ -19,7 +19,7 @@
               </x-card-info>
           </div>
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-              <div class="p-6 flex justify-between">
+              <div class="p-6 flex max-md:flex-col max-md:space-y-2 justify-between">
                   <div>
                     <form action="" method="get">
                       <div class="relative">
@@ -32,9 +32,11 @@
                     </form>
                   </div>
                   <div>
-                    <a href="{{ route('tool.create') }}" class="bg-fertimads-2 text-white py-2 px-4 rounded-md">Tambah Alat</a>
-                    <a href="{{ route('tool.export-excel') }}" target="_blank"
-                      class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export Excel</a>
+                    <div class="flex flex-row justify-end space-x-2">
+                      <a href="{{ route('tool.create') }}" class="bg-fertimads-2 text-white py-2 px-4 rounded-md">Tambah Alat</a>
+                      <a href="{{ route('tool.export-excel') }}" target="_blank"
+                        class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export Excel</a>
+                    </div>
                   </div>
               </div>
           </div>
