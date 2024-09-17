@@ -32,27 +32,29 @@
                                 </button>
                             </div>
                             <div class="mt-3">
-                              <h3>Urutan</h3>
+                                <h3>Urutan</h3>
                             </div>
                             <div class="flex flex-row space-x-2">
                                 @foreach ($orderBys as $orderBy)
-                                  <div>
-                                      <input type="radio" id="{{ $orderBy->id }}" name="order_by" value="{{ $orderBy->value }}"
-                                          class="hidden peer/garden" onchange="filterAction()" @checked(request()->query('order_by') == $orderBy->value) />
-                                      <label for="{{ $orderBy->id }}"
-                                          class="inline-flex w-full px-4 py-2 bg-white rounded-md shadow-md text-xs cursor-pointer peer-checked/garden:bg-primary peer-checked/garden:text-white hover:text-gray-600">
-                                          {{ $orderBy->name }}
-                                      </label>
-                                  </div>
+                                    <div>
+                                        <input type="radio" id="{{ $orderBy->id }}" name="order_by"
+                                            value="{{ $orderBy->value }}" class="hidden peer/garden"
+                                            onchange="filterAction()" @checked(request()->query('order_by') == $orderBy->value) />
+                                        <label for="{{ $orderBy->id }}"
+                                            class="inline-flex w-full px-4 py-2 bg-white rounded-md shadow-md text-xs cursor-pointer peer-checked/garden:bg-primary peer-checked/garden:text-white hover:text-gray-600">
+                                            {{ $orderBy->name }}
+                                        </label>
+                                    </div>
                                 @endforeach
                             </div>
                         </form>
                     </div>
-                    <div class="max-md:w-full pt-1">
+                    <div class="max-md:w-full flex flex-row space-x-2">
                         <a href="{{ route('commodity.create') }}"
                             class="bg-fertimads-2 text-white py-2 px-4 rounded-md box-border">Tambah Komoditi</a>
-                        <a href="{{ route('commodity.export-excel', ['order_by' => request()->query('order_by')]) }}" target="_blank"
-                          class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export Excel</a>
+                        <a href="{{ route('commodity.export-excel', ['order_by' => request()->query('order_by')]) }}"
+                            target="_blank" class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export
+                            Excel</a>
                     </div>
                 </div>
             </div>
@@ -73,7 +75,8 @@
                             <div class="mt-2 flex flex-row justify-between items-center">
                                 <span class="text-xs">{{ $commodity->gardens_count }} Kebun</span>
                                 <div class="flex flex-row-reverse gap-2">
-                                    <a href="javascript:void(0);" onclick="deleteData({{ $commodity->id }}, '{{ $commodity->name }}')"
+                                    <a href="javascript:void(0);"
+                                        onclick="deleteData({{ $commodity->id }}, '{{ $commodity->name }}')"
                                         title="{{ __('Hapus Komoditi') }}" class="text-xs text-danger">
                                         <i class="fa-solid fa-trash-can pointer-events-none"></i>
                                     </a>
@@ -105,13 +108,13 @@
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
             const filterAction = () => {
-              document.querySelector('#form-filter').submit()
+                document.querySelector('#form-filter').submit()
             }
             const deleteData = async (id, name) => {
                 const isDelete = confirm(`Apakah anda yakin ingin menghapus komoditas ${name}?`)
 
                 if (!isDelete) {
-                  return false
+                    return false
                 }
 
                 const data = await fetchData(

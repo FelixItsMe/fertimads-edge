@@ -59,7 +59,7 @@
                             @foreach ($fertilizeSchedules as $fertilizeSchedule)
                                 <div class="bg-white p-4 rounded-lg flex flex-col gap-2">
                                     <div class="text-sm font-semibold">Pemupukan
-                                        {{ $fertilizeSchedule->deviceSelenoid->garden->name }}</div>
+                                        {{ $fertilizeSchedule->garden->name }}</div>
                                     <div class="flex flex-row justify-between">
                                         <div>
                                         </div>
@@ -71,7 +71,7 @@
                             @foreach ($waterSchedules as $waterScheduleRun)
                                 <div class="bg-white p-4 rounded-lg flex flex-col gap-2">
                                     <div class="text-sm font-semibold">Penyiraman
-                                        {{ $waterScheduleRun->deviceSchedule->deviceSelenoid->garden->name }}</div>
+                                        {{ $waterScheduleRun->deviceSchedule->deviceSelenoid?->garden?->name ?? '-' }}</div>
                                     <div class="flex flex-row justify-between">
                                         <div>
                                         </div>

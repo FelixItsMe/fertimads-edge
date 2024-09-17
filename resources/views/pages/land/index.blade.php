@@ -33,71 +33,79 @@
                 </div>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-3 flex justify-between items-center">
+                <div class="p-3 flex max-md:flex-col max-md:space-y-2 justify-between items-center">
                     <div>
-                      <form action="" method="get">
-                        <div class="relative mt-1">
-                          <input type="text" name="search" class="w-full px-4 py-2 border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                            placeholder="Cari" value="{{ request()->query('search') }}">
-                          <button type="submit" class="absolute inset-y-0 right-0 px-4 py-2 text-sm text-gray-600 focus:outline-none">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                          </button>
-                        </div>
-                      </form>
+                        <form action="" method="get">
+                            <div class="relative mt-1">
+                                <input type="text" name="search"
+                                    class="w-full px-4 py-2 border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+                                    placeholder="Cari" value="{{ request()->query('search') }}">
+                                <button type="submit"
+                                    class="absolute inset-y-0 right-0 px-4 py-2 text-sm text-gray-600 focus:outline-none">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="items-center">
-                      <a href="{{ route('land.create') }}" class="bg-fertimads-2 text-white py-2 px-4 rounded-md text-center">Tambah Lahan</a>
-                      <a href="{{ route('land.export-excel') }}" target="_blank" class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export Excel</a>
+                    <div class="flex flex-row items-center space-x-2">
+                        <a href="{{ route('land.create') }}"
+                            class="bg-fertimads-2 max-md:text-sm text-white py-2 px-4 rounded-md text-center">Tambah Lahan</a>
+                        <a href="{{ route('land.export-excel') }}" target="_blank"
+                            class="bg-green-500 max-md:text-sm text-white py-2 px-4 rounded-md text-center">Export Excel</a>
                     </div>
                 </div>
                 <div class="overflow-x-scroll">
-                  <table class="w-full align-middle border-slate-400 table mb-0">
-                      <thead>
-                          <tr>
-                              <th>Nama Lahan</th>
-                              <th>Luas Lahan</th>
-                              <th>Lokasi Lahan</th>
-                              <th>Koordinat Lahan</th>
-                              <th>Altitude</th>
-                              <th>Jumlah Kebun</th>
-                              <th>Aksi</th>
-                          </tr>
-                      </thead>
-                      <tbody class="table-border-bottom-0">
-                          @forelse ($lands as $land)
-                              <tr>
-                                  <td>{{ $land->name }}</td>
-                                  <td>{{ $land->area }}&nbsp;m²</td>
-                                  <td>{{ Str::limit($land->address, 25) }}</td>
-                                  <td>{{ $land->latitude }},&nbsp;{{ $land->longitude }}</td>
-                                  <td>{{ $land->altitude }}&nbsp;mdpl</td>
-                                  <td class="text-center">{{ $land->gardens_count }}</td>
-                                  <td>
-                                      <div class="flex flex-row space-x-2">
-                                          <a href="{{ route('land.show', $land->id) }}" title="Detail Lahan" class="text-sm text-info">
-                                              <i class="fa-solid fa-circle-info"></i>
-                                          </a>
-                                          <a href="{{ route('land.edit', $land->id) }}" title="Edit Lahan" class="text-sm text-warning">
-                                              <i class="fa-solid fa-pen"></i>
-                                          </a>
-                                          <a href="#" onclick="deleteData({{ $land->id }}, '{{ $land->name }}')" title="Hapus Lahan" class="text-sm text-danger">
-                                              <i class="fa-solid fa-trash-can"></i>
-                                          </a>
-                                      </div>
-                                  </td>
-                              </tr>
-                          @empty
-                              <tr>
-                                  <td colspan="6" class="text-center">Tidak ada data</td>
-                              </tr>
-                          @endforelse
-                      </tbody>
-                  </table>
-                  @if ($lands->hasPages())
-                      <div class="p-6">
-                          {{ $lands->links() }}
-                      </div>
-                  @endif
+                    <table class="w-full align-middle border-slate-400 table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Nama Lahan</th>
+                                <th>Luas Lahan</th>
+                                <th>Lokasi Lahan</th>
+                                <th>Koordinat Lahan</th>
+                                <th>Altitude</th>
+                                <th>Jumlah Kebun</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @forelse ($lands as $land)
+                                <tr>
+                                    <td>{{ $land->name }}</td>
+                                    <td>{{ $land->area }}&nbsp;m²</td>
+                                    <td>{{ Str::limit($land->address, 25) }}</td>
+                                    <td>{{ $land->latitude }},&nbsp;{{ $land->longitude }}</td>
+                                    <td>{{ $land->altitude }}&nbsp;mdpl</td>
+                                    <td class="text-center">{{ $land->gardens_count }}</td>
+                                    <td>
+                                        <div class="flex flex-row space-x-2">
+                                            <a href="{{ route('land.show', $land->id) }}" title="Detail Lahan"
+                                                class="text-sm text-info">
+                                                <i class="fa-solid fa-circle-info"></i>
+                                            </a>
+                                            <a href="{{ route('land.edit', $land->id) }}" title="Edit Lahan"
+                                                class="text-sm text-warning">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+                                            <a href="#"
+                                                onclick="deleteData({{ $land->id }}, '{{ $land->name }}')"
+                                                title="Hapus Lahan" class="text-sm text-danger">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">Tidak ada data</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    @if ($lands->hasPages())
+                        <div class="p-6">
+                            {{ $lands->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -109,15 +117,15 @@
                 const isDelete = confirm(`Apakah anda yakin ingin menghapus lahan ${name}?`)
 
                 if (!isDelete) {
-                  return false
+                    return false
                 }
 
                 const data = await fetchData(
-                    "{{ route('land.destroy', 'ID') }}".replace('ID', id),
-                    {
+                    "{{ route('land.destroy', 'ID') }}".replace('ID', id), {
                         method: "DELETE",
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+                                .nodeValue,
                             'Accept': 'application/json',
                         },
                     }
