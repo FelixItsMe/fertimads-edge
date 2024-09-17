@@ -19,12 +19,14 @@
                 </x-card-info>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 flex justify-between">
-                    <h1 class="text-3xl font-extrabold">Daftar Anggota</h1>
+                <div class="p-6 flex max-md:flex-col max-md:space-y-2 justify-between">
+                    <h1 class="text-3xl font-extrabold max-md:text-center">Daftar Anggota</h1>
                     <div>
-                      <a href="{{ route('user.create') }}" class="bg-fertimads-2 text-white py-2 px-4 rounded-md">Tambah Anggota</a>
-                      <a href="{{ route('user.export-excel') }}" target="_blank"
-                        class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export Excel</a>
+                      <div class="flex flex-row space-x-2 justify-end">
+                        <a href="{{ route('user.create') }}" class="bg-fertimads-2 text-white py-2 px-4 rounded-md">Tambah Anggota</a>
+                        <a href="{{ route('user.export-excel') }}" target="_blank"
+                          class="bg-green-500 text-white py-2 px-4 rounded-md text-center">Export Excel</a>
+                      </div>
                     </div>
                 </div>
                 <table class="w-full align-middle border-slate-400 table mb-0">
