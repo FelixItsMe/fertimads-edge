@@ -66,22 +66,16 @@
             <x-responsive-nav-link :href="route('dashboard.index')" :active="request()->routeIs('dashboard.*')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('land.index')" :active="request()->routeIs('land.*')">
-                {{ __('Manajemen Lahan') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('garden.index')" :active="request()->routeIs('garden.*')">
-                {{ __('Manajemen Kebun') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('commodity.index')" :active="request()->routeIs('commodity.*')">
-                {{ __('Manajemen Komoditi') }}
-            </x-responsive-nav-link>
+            @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::MANAGEMENT->value || Auth::user()->role == 'su', 'layouts.management-navlink')
+            @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::CONTROL->value || Auth::user()->role == 'su', 'layouts.control-navlink')
+            @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::CARE->value || Auth::user()->role == 'su', 'layouts.care-navlink')
         </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->role }}</div>
             </div>
 
             <div class="mt-3 space-y-1">
