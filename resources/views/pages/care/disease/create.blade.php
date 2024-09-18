@@ -46,6 +46,7 @@
                         hover:file:bg-violet-100
                         " />
               </label>
+              <x-input-error :messages="$errors->get('image')" class="mt-2" />
             </div>
           </div>
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-full">
@@ -115,11 +116,21 @@
   <!-- Script untuk memuat quill.js editor -->
   <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
   <script>
-    const causeEditor = new Quill('#cause-editor', {theme: 'snow'});
-    const symptomsEditor = new Quill('#symptoms-editor', {theme: 'snow'});
-    const controlEditor = new Quill('#control-editor', {theme: 'snow'});
-    const chemicalEditor = new Quill('#chemical-editor', {theme: 'snow'});
-    const activeEditor = new Quill('#active-editor', {theme: 'snow'});
+    const causeEditor = new Quill('#cause-editor', {
+      theme: 'snow'
+    });
+    const symptomsEditor = new Quill('#symptoms-editor', {
+      theme: 'snow'
+    });
+    const controlEditor = new Quill('#control-editor', {
+      theme: 'snow'
+    });
+    const chemicalEditor = new Quill('#chemical-editor', {
+      theme: 'snow'
+    });
+    const activeEditor = new Quill('#active-editor', {
+      theme: 'snow'
+    });
 
     const form = document.querySelector('#form')
 
