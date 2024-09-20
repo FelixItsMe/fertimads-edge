@@ -122,7 +122,7 @@
                         {{ __('Batalkan') }}
                     </x-secondary-button>
 
-                    <x-primary-button class="ms-3" type="button" x-on:click="exportTelemetry()">
+                    <x-primary-button class="ms-3" type="button" id="btn-export-excel" x-on:click="exportTelemetry('btn-export-excel')">
                         {{ __('Export Excel') }}
                     </x-primary-button>
                 </div>
@@ -412,7 +412,20 @@
                 initLandPolygon(landId, map)
             }
 
-            const exportTelemetry = async () => {
+            const exportTelemetry = async (btnId) => {
+                console.log(btnId)
+                let eButton = document.getElementById(btnId)
+
+                if (eButton) {
+                    // Show loading indication
+                    eButton.setAttribute('data-kt-indicator', 'on');
+
+                    // Disable button to avoid multiple click
+                    eButton.disabled = true;
+                    eButton.classList.replace('bg-primary', 'bg-green-700')
+                }
+
+
                 const eQueryFrom = document.querySelector('input#from'),
                     eQueryTo = document.querySelector('input#to'),
                     exportUrl = new URL("{{ route('telemetry-rsc.export-excel') }}")
@@ -431,12 +444,18 @@
                     }
                 );
 
+                if (eButton) {
+                  eButton.disabled = false
+                  eButton.classList.replace('bg-green-700', 'bg-primary')
+                }
+
                 if (!data) {
-                    eExportStatus.textContent = ''
+                    eExportStatus.textContent = 'Gagal melakukan export'
+
                     return false
                 }
 
-                eExportStatus.textContent = `Export sedang berlangsung!`
+                eExportStatus.textContent = `Export sedang berlangsung! Harap tunggu...`
             }
 
             const gardenModalData = async id => {
