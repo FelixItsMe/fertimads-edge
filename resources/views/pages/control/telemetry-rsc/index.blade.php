@@ -413,7 +413,6 @@
             }
 
             const exportTelemetry = async (btnId) => {
-                console.log(btnId)
                 let eButton = document.getElementById(btnId)
 
                 if (eButton) {
@@ -429,6 +428,8 @@
                 const eQueryFrom = document.querySelector('input#from'),
                     eQueryTo = document.querySelector('input#to'),
                     exportUrl = new URL("{{ route('telemetry-rsc.export-excel') }}")
+
+                eExportStatus.textContent = `Loading...`
 
                 exportUrl.searchParams.append('from', eQueryFrom.value)
                 exportUrl.searchParams.append('to', eQueryTo.value)
