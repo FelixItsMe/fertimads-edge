@@ -116,6 +116,8 @@
                 <div>
                     <div id="export-status">
                     </div>
+                    <div id="export-link">
+                    </div>
                 </div>
                 <div>
                     <x-secondary-button x-on:click="$dispatch('close')">
@@ -907,7 +909,7 @@
                 console.log('Hello world');
                 window.Echo.private('export-completed.{{ auth()->user()->id }}')
                     .listen('ExportCompletedEvent', (event) => {
-                        eExportStatus.innerHTML = `Export Selesai... <a href="{{ route('telemetry-rsc.download-excel') }}"
+                        document.querySelector('#export-link').innerHTML = `Export Selesai... <a href="{{ route('telemetry-rsc.download-excel') }}"
                         target="_blank" class="text-sky-400 hover:text-blue-600 underline">Klik untuk mengunduh!</a>`
                     })
 
