@@ -36,6 +36,9 @@ return [
                 'tls' => [
                     'local_cert' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', null),
                     'local_pk' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', null),
+                    'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
+                    'verify_peer'=>false,
+                    'verify_peer_name'=>false,
                 ],
             ],
             'max_request_size' => env('REVERB_MAX_REQUEST_SIZE', 10_000),
