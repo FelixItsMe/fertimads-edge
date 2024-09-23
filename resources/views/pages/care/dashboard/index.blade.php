@@ -184,6 +184,27 @@
                                       <td class="py-1">:</td>
                                       <td class="py-1"><span class="text-gray-500 font-normal" id="populasi">${garden?.populations || '-'} Tanaman</span></td>
                                     </tr>
+                                    <tr class="py-3">
+                                      <td class="py-1">
+                                        <p class="text-gray-500 font-bold">Penyakit</p>
+                                      </td>
+                                      <td class="py-1">:</td>
+                                      <td class="py-1"><span class="text-gray-500 font-normal" id="penyakit">${garden?.latest_pest?.disease_name || '-'}</span></td>
+                                    </tr>
+                                    <tr class="py-3">
+                                      <td class="py-1">
+                                        <p class="text-gray-500 font-bold">Hama</p>
+                                      </td>
+                                      <td class="py-1">:</td>
+                                      <td class="py-1"><span class="text-gray-500 font-normal" id="hama">${garden?.latest_pest?.pest_name || '-'}</span></td>
+                                    </tr>
+                                    <tr class="py-3">
+                                      <td class="py-1">
+                                        <p class="text-gray-500 font-bold">Jenis Pupuk</p>
+                                      </td>
+                                      <td class="py-1">:</td>
+                                      <td class="py-1"><span class="text-gray-500 font-normal" id="jenis_pupuk">${garden?.device_selenoid?.device_report?.length > 0 ? garden?.device_selenoid?.device_report[-1].pemupukan_type : '-'}</span></td>
+                                    </tr>
                                   </tbody>
                                 </table>
                               </div>
@@ -344,235 +365,6 @@
       return true
     }
 
-    const openModal = async (map, garden) => {
-      if (map.modalControl) {
-        map.removeControl(map.modalControl);
-      }
-
-      let latestTelemetry
-      await getLatestTelemetry(garden.id).then(data => {
-        latestTelemetry = data
-      })
-
-      map.modalControl = L.control({
-        position: 'topleft'
-      });
-
-      map.modalControl.onAdd = function(map) {
-        const div = L.DomUtil.create('div', 'leaflet-control');
-
-        div.innerHTML = `
-                      <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                        <div class="px-2 pt-5 pb-4 bg-white sm:p-3 sm:pb-4">
-                          <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:text-left">
-                              <div class="mt-2">
-                                <div class="grid grid-cols-2 gap-4">
-                                  <div>
-                                    <h4 class="text-lg font-medium leading-6 text-gray-900 mb-2">Informasi Kebun ${garden?.name ?? ''}</h4>
-                                    <table class="w-full">
-                                      <tbody>
-                                        <tr class="py-3">
-                                          <td class="pb-1">
-                                            <p class="text-gray-500 font-bold">Luas Kebun</p>
-                                          </td>
-                                          <td class="pb-1">:</td>
-                                          <td class="pb-1"><span class="text-gray-500 font-normal" id="luasKebun">${garden?.area ?? '-'} m²</span></td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1">
-                                            <p class="text-gray-500 font-bold">Tahap</p>
-                                          </td>
-                                          <td class="py-1">:</td>
-                                          <td class="py-1"><span class="text-gray-500 font-normal" id="tahap">Penanaman</span></td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1">
-                                            <p class="text-gray-500 font-bold">Mandor</p>
-                                          </td>
-                                          <td class="py-1">:</td>
-                                          <td class="py-1"><span class="text-gray-500 font-normal" id="mandor">Jhon Doe</span></td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1">
-                                          <p class="text-gray-500 font-bold">Komoditi</p>
-                                          </td>
-                                          <td class="py-1">:</td>
-                                          <td class="py-1"><span class="text-gray-500 font-normal" id="komoditi">${garden?.commodity?.name ?? ''}</span></td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1">
-                                            <p class="text-gray-500 font-bold">Total Blok</p>
-                                          </td>
-                                          <td class="py-1">:</td>
-                                          <td class="py-1"><span class="text-gray-500 font-normal" id="totalBlok">${garden?.count_block ?? '-'} Blok</span></td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1">
-                                            <p class="text-gray-500 font-bold">Populasi</p>
-                                          </td>
-                                          <td class="py-1">:</td>
-                                          <td class="py-1"><span class="text-gray-500 font-normal" id="populasi">${garden?.populations || '-'} Tanaman</span></td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                  <div>
-                                    <h4 class="text-lg font-medium leading-6 text-gray-900 mb-2">Unsur Hara Terbaru</h4>
-                                    <div class="flex w-full flex-wrap gap-5">
-                                      <div>
-                                        <div class="font-bold text-gray-500">Nitrogen</div>
-                                        <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.N ?? 0)} mg/kg</div>
-                                      </div>
-                                      <div>
-                                        <div class="font-bold text-gray-500">Fosfor</div>
-                                        <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.P ?? 0)} mg/kg</div>
-                                      </div>
-                                      <div>
-                                        <div class="font-bold text-gray-500">Kalium</div>
-                                        <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.K ?? 0)} mg/kg</div>
-                                      </div>
-                                      <div>
-                                        <div class="font-bold text-gray-500">EC</div>
-                                        <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.EC ?? 0)} uS/cm</div>
-                                      </div>
-                                      <div>
-                                        <div class="font-bold text-gray-500">pH Tanah</div>
-                                        <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.pH ?? 0)}</div>
-                                      </div>
-                                      <div>
-                                        <div class="font-bold text-gray-500">Suhu Tanah</div>
-                                        <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.T ?? 0)}<sup>o</sup>C</div>
-                                      </div>
-                                      <div>
-                                        <div class="font-bold text-gray-500">Kelembapan Tanah</div>
-                                        <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.soil_sensor.H ?? 0)}%</div>
-                                      </div>
-                                      <div>
-                                        <div class="font-bold text-gray-500">Suhu Lingkungan</div>
-                                        <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.dht1.T ?? 0).toFixed(2)}<sup>o</sup>C</div>
-                                      </div>
-                                      <div>
-                                        <div class="font-bold text-gray-500">Kelembapan Lingkungan</div>
-                                        <div class="text-gray-500 font-normal">${(latestTelemetry?.telemetry?.dht1.H ?? 0).toFixed(2)}%</div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4 mt-3">
-                                  <div>
-                                    <h4 class="text-lg font-medium leading-6 text-gray-900 mb-2">Jadwal Fertigasi</h4>
-                                    <div class="">
-                                      <input type="hidden" name="execute_date">
-                                      <div class="py-2 px-4 bg-primary text-white flex flex-row justify-between">
-                                        <div id="month-year-text" class="font-extrabold"></div>
-                                        <div class="flex gap-2">
-                                          <button type="button" class="hover:text-slate-400"
-                                          id="subMonthButton"><i class="fa-solid fa-chevron-left"></i></button>
-                                          <button type="button" class="hover:text-slate-400"
-                                          id="addMonthButton"><i class="fa-solid fa-chevron-right"></i></button>
-                                        </div>
-                                      </div>
-                                      <div id="calendar"></div>
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <h4 class="text-lg font-medium leading-6 text-gray-900 mb-2">Detail Informasi Jadwal</h4>
-                                    <table class="w-full">
-                                      <tbody>
-                                        <tr class="py-3">
-                                          <td class="pb-1" style="vertical-align: top">
-                                            <p class="text-gray-500 font-bold">Kegiatan</p>
-                                          </td>
-                                          <td class="pb-1" style="vertical-align: top">:</td>
-                                          <td class="pb-1"><span class="text-gray-500 font-normal" id="jenisKegiatan">-</span></td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1" style="vertical-align: top">
-                                            <p class="text-gray-500 font-bold">Estimasi Volume</p>
-                                          </td>
-                                          <td class="py-1" style="vertical-align: top">:</td>
-                                          <td class="py-1"><span class="text-gray-500 font-normal" id="volume">-</span></td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1" style="vertical-align: top">
-                                            <p class="text-gray-500 font-bold">Estimasi Durasi</p>
-                                          </td>
-                                          <td class="py-1" style="vertical-align: top">:</td>
-                                          <td class="py-1"><span class="text-gray-500 font-normal" id="waktuKegiatan">-</span></td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1" style="vertical-align: top">
-                                          <p class="text-gray-500 font-bold">Waktu Penjadwalan</p>
-                                          </td>
-                                          <td class="py-1" style="vertical-align: top">:</td>
-                                          <td class="py-1">
-                                            <div class="text-gray-500 font-normal" id="waktuPenjadwalan">-</div>
-                                          </td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1" style="vertical-align: top">
-                                            <p class="text-gray-500 font-bold">Aktual Volume</p>
-                                          </td>
-                                          <td class="py-1" style="vertical-align: top">:</td>
-                                          <td class="py-1"><span class="text-gray-500 font-normal" id="aktualVolume">-</span></td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1" style="vertical-align: top">
-                                            <p class="text-gray-500 font-bold">Aktual Durasi</p>
-                                          </td>
-                                          <td class="py-1" style="vertical-align: top">:</td>
-                                          <td class="py-1"><span class="text-gray-500 font-normal" id="aktualWaktuKegiatan">-</span></td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1">
-                                            <p class="text-gray-500 font-bold">Flow Rate Progress</p>
-                                          </td>
-                                        </tr>
-                                        <tr class="py-3">
-                                          <td class="py-1">
-                                            <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                              <div class="bg-yellow-300 h-2.5 rounded-full" style="width: ${latestTelemetry?.telemetry?.flow_meter.V ?? '0'}%"></div>
-                                            </div>
-                                          </td>
-                                          <td class="py-1"></td>
-                                          <td class="py-1 px-3">
-                                          ${(latestTelemetry?.telemetry?.flow_meter.V ?? 0).toFixed(2)}%
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-
-                                    <div class="flex items-center space-x-4 mt-3">
-                                      <div class="flex items-center space-x-2">
-                                        <span class="w-4 rounded-full aspect-square bg-yellow-300"></span>
-                                        <span class="">Pemupukan</span>
-                                      </div>
-
-                                      <div class="flex items-center space-x-2">
-                                        <span class="w-4 rounded-full aspect-square bg-blue-300"></span>
-                                        <span class="">Penyiraman</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
-                          <button type="button" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-teal-700 hover:text-white sm:ml-3 sm:w-auto sm:text-sm" onclick="map.removeControl(map.modalControl)">Tutup</button>
-                        </div>
-                      </div>
-                    `;
-
-        L.DomEvent.disableClickPropagation(div)
-        L.DomEvent.disableScrollPropagation(div)
-        return div;
-      };
-      map.modalControl.addTo(map);
-    };
-
     const gardenModalData = async id => {
       const data = await fetchData(
         "{{ route('extra.garden.modal', 'ID') }}".replace('ID', id), {
@@ -587,11 +379,16 @@
 
       if (!data) return false
 
+      console.log(data)
+
       document.querySelector('#nama-kebun').textContent = data.garden.name
       document.querySelector('#luasKebun').textContent = data.garden.area + " m²"
       document.querySelector('#komoditi').textContent = data.garden.commodity.name
       document.querySelector('#totalBlok').textContent = data.garden.count_block
       document.querySelector('#populasi').textContent = data.garden.population
+      document.querySelector('#penyakit').textContent = data.garden.latest_pest?.disease_name || "-"
+      document.querySelector('#hama').textContent = data.garden.latest_pest?.pest_name || "-"
+      document.querySelector('#jenis_pupuk').textContent = data.garden.device_selenoid?.device_report?.length > 0 ? data.garden.device_selenoid?.device_report[data.garden.device_selenoid?.device_report?.length - 1].pemupukan_type : '-'
 
       document.querySelector('#telemetry-n').textContent = parseFloat(data.telemetry.soil_sensor.N).toFixed(
         2) + " mg/kg"

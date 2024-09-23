@@ -34,7 +34,7 @@
               <img id='preview_img' class="z-10 h-[400px] w-[400px] object-cover rounded-lg absolute top-0 bottom-0 right-0 left-0" src="" />
               <label class="z-50 block mt-5 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full h-full opacity-0">
                 <span class="sr-only">Choose profile photo</span>
-                <input type="file" onchange="loadFile(event)" name="foto" class="block w-full text-sm text-slate-500
+                <input type="file" onchange="loadFile(event)" name="foto" id="foto" class="block w-full text-sm text-slate-500
                     file:mr-4 file:py-2 file:px-4
                         file:rounded-full file:border-0
                         file:text-sm file:font-semibold
@@ -43,6 +43,7 @@
                         " />
               </label>
             </div>
+            <span class="text-sm text-red-600 space-y-1" id="image-error"></span>
           </div>
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-full">
             <div class="flex space-x-5">
@@ -95,7 +96,7 @@
               <x-input-error :messages="$errors->get('nama_obat')" class="mt-2" />
             </div>
             <div class="block mt-5">
-              <x-primary-button>Kirim</x-primary-button>
+              <x-primary-button id="submit-btn">Kirim</x-primary-button>
               <a href="{{ route('weeds.index') }}" class='inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150'>Batal</a>
             </div>
           </div>
@@ -112,6 +113,7 @@
     const controlEditor = new Quill('#control-editor', {theme: 'snow'});
     const chemicalEditor = new Quill('#chemical-editor', {theme: 'snow'});
     const activeEditor = new Quill('#active-editor', {theme: 'snow'});
+    const submitBtn = document.querySelector("#submit-btn")
 
     const form = document.querySelector('#form')
 
@@ -120,6 +122,15 @@
       document.querySelector("#pengendalian").value = controlEditor.root.innerHTML
       document.querySelector("#golongan_senyawa_kimia").value = chemicalEditor.root.innerHTML
       document.querySelector("#bahan_aktif").value = activeEditor.root.innerHTML
+
+      const inputFile = document.querySelector("#foto")
+
+      if (inputFile.files.length < 1) {
+        alert("Foto tidak boleh kosong!")
+        return false
+      }
+
+      return true
     }
   </script>
 

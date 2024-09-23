@@ -76,6 +76,11 @@ class Garden extends Model
         return $this->hasMany(Pest::class);
     }
 
+    public function latestPest(): HasOne
+    {
+        return $this->hasOne(Pest::class, 'garden_id')->latestOfMany();
+    }
+
     /**
      * Get all of the deviceSchedules for the Garden
      *
