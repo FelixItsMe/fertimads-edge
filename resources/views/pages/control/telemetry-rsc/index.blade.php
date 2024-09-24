@@ -609,51 +609,12 @@
               cell.classList.add('text-blue-500')
             }
 
-            const exportTelemetry = async (btnId) => {
-                let eButton = document.getElementById(btnId)
+            const schedule = availableSchedules.find(schedule => {
+              return schedule.date == formatDate
+            })
 
-                if (eButton) {
-                    // Show loading indication
-                    eButton.setAttribute('data-kt-indicator', 'on');
-
-                    // Disable button to avoid multiple click
-                    eButton.disabled = true;
-                    eButton.classList.replace('bg-primary', 'bg-green-700')
-                }
-
-
-                const eQueryFrom = document.querySelector('input#from'),
-                    eQueryTo = document.querySelector('input#to'),
-                    exportUrl = new URL("{{ route('telemetry-rsc.export-excel') }}")
-
-                eExportStatus.textContent = `Loading...`
-
-                exportUrl.searchParams.append('from', eQueryFrom.value)
-                exportUrl.searchParams.append('to', eQueryTo.value)
-
-                const data = await fetchData(
-                    exportUrl, {
-                        method: "GET",
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
-                                .nodeValue,
-                            'Accept': 'application/json',
-                        },
-                    }
-                );
-
-                if (eButton) {
-                  eButton.disabled = false
-                  eButton.classList.replace('bg-green-700', 'bg-primary')
-                }
-
-                if (!data) {
-                    eExportStatus.textContent = 'Gagal melakukan export'
-
-                    return false
-                }
-
-                eExportStatus.textContent = `Export sedang berlangsung! Harap tunggu...`
+            if (schedule?.schedule.includes(1)) {
+              wBar.classList.add('bg-primary', 'w-full', 'h-1');
             }
             if (schedule?.schedule.includes(2)) {
               fBar.classList.add('bg-yellow-300', 'w-full', 'h-1');
@@ -946,11 +907,11 @@
       return dayDiff;
     }
 
-            window.onload = () => {
-                console.log('Hello world');
-                window.Echo.private('export-completed.{{ auth()->user()->id }}')
-                    .listen('ExportCompletedEvent', (event) => {
-                        document.querySelector('#export-link').innerHTML = `Export Selesai... <a href="{{ route('telemetry-rsc.download-excel') }}"
+    window.onload = () => {
+      console.log('Hello world');
+      window.Echo.private('export-completed.{{ auth()->user()->id }}')
+        .listen('ExportCompletedEvent', (event) => {
+          eExportStatus.innerHTML = `Export Selesai... <a href="{{ route('telemetry-rsc.download-excel') }}"
                         target="_blank" class="text-sky-400 hover:text-blue-600 underline">Klik untuk mengunduh!</a>`
         })
 
