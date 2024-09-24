@@ -390,24 +390,24 @@
       document.querySelector('#hama').textContent = data.garden.latest_pest?.pest_name || "-"
       document.querySelector('#jenis_pupuk').textContent = data.garden.device_selenoid?.device_report?.length > 0 ? data.garden.device_selenoid?.device_report[data.garden.device_selenoid?.device_report?.length - 1].pemupukan_type : '-'
 
-      document.querySelector('#telemetry-n').textContent = parseFloat(data.telemetry.soil_sensor.N).toFixed(
-        2) + " mg/kg"
-      document.querySelector('#telemetry-f').textContent = parseFloat(data.telemetry.soil_sensor.P).toFixed(
-        2) + " mg/kg"
-      document.querySelector('#telemetry-k').textContent = parseFloat(data.telemetry.soil_sensor.K).toFixed(
-        2) + " mg/kg"
-      document.querySelector('#telemetry-ec').textContent = parseFloat(data.telemetry.soil_sensor.EC).toFixed(
-        2) + " uS/cm"
-      document.querySelector('#telemetry-ph').textContent = parseFloat(data.telemetry.soil_sensor.pH).toFixed(
-        2)
-      document.querySelector('#telemetry-t-tanah').textContent = parseFloat(data.telemetry.soil_sensor.T)
-        .toFixed(2) + "°C"
-      document.querySelector('#telemetry-h-tanah').textContent = parseFloat(data.telemetry.soil_sensor.H)
-        .toFixed(2) + "%"
-      document.querySelector('#telemetry-t-dht').textContent = parseFloat(data.telemetry.dht1.T).toFixed(2) +
-        "°C"
-      document.querySelector('#telemetry-h-dht').textContent = parseFloat(data.telemetry.dht1.H).toFixed(2) +
-        "%"
+      document.querySelector('#telemetry-n').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.N).toFixed(
+        2) + " mg/kg" : "-"
+      document.querySelector('#telemetry-f').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.P).toFixed(
+        2) + " mg/kg" : '-'
+      document.querySelector('#telemetry-k').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.K).toFixed(
+        2) + " mg/kg" : '-'
+      document.querySelector('#telemetry-ec').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.EC).toFixed(
+        2) + " uS/cm" : '-'
+      document.querySelector('#telemetry-ph').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.pH).toFixed(
+        2) : '-'
+      document.querySelector('#telemetry-t-tanah').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.T)
+        .toFixed(2) + "°C" : '-'
+      document.querySelector('#telemetry-h-tanah').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.H)
+        .toFixed(2) + "%" : '-'
+      document.querySelector('#telemetry-t-dht').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.dht1.T).toFixed(2) +
+        "°C" : '-'
+      document.querySelector('#telemetry-h-dht').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.dht1.H).toFixed(2) +
+        "%" : '-'
 
       document.querySelector('#calendar-add-month').dataset.gardenId = data.garden.id
       document.querySelector('#calendar-sub-month').dataset.gardenId = data.garden.id
