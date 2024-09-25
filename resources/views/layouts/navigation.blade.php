@@ -69,6 +69,10 @@
             @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::MANAGEMENT->value || Auth::user()->role == 'su', 'layouts.management-navlink')
             @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::CONTROL->value || Auth::user()->role == 'su', 'layouts.control-navlink')
             @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::CARE->value || Auth::user()->role == 'su', 'layouts.care-navlink')
+
+            <x-responsive-nav-link :href="route('weather.index')" :active="request()->routeIs('weather.*')">
+              {{ __('Cuaca') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->

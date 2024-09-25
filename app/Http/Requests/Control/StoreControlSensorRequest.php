@@ -42,4 +42,27 @@ class StoreControlSensorRequest extends FormRequest
             'kalium.lower_limit'        => 'required_if_accepted:kalium.enable|nullable|numeric|lte:kalium.upper_limit',
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'humidity.enable' => 'Kelembapan',
+            'humidity.upper_limit' => 'Batas atas kelembapan',
+            'humidity.lower_limit' => 'Batas bawah kelembapan',
+            'nitrogen.enable' => 'Nitrogen',
+            'nitrogen.upper_limit' => 'Batas atas nitrogen',
+            'nitrogen.lower_limit' => 'Batas bawah nitrogen',
+            'phosphorus.enable' => 'Fosfor',
+            'phosphorus.upper_limit' => 'Batas atas fosfor',
+            'phosphorus.lower_limit' => 'Batas bawah fosfor',
+            'kalium.enable' => 'Kalium',
+            'kalium.upper_limit' => 'Batas atas kalium',
+            'kalium.lower_limit' => 'Batas bawah kalium',
+        ];
+    }
 }

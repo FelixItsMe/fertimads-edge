@@ -19,15 +19,15 @@
                 </x-card-info>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 flex justify-between">
+                <div class="p-6 flex flex-col lg:flex-row max-lg:space-y-2 justify-between">
                     <h1 class="text-3xl font-extrabold">Daftar Perangkat AWS</h1>
                     <a href="{{ route('aws-device.create') }}"
-                        class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Perangkat AWS Baru</a>
+                        class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md text-center">Tambah Perangkat AWS Baru</a>
                 </div>
             </div>
             <div class="grid grid-flow-row grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4">
                 @forelse ($awsDevices as $awsDevice)
-                    <div class="grid grid-cols-2 gap-2 bg-white rounded-md overflow-hidden p-4">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 bg-white rounded-md overflow-hidden p-4">
                         <img src="{{ asset($awsDevice->picture) }}" alt="Device Img"
                             class="w-full aspect-square object-cover rounded-md">
                         <div class="h-full flex flex-col justify-between">

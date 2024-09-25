@@ -133,7 +133,7 @@ const weatherNames = code => {
 }
 
 const weatherHtml = () => {
-    return `<div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-gradient-to-br from-blue-600 to-blue-900 rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+    return `<div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-gradient-to-br from-blue-600 to-blue-900 rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline" id="wether-modal">
         <div class="p-3 flex flex-row gap-2 text-white">
             <div>
             <div>
