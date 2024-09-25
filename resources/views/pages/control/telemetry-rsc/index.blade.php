@@ -4,8 +4,12 @@
         <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
         <style>
             #map {
-                height: 70vh;
+                height: 80vh;
                 z-index: 50;
+            }
+
+            #garden-detail-modal, #wether-modal {
+              transform-origin: top right;
             }
         </style>
     @endpush
@@ -73,12 +77,12 @@
                             @endforelse
                         </tbody>
                     </table>
+                    @if ($deviceTelemetries->hasPages())
+                        <div class="p-6">
+                            {{ $deviceTelemetries->links() }}
+                        </div>
+                    @endif
                 </div>
-                @if ($deviceTelemetries->hasPages())
-                    <div class="p-6">
-                        {{ $deviceTelemetries->links() }}
-                    </div>
-                @endif
             </div>
 
         </div>
@@ -124,7 +128,8 @@
                         {{ __('Batalkan') }}
                     </x-secondary-button>
 
-                    <x-primary-button class="ms-3" type="button" id="btn-export-excel" x-on:click="exportTelemetry('btn-export-excel')">
+                    <x-primary-button class="ms-3" type="button" id="btn-export-excel"
+                        x-on:click="exportTelemetry('btn-export-excel')">
                         {{ __('Export Excel') }}
                     </x-primary-button>
                 </div>
@@ -211,7 +216,7 @@
 
                 div.innerHTML = `
                   <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full hidden" id="garden-detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                    <div class="px-2 pt-2 pb-2 bg-white sm:p-3 sm:pb-4 max-h-48 md:max-h-96 overflow-y-scroll">
+                    <div class="px-2 pt-2 pb-2 bg-white sm:p-3 sm:pb-4 max-h-52 lg:max-h-80 overflow-y-scroll">
                       <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:text-left">
                           <div class="mt-2">
@@ -448,8 +453,8 @@
                 );
 
                 if (eButton) {
-                  eButton.disabled = false
-                  eButton.classList.replace('bg-green-700', 'bg-primary')
+                    eButton.disabled = false
+                    eButton.classList.replace('bg-green-700', 'bg-primary')
                 }
 
                 if (!data) {
@@ -902,11 +907,28 @@
                 // Convert milliseconds to days
                 const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-                return dayDiff;
+                return dayDiff - 1;
             }
+
+            function adjustScale() {
+                const zoomLevel = window.devicePixelRatio;
+                const gardenCard = document.querySelector('#garden-detail-modal');
+                // const weatherCard = document.querySelector('#wether-modal');
+
+                // Adjust the scale of the element based on the zoom level
+                if (gardenCard) {
+                  gardenCard.style.transform = 'scale(' + (1 / zoomLevel) + ')';
+                }
+                // weatherCard.style.transform = 'scale(' + (1 / zoomLevel) + ')';
+
+                map.invalidateSize();
+            }
+
+            window.addEventListener('resize', adjustScale);
 
             window.onload = () => {
                 console.log('Hello world');
+
                 window.Echo.private('export-completed.{{ auth()->user()->id }}')
                     .listen('ExportCompletedEvent', (event) => {
                         document.querySelector('#export-link').innerHTML = `Export Selesai... <a href="{{ route('telemetry-rsc.download-excel') }}"

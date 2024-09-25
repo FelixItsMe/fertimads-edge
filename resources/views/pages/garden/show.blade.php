@@ -22,14 +22,14 @@
 
   <div class="py-12">
     <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
-      <div class="flex flex-col sm:flex-row max-sm:gap-2 sm:space-x-2">
-        <div class="w-full sm:w-3/4">
+      <div class="flex flex-col lg:flex-row max-lg:gap-2 lg:space-x-2">
+        <div class="w-full lg:w-3/4">
           <div id="map" class="rounded-md border-2 border-slate-600"></div>
           <input type="hidden" name="land_polygon" id="land-polygon" value="{{ json_encode($garden->land->polygon) }}">
           <input type="hidden" name="garden_polygon" id="garden-polygon" value="{{ json_encode($garden->polygon) }}">
         </div>
-        <div class="w-full sm:w-1/4">
-          <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+        <div class="w-full lg:w-1/4">
+          <div class="bg-white overflow-hidden shadow-sm lg:rounded-lg p-6">
             <div class="flex flex-col gap-y-4">
               <div class="w-full">
                 <x-input-label class="text-slate-400" for="name">{{ __('Nama Kebun') }}</x-input-label>

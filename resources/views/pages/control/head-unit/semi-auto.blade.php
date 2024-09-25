@@ -23,16 +23,16 @@
                 <div>
                     <div id="map" class="rounded-md"></div>
                 </div>
-                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-5 gap-2">
+                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-5 gap-2 max-md:px-4">
                     <div class="flex flex-col gap-2 pr-12">
                         <div class="font-bold py-2">Opsi Kendali</div>
                         @include('pages.control.head-unit.links')
                     </div>
                     <div class="col-span-4 flex flex-col gap-2">
                         <div class="py-2"><span class="font-bold">Kendali Perangkat</span></div>
-                        <div class="grid grid-flow-row grid-cols-2 gap-8">
+                        <div class="grid grid-flow-row grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="flex flex-col gap-2">
-                                <div class="grid grid-flow-row grid-cols-4">
+                                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-4">
                                     <div>Pilih Lahan</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
@@ -51,7 +51,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-flow-row grid-cols-4">
+                                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-4">
                                     <div>Pilih Kebun</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2" id="list-gardens">
@@ -61,7 +61,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-flow-row grid-cols-4">
+                                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-4">
                                     <div>Pilih Output</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
@@ -100,7 +100,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-flow-row grid-cols-4">
+                                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-4">
                                     <div>Atur Volume (Liter)</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
@@ -935,7 +935,7 @@
                 // Convert milliseconds to days
                 const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-                return dayDiff;
+                return dayDiff - 1;
             }
             // end modal garden
 

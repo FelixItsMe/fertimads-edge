@@ -23,16 +23,16 @@
                 <div>
                     <div id="map" class="rounded-md"></div>
                 </div>
-                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-5 gap-2">
+                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-5 gap-2 max-md:px-4">
                     <div class="flex flex-col gap-2 pr-12">
                         <div class="font-bold py-2">Opsi Kendali</div>
                         @include('pages.control.head-unit.links')
                     </div>
                     <div class="col-span-4 flex flex-col gap-2">
                         <div class="py-2"><span class="font-bold">Kendali Perangkat</span></div>
-                        <div class="grid grid-flow-row grid-cols-2 gap-8">
+                        <div class="grid grid-flow-row grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="flex flex-col gap-2">
-                                <div class="grid grid-flow-row grid-cols-4">
+                                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-4">
                                     <div>Pilih Output</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
@@ -58,7 +58,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-flow-row grid-cols-4">
+                                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-4">
                                     <div>Pilih Lahan</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
@@ -77,7 +77,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-flow-row grid-cols-4">
+                                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-4">
                                     <div>Pilih Kebun</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2" id="list-gardens">
@@ -87,7 +87,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-flow-row grid-cols-4">
+                                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-4">
                                     <div>Tanggal Mulai</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
@@ -96,7 +96,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-flow-row grid-cols-4">
+                                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-4">
                                     <div>Umur Komoditi (Hari)</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
@@ -105,7 +105,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-flow-row grid-cols-4">
+                                <div class="grid grid-flow-row grid-cols-1 md:grid-cols-4">
                                     <div>Waktu Pelaksanaan</div>
                                     <div class="col-span-3">
                                         <div class="grid grid-flow-row grid-cols-2 gap-2">
@@ -126,7 +126,13 @@
                                         <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;<span
                                             id="info-text"></span>
                                     </div>
+                                    <div>
+                                        <h4>List Aktif Jadwal Kebun</h4>
+                                    </div>
                                     <div id="list-active-schedule">
+                                        <div class="bg-slate-500/50 py-2 px-4 rounded-lg text-center">
+                                            Tidak ada
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -402,6 +408,12 @@
             }
 
             const stopWaterSchedule = async id => {
+                let isDelete = confirm("Hapus jadwal? \n Aksi ini bersifat permanen.");
+
+                if (!isDelete) {
+                    return false
+                }
+
                 const data = await fetchData(
                     "{{ route('head-unit.schedule-water.stop', 'ID') }}".replace('ID', id), {
                         method: "PUT",
@@ -945,7 +957,7 @@
                 // Convert milliseconds to days
                 const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-                return dayDiff;
+                return dayDiff - 1;
             }
             // end modal garden
 
@@ -964,9 +976,23 @@
                 return data
             }
 
+            const eLoading = elementId => {
+              document.getElementById(elementId).innerHTML = `<div
+                class="bg-white px-4 py-2 rounded-md shadow-md flex justify-center">
+                  <x-loading />
+                </div>`
+            }
+
             const eListWaterSchedules = listWaterSchedule => {
                 const pListSchedule = document.querySelector('#list-active-schedule')
                 pListSchedule.innerHTML = ``
+
+                if (listWaterSchedule.length == 0) {
+                  pListSchedule.innerHTML = `<div class="bg-slate-500/50 py-2 px-4 rounded-lg text-center">
+                      Tidak ada
+                  </div>`
+                  return false
+                }
 
                 listWaterSchedule.forEach(waterSchedule => {
                     const divSchedule = document.createElement('div')
@@ -994,6 +1020,7 @@
                 console.log('Hello world');
 
                 document.querySelector('#list-gardens').addEventListener('change', async e => {
+                    eLoading('list-active-schedule')
                     const modalData = await gardenModalData(document.querySelector(
                         '#list-gardens input:checked').value)
                     const data = await getActiveWaterSchedule(document.querySelector(
