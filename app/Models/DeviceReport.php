@@ -11,6 +11,8 @@ class DeviceReport extends Model
 {
     use HasFactory;
 
+    public $appends = ['pemupukan_type'];
+
     /**
      * The attributes that are mass assignable.
      *

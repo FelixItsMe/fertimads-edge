@@ -43,7 +43,7 @@ class GardenController extends Controller
             ->with([
                 'commodity:id,name'
             ])
-            ->when(request()->query('search'), function(Builder $query, $search){
+            ->when(request()->query('search'), function (Builder $query, $search) {
                 $search = '%' . trim($search) . '%';
                 $query->whereAny([
                     'name',
@@ -75,7 +75,7 @@ class GardenController extends Controller
             ->pluck('name', 'id');
         $devices = Device::query()
             ->withCount([
-                'deviceSelenoids' => function($query){
+                'deviceSelenoids' => function ($query) {
                     $query->whereNull('garden_id');
                 }
             ])
@@ -132,7 +132,7 @@ class GardenController extends Controller
             ->pluck('name', 'id');
         $devices = Device::query()
             ->withCount([
-                'deviceSelenoids' => function(Builder $query)use($garden){
+                'deviceSelenoids' => function (Builder $query) use ($garden) {
                     $query->where('garden_id', $garden->id)
                         ->orWhereNull('garden_id');
                 }
@@ -161,7 +161,7 @@ class GardenController extends Controller
         activity()
             ->performedOn($garden)
             ->event('edit')
-            ->log('Kebun '. $garden->name .' diupdate');
+            ->log('Kebun ' . $garden->name . ' diupdate');
 
         return redirect()->route('garden.index')->with('garden-success', 'Berhasil disimpan');
     }
@@ -178,14 +178,15 @@ class GardenController extends Controller
         activity()
             ->performedOn($garden)
             ->event('delete')
-            ->log('Kebun '. $garden->name .' dihapus');
+            ->log('Kebun ' . $garden->name . ' dihapus');
 
         return response()->json([
             'message' => 'Berhasil dihapus'
         ]);
     }
 
-    public function listGardensName() : JsonResponse {
+    public function listGardensName(): JsonResponse
+    {
         return response()->json([
             'message' => 'Gardens data for list',
             'gardens' => Garden::query()
@@ -194,10 +195,13 @@ class GardenController extends Controller
         ]);
     }
 
-    public function gardenModal(Garden $garden) : JsonResponse {
+    public function gardenModal(Garden $garden): JsonResponse
+    {
         $garden->load([
-            'deviceSelenoid',
-            'commodity:id,name'
+            'commodity:id,name',
+            'pests',
+            'latestPest',
+            'deviceSelenoid' => ['deviceReport' => fn($query) => $query->where('type', 'like', '%pemupukan%'), 'latestReport' => fn($query) => $query->where('type', 'like', '%pemupukan%')]
         ]);
 
         $hasWaterSchedule = DeviceSchedule::query()
@@ -205,13 +209,13 @@ class GardenController extends Controller
             ->count();
 
         $waterSchedule = DeviceScheduleExecute::query()
-            ->whereHas('deviceScheduleRun.deviceSchedule', function($query)use($garden){
+            ->whereHas('deviceScheduleRun.deviceSchedule', function ($query) use ($garden) {
                 $query->where('garden_id', $garden->id);
             })
             ->whereNull('end_time')
             ->first();
         $fertilizerSchedule = DeviceFertilizeScheduleExecute::query()
-            ->whereHas('deviceFertilizerSchedule.deviceSelenoid', function($query)use($garden){
+            ->whereHas('deviceFertilizerSchedule.deviceSelenoid', function ($query) use ($garden) {
                 $query->where('garden_id', $garden->id);
             })
             ->whereNull('execute_end')
@@ -227,7 +231,8 @@ class GardenController extends Controller
         ]);
     }
 
-    public function activeWaterSchedules(Garden $garden) : JsonResponse {
+    public function activeWaterSchedules(Garden $garden): JsonResponse
+    {
         $activeWaterSchedules = DeviceSchedule::query()
             ->with('commodity:id,name')
             ->where('garden_id', $garden->id)
@@ -240,7 +245,8 @@ class GardenController extends Controller
         ]);
     }
 
-    public function exportExcel() : BinaryFileResponse|RedirectResponse {
+    public function exportExcel(): BinaryFileResponse|RedirectResponse
+    {
         $collect = [];
 
         foreach (

@@ -38,7 +38,7 @@
               <img id='preview_img' class="z-10 h-[400px] w-[400px] object-cover rounded-lg absolute top-0 bottom-0 right-0 left-0" src="" />
               <label class="z-50 block mt-5 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full h-full opacity-0">
                 <span class="sr-only">Choose profile photo</span>
-                <input type="file" onchange="loadFile(event)" name="image" class="block w-full text-sm text-slate-500
+                <input type="file" onchange="loadFile(event)" name="image" id="image" class="block w-full text-sm text-slate-500
                     file:mr-4 file:py-2 file:px-4
                         file:rounded-full file:border-0
                         file:text-sm file:font-semibold
@@ -46,7 +46,9 @@
                         hover:file:bg-violet-100
                         " />
               </label>
+              <x-input-error :messages="$errors->get('image')" class="mt-2" />
             </div>
+            <span class="text-sm text-red-600 space-y-1" id="image-error"></span>
           </div>
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-full">
             <div class="flex space-x-5">
@@ -115,11 +117,21 @@
   <!-- Script untuk memuat quill.js editor -->
   <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
   <script>
-    const causeEditor = new Quill('#cause-editor', {theme: 'snow'});
-    const symptomsEditor = new Quill('#symptoms-editor', {theme: 'snow'});
-    const controlEditor = new Quill('#control-editor', {theme: 'snow'});
-    const chemicalEditor = new Quill('#chemical-editor', {theme: 'snow'});
-    const activeEditor = new Quill('#active-editor', {theme: 'snow'});
+    const causeEditor = new Quill('#cause-editor', {
+      theme: 'snow'
+    });
+    const symptomsEditor = new Quill('#symptoms-editor', {
+      theme: 'snow'
+    });
+    const controlEditor = new Quill('#control-editor', {
+      theme: 'snow'
+    });
+    const chemicalEditor = new Quill('#chemical-editor', {
+      theme: 'snow'
+    });
+    const activeEditor = new Quill('#active-editor', {
+      theme: 'snow'
+    });
 
     const form = document.querySelector('#form')
 
@@ -129,6 +141,15 @@
       document.querySelector("#control").value = controlEditor.root.innerHTML
       document.querySelector("#chemical").value = chemicalEditor.root.innerHTML
       document.querySelector("#active_materials").value = activeEditor.root.innerHTML
+
+      const inputFile = document.querySelector("#image")
+
+      if (inputFile.files.length < 1) {
+        alert("Foto tidak boleh kosong!")
+        return false
+      }
+
+      return true
     }
   </script>
 

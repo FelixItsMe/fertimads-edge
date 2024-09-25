@@ -150,7 +150,12 @@ class LandController extends Controller
         $lands = Land::query()
             ->select(['id', 'name', 'latitude', 'longitude', 'polygon'])
             ->with([
-                'gardens.commodity'
+                'gardens' => [
+                    'commodity',
+                    'pests',
+                    'latestPest',
+                    'deviceSelenoid' => ['deviceReport' => fn ($query) => $query->where('type', 'like', '%pemupukan%'), 'latestReport' => fn ($query) => $query->where('type', 'like', '%pemupukan%')]
+                ]
             ])
             ->get();
 

@@ -85,36 +85,36 @@
                 </div>
             </div>
 
-        </div>
     </div>
+  </div>
 
-    {{-- Export Modal --}}
-    <x-modal name="export-data" :show="$errors->isNotEmpty()" style="z-index: 9999;" focusable>
-        <form method="get" action="{{ route('telemetry-rsc.export-excel') }}" class="p-6">
-            <h2 class="text-lg font-medium text-gray-900">
-                {{ __('Pilih range tanggal yang akan diexport') }}
-            </h2>
+  {{-- Export Modal --}}
+  <x-modal name="export-data" :show="$errors->isNotEmpty()" style="z-index: 9999;" focusable>
+    <form method="get" action="{{ route('telemetry-rsc.export-excel') }}" class="p-6">
+      <h2 class="text-lg font-medium text-gray-900">
+        {{ __('Pilih range tanggal yang akan diexport') }}
+      </h2>
 
-            <x-input-error :messages="$errors->get('deviceTelemetries')" class="mt-2" />
+      <x-input-error :messages="$errors->get('deviceTelemetries')" class="mt-2" />
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-6">
-                <div>
-                    <x-input-label for="from" value="{{ __('Tanggal Awal') }}" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-6">
+        <div>
+          <x-input-label for="from" value="{{ __('Tanggal Awal') }}" />
 
-                    <x-text-input id="from" name="from" type="date" class="mt-1 block w-full"
-                        placeholder="From" value="{{ request()->query('from', now()->format('Y-m-d')) }}" />
+          <x-text-input id="from" name="from" type="date" class="mt-1 block w-full"
+            placeholder="From" value="{{ request()->query('from', now()->format('Y-m-d')) }}" />
 
-                    <x-input-error :messages="$errors->get('from')" class="mt-2" />
-                </div>
-                <div>
-                    <x-input-label for="to" value="{{ __('Tanggal Akhir') }}" />
+          <x-input-error :messages="$errors->get('from')" class="mt-2" />
+        </div>
+        <div>
+          <x-input-label for="to" value="{{ __('Tanggal Akhir') }}" />
 
-                    <x-text-input id="to" name="to" type="date" class="mt-1 block w-full"
-                        placeholder="To" value="{{ request()->query('to', now()->format('Y-m-d')) }}" />
+          <x-text-input id="to" name="to" type="date" class="mt-1 block w-full"
+            placeholder="To" value="{{ request()->query('to', now()->format('Y-m-d')) }}" />
 
-                    <x-input-error :messages="$errors->get('to')" class="mt-2" />
-                </div>
-            </div>
+          <x-input-error :messages="$errors->get('to')" class="mt-2" />
+        </div>
+      </div>
 
             <div class="mt-6 flex justify-between">
                 <div>
@@ -253,6 +253,27 @@
                                       <td class="py-1">:</td>
                                       <td class="py-1"><span class="text-gray-500 font-normal" id="populasi"> Tanaman</span></td>
                                     </tr>
+                                    <tr class="py-3">
+                                      <td class="py-1">
+                                        <p class="text-gray-500 font-bold">Penyakit</p>
+                                      </td>
+                                      <td class="py-1">:</td>
+                                      <td class="py-1"><span class="text-gray-500 font-normal" id="penyakit"</span></td>
+                                    </tr>
+                                    <tr class="py-3">
+                                      <td class="py-1">
+                                        <p class="text-gray-500 font-bold">Hama</p>
+                                      </td>
+                                      <td class="py-1">:</td>
+                                      <td class="py-1"><span class="text-gray-500 font-normal" id="hama"></span></td>
+                                    </tr>
+                                    <tr class="py-3">
+                                      <td class="py-1">
+                                        <p class="text-gray-500 font-bold">Jenis Pupuk</p>
+                                      </td>
+                                      <td class="py-1">:</td>
+                                      <td class="py-1"><span class="text-gray-500 font-normal" id="jenis_pupuk"></span></td>
+                                    </tr>
                                   </tbody>
                                 </table>
                               </div>
@@ -344,395 +365,389 @@
                   </div>
                 `;
 
-                L.DomEvent.disableClickPropagation(div)
-                L.DomEvent.disableScrollPropagation(div)
-                return div;
-            };
-            map.modalControl.addTo(map);
+      L.DomEvent.disableClickPropagation(div)
+      L.DomEvent.disableScrollPropagation(div)
+      return div;
+    };
+    map.modalControl.addTo(map);
 
-            const getLands = async () => {
-                const data = await fetchData(
-                    "{{ route('extra.land.polygon.garden') }}", {
-                        method: "GET",
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
-                                .nodeValue,
-                            'Accept': 'application/json',
-                        },
-                    }
-                );
+    const getLands = async () => {
+      const data = await fetchData(
+        "{{ route('extra.land.polygon.garden') }}", {
+          method: "GET",
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+              .nodeValue,
+            'Accept': 'application/json',
+          },
+        }
+      );
 
-                return data?.lands
+      return data?.lands
+    }
+
+    const initLandPolygon = async (id, map) => {
+      const lands = await getLands()
+
+      if (currentLand.polygonLayer) {
+        currentLand.polygonLayer.remove()
+      }
+
+      if (!lands) {
+        return false
+      }
+
+      currentGroupGarden.clearLayers()
+
+      let firstLand = null
+
+      lands.forEach(land => {
+        if (land.gardens) {
+          firstLand = L.polygon(land.polygon, {
+            dashArray: '10, 10',
+            dashOffset: '20',
+            color: '#fff',
+          })
+        }
+        currentGroupGarden.addLayer(
+          L.polygon(land.polygon, {
+            dashArray: '10, 10',
+            dashOffset: '20',
+            color: '#fff',
+          })
+        )
+
+        land.gardens.forEach(garden => {
+          currentGroupGarden.addLayer(
+            L.polygon(garden.polygon, {
+              color: '#' + garden.color,
+            }).on('click', async e => {
+              const modalData = await gardenModalData(garden.id)
+            })
+          )
+        })
+
+      })
+
+      map.fitBounds(firstLand.getBounds());
+
+      currentGroupGarden.addTo(map)
+
+      return true
+    }
+
+    const pickLand = landId => {
+      initLandPolygon(landId, map)
+    }
+
+    const exportTelemetry = async () => {
+      const eQueryFrom = document.querySelector('input#from'),
+        eQueryTo = document.querySelector('input#to'),
+        exportUrl = new URL("{{ route('telemetry-rsc.export-excel') }}")
+
+      exportUrl.searchParams.append('from', eQueryFrom.value)
+      exportUrl.searchParams.append('to', eQueryTo.value)
+
+      const data = await fetchData(
+        exportUrl, {
+          method: "GET",
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+              .nodeValue,
+            'Accept': 'application/json',
+          },
+        }
+      );
+
+      if (!data) {
+        eExportStatus.textContent = ''
+        return false
+      }
+
+      eExportStatus.textContent = `Export sedang berlangsung!`
+    }
+
+    const gardenModalData = async id => {
+      const data = await fetchData(
+        "{{ route('extra.garden.modal', 'ID') }}".replace('ID', id), {
+          method: "GET",
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+              .nodeValue,
+            'Accept': 'application/json',
+          },
+        }
+      );
+
+      if (!data) return false
+
+      document.querySelector('#nama-kebun').textContent = data.garden.name
+      document.querySelector('#luasKebun').textContent = data.garden.area + " m²"
+      document.querySelector('#komoditi').textContent = data.garden.commodity.name
+      document.querySelector('#totalBlok').textContent = data.garden.count_block
+      document.querySelector('#populasi').textContent = data.garden.population
+      document.querySelector('#penyakit').textContent = data.garden.latest_pest?.disease_name || "-"
+      document.querySelector('#hama').textContent = data.garden.latest_pest?.pest_name || "-"
+      document.querySelector('#jenis_pupuk').textContent = data.garden.device_selenoid?.device_report?.length > 0 ? data.garden.device_selenoid?.device_report[data.garden.device_selenoid?.device_report?.length - 1].pemupukan_type : '-'
+
+      document.querySelector('#telemetry-n').textContent = parseFloat(data.telemetry.soil_sensor.N).toFixed(
+        2) + " mg/kg"
+      document.querySelector('#telemetry-f').textContent = parseFloat(data.telemetry.soil_sensor.P).toFixed(
+        2) + " mg/kg"
+      document.querySelector('#telemetry-k').textContent = parseFloat(data.telemetry.soil_sensor.K).toFixed(
+        2) + " mg/kg"
+      document.querySelector('#telemetry-ec').textContent = parseFloat(data.telemetry.soil_sensor.EC).toFixed(
+        2) + " uS/cm"
+      document.querySelector('#telemetry-ph').textContent = parseFloat(data.telemetry.soil_sensor.pH).toFixed(
+        2)
+      document.querySelector('#telemetry-t-tanah').textContent = parseFloat(data.telemetry.soil_sensor.T)
+        .toFixed(2) + "°C"
+      document.querySelector('#telemetry-h-tanah').textContent = parseFloat(data.telemetry.soil_sensor.H)
+        .toFixed(2) + "%"
+      document.querySelector('#telemetry-t-dht').textContent = parseFloat(data.telemetry.dht1.T).toFixed(2) +
+        "°C"
+      document.querySelector('#telemetry-h-dht').textContent = parseFloat(data.telemetry.dht1.H).toFixed(2) +
+        "%"
+
+      document.querySelector('#calendar-add-month').dataset.gardenId = data.garden.id
+      document.querySelector('#calendar-sub-month').dataset.gardenId = data.garden.id
+
+      const calendarSchedules = await getSchedules(data.garden.id, currentYear, currentMonth + 1)
+
+      // Generate and display the calendar
+      generateCalendar(currentMonth, currentYear, data.garden.id, calendarSchedules.schedules);
+
+      document.querySelector('#garden-detail-modal').classList.remove('hidden')
+    }
+
+    const getSchedules = async (gardenId, year, month) => {
+      if (controller) {
+        controller.abort()
+      }
+
+      controller = new AbortController();
+      const signal = controller.signal;
+      const calendarUrl = new URL(
+        "{{ route('activity-schedule.schedule-in-month', ['month' => 'MONTH', 'year' => 'YEAR']) }}"
+        .replace('MONTH', month)
+        .replace('YEAR', year)
+      )
+
+      calendarUrl.searchParams.append('garden_id', gardenId)
+
+      const data = await fetchData(
+        calendarUrl, {
+          signal,
+          method: "GET",
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+              .nodeValue,
+            'Accept': 'application/json',
+          },
+        }
+      );
+
+      return data
+    }
+
+    const generateCalendar = (month, year, gardenId, availableSchedules) => {
+      const calendarEl = document.getElementById('calendar');
+
+      // Get the first day of the month
+      const firstDay = new Date(year, month, 1);
+
+      // Get the number of days in the month
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // Get the day of the week for the first day
+      const dayOfWeek = firstDay.getDay();
+
+      // Get month name
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+      const currentMonthName = monthNames[month];
+
+      document.querySelector('#month-year-text').textContent = `${currentMonthName} ${year}`
+
+      // Create the table element
+      const table = document.createElement('table');
+      table.classList.add('table-auto', 'w-full');
+
+      // Create the table header row
+      const headerRow = document.createElement('tr');
+      ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'].forEach(day => {
+        const headerCell = document.createElement('th');
+        headerCell.classList.add('text-center', 'text-xs', 'py-2', 'bg-gray-200', 'w-1/7');
+        headerCell.textContent = day;
+        headerRow.appendChild(headerCell);
+      });
+      table.appendChild(headerRow);
+
+      // Create the calendar grid
+      let currentDay = 1 - dayOfWeek; // Adjust for starting day
+      while (currentDay <= daysInMonth) {
+        const row = document.createElement('tr');
+        for (let i = 0; i < 7; i++) {
+          const cell = document.createElement('td');
+          cell.classList.add('py-4', 'border', 'text-center', 'relative', 'cursor-pointer',
+            'hover:bg-primary',
+            'hover:text-white');
+          if (currentDay <= 0 || currentDay > daysInMonth) {
+            cell.classList.add('text-gray-400'); // Grey out days from previous/next month
+          } else {
+            const info = document.createElement('div');
+            const wBar = document.createElement('div');
+            const fBar = document.createElement('div');
+            const formatDate =
+              `${year}-${(month + 1).toString().padStart(2, "0")}-${currentDay.toString().padStart(2, "0")}`
+            cell.textContent = currentDay;
+            cell.setAttribute('data-date', formatDate);
+
+            if (formatDate == pickedDate) {
+              selectDate(cell, gardenId)
             }
 
-            const initLandPolygon = async (id, map) => {
-                const lands = await getLands()
-
-                if (currentLand.polygonLayer) {
-                    currentLand.polygonLayer.remove()
-                }
-
-                if (!lands) {
-                    return false
-                }
-
-                currentGroupGarden.clearLayers()
-
-                let firstLand = null
-
-                lands.forEach(land => {
-                    if (land.gardens) {
-                        firstLand = L.polygon(land.polygon, {
-                            dashArray: '10, 10',
-                            dashOffset: '20',
-                            color: '#fff',
-                        })
-                    }
-                    currentGroupGarden.addLayer(
-                        L.polygon(land.polygon, {
-                            dashArray: '10, 10',
-                            dashOffset: '20',
-                            color: '#fff',
-                        })
-                    )
-
-                    land.gardens.forEach(garden => {
-                        currentGroupGarden.addLayer(
-                            L.polygon(garden.polygon, {
-                                color: '#' + garden.color,
-                            }).on('click', async e => {
-                                const modalData = await gardenModalData(garden.id)
-                            })
-                        )
-                    })
-
-                })
-
-                map.fitBounds(firstLand.getBounds());
-
-                currentGroupGarden.addTo(map)
-
-                return true
+            cell.onclick = (e) => {
+              selectDate(e.target, gardenId)
             }
 
-            const pickLand = landId => {
-                initLandPolygon(landId, map)
+            if (currentDay == new Date().getDate()) {
+              cell.classList.add('text-blue-500')
             }
 
-            const exportTelemetry = async (btnId) => {
-                let eButton = document.getElementById(btnId)
-
-                if (eButton) {
-                    // Show loading indication
-                    eButton.setAttribute('data-kt-indicator', 'on');
-
-                    // Disable button to avoid multiple click
-                    eButton.disabled = true;
-                    eButton.classList.replace('bg-primary', 'bg-green-700')
-                }
-
-
-                const eQueryFrom = document.querySelector('input#from'),
-                    eQueryTo = document.querySelector('input#to'),
-                    exportUrl = new URL("{{ route('telemetry-rsc.export-excel') }}")
-
-                eExportStatus.textContent = `Loading...`
-
-                exportUrl.searchParams.append('from', eQueryFrom.value)
-                exportUrl.searchParams.append('to', eQueryTo.value)
-
-                const data = await fetchData(
-                    exportUrl, {
-                        method: "GET",
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
-                                .nodeValue,
-                            'Accept': 'application/json',
-                        },
-                    }
-                );
-
-                if (eButton) {
-                    eButton.disabled = false
-                    eButton.classList.replace('bg-green-700', 'bg-primary')
-                }
-
-                if (!data) {
-                    eExportStatus.textContent = 'Gagal melakukan export'
-
-                    return false
-                }
-
-                eExportStatus.textContent = `Export sedang berlangsung! Harap tunggu...`
+            const schedule = availableSchedules.find(schedule => {
+              return schedule.date == formatDate
+            })
+            if (eButton) {
+                eButton.disabled = false
+                eButton.classList.replace('bg-green-700', 'bg-primary')
             }
 
-            const gardenModalData = async id => {
-                const data = await fetchData(
-                    "{{ route('extra.garden.modal', 'ID') }}".replace('ID', id), {
-                        method: "GET",
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
-                                .nodeValue,
-                            'Accept': 'application/json',
-                        },
-                    }
-                );
+            if (!data) {
+                eExportStatus.textContent = 'Gagal melakukan export'
 
-                if (!data) return false
-
-                document.querySelector('#nama-kebun').textContent = data.garden.name
-                document.querySelector('#luasKebun').textContent = data.garden.area + " m²"
-                document.querySelector('#komoditi').textContent = data.garden.commodity.name
-                document.querySelector('#totalBlok').textContent = data.garden.count_block
-                document.querySelector('#populasi').textContent = data.garden.population
-
-                document.querySelector('#telemetry-n').textContent = parseFloat(data.telemetry.soil_sensor.N).toFixed(
-                    2) + " mg/kg"
-                document.querySelector('#telemetry-f').textContent = parseFloat(data.telemetry.soil_sensor.P).toFixed(
-                    2) + " mg/kg"
-                document.querySelector('#telemetry-k').textContent = parseFloat(data.telemetry.soil_sensor.K).toFixed(
-                    2) + " mg/kg"
-                document.querySelector('#telemetry-ec').textContent = parseFloat(data.telemetry.soil_sensor.EC).toFixed(
-                    2) + " uS/cm"
-                document.querySelector('#telemetry-ph').textContent = parseFloat(data.telemetry.soil_sensor.pH).toFixed(
-                    2)
-                document.querySelector('#telemetry-t-tanah').textContent = parseFloat(data.telemetry.soil_sensor.T)
-                    .toFixed(2) + "°C"
-                document.querySelector('#telemetry-h-tanah').textContent = parseFloat(data.telemetry.soil_sensor.H)
-                    .toFixed(2) + "%"
-                document.querySelector('#telemetry-t-dht').textContent = parseFloat(data.telemetry.dht1.T).toFixed(2) +
-                    "°C"
-                document.querySelector('#telemetry-h-dht').textContent = parseFloat(data.telemetry.dht1.H).toFixed(2) +
-                    "%"
-
-                document.querySelector('#calendar-add-month').dataset.gardenId = data.garden.id
-                document.querySelector('#calendar-sub-month').dataset.gardenId = data.garden.id
-
-                const calendarSchedules = await getSchedules(data.garden.id, currentYear, currentMonth + 1)
-
-                // Generate and display the calendar
-                generateCalendar(currentMonth, currentYear, data.garden.id, calendarSchedules.schedules);
-
-                document.querySelector('#garden-detail-modal').classList.remove('hidden')
+                return false
             }
 
-            const getSchedules = async (gardenId, year, month) => {
-                if (controller) {
-                    controller.abort()
-                }
-
-                controller = new AbortController();
-                const signal = controller.signal;
-                const calendarUrl = new URL(
-                    "{{ route('activity-schedule.schedule-in-month', ['month' => 'MONTH', 'year' => 'YEAR']) }}"
-                    .replace('MONTH', month)
-                    .replace('YEAR', year)
-                )
-
-                calendarUrl.searchParams.append('garden_id', gardenId)
-
-                const data = await fetchData(
-                    calendarUrl, {
-                        signal,
-                        method: "GET",
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
-                                .nodeValue,
-                            'Accept': 'application/json',
-                        },
-                    }
-                );
-
-                return data
+            eExportStatus.textContent = `Export sedang berlangsung! Harap tunggu...`
+            if (schedule?.schedule.includes(1)) {
+              wBar.classList.add('bg-primary', 'w-full', 'h-1');
             }
-
-            const generateCalendar = (month, year, gardenId, availableSchedules) => {
-                const calendarEl = document.getElementById('calendar');
-
-                // Get the first day of the month
-                const firstDay = new Date(year, month, 1);
-
-                // Get the number of days in the month
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-                // Get the day of the week for the first day
-                const dayOfWeek = firstDay.getDay();
-
-                // Get month name
-                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
-                ];
-                const currentMonthName = monthNames[month];
-
-                document.querySelector('#month-year-text').textContent = `${currentMonthName} ${year}`
-
-                // Create the table element
-                const table = document.createElement('table');
-                table.classList.add('table-auto', 'w-full');
-
-                // Create the table header row
-                const headerRow = document.createElement('tr');
-                ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'].forEach(day => {
-                    const headerCell = document.createElement('th');
-                    headerCell.classList.add('text-center', 'text-xs', 'py-2', 'bg-gray-200', 'w-1/7');
-                    headerCell.textContent = day;
-                    headerRow.appendChild(headerCell);
-                });
-                table.appendChild(headerRow);
-
-                // Create the calendar grid
-                let currentDay = 1 - dayOfWeek; // Adjust for starting day
-                while (currentDay <= daysInMonth) {
-                    const row = document.createElement('tr');
-                    for (let i = 0; i < 7; i++) {
-                        const cell = document.createElement('td');
-                        cell.classList.add('py-4', 'border', 'text-center', 'relative', 'cursor-pointer',
-                            'hover:bg-primary',
-                            'hover:text-white');
-                        if (currentDay <= 0 || currentDay > daysInMonth) {
-                            cell.classList.add('text-gray-400'); // Grey out days from previous/next month
-                        } else {
-                            const info = document.createElement('div');
-                            const wBar = document.createElement('div');
-                            const fBar = document.createElement('div');
-                            const formatDate =
-                                `${year}-${(month + 1).toString().padStart(2, "0")}-${currentDay.toString().padStart(2, "0")}`
-                            cell.textContent = currentDay;
-                            cell.setAttribute('data-date', formatDate);
-
-                            if (formatDate == pickedDate) {
-                                selectDate(cell, gardenId)
-                            }
-
-                            cell.onclick = (e) => {
-                                selectDate(e.target, gardenId)
-                            }
-
-                            if (currentDay == new Date().getDate()) {
-                                cell.classList.add('text-blue-500')
-                            }
-
-                            const schedule = availableSchedules.find(schedule => {
-                                return schedule.date == formatDate
-                            })
-
-                            if (schedule?.schedule.includes(1)) {
-                                wBar.classList.add('bg-primary', 'w-full', 'h-1');
-                            }
-                            if (schedule?.schedule.includes(2)) {
-                                fBar.classList.add('bg-yellow-300', 'w-full', 'h-1');
-                            }
-                            info.classList.add(
-                                'absolute',
-                                'bottom-1',
-                                'left-0',
-                                'h-3',
-                                'right-0',
-                                'flex',
-                                'flex-col',
-                                'px-2'
-                            );
-
-                            info.appendChild(wBar)
-                            info.appendChild(fBar)
-                            cell.appendChild(info)
-                        }
-                        row.appendChild(cell);
-                        currentDay++;
-                    }
-                    table.appendChild(row);
-                }
-
-                calendarEl.innerHTML = ""; // Clear previous calendar
-                calendarEl.appendChild(table);
+            if (schedule?.schedule.includes(2)) {
+              fBar.classList.add('bg-yellow-300', 'w-full', 'h-1');
             }
+            info.classList.add(
+              'absolute',
+              'bottom-1',
+              'left-0',
+              'h-3',
+              'right-0',
+              'flex',
+              'flex-col',
+              'px-2'
+            );
 
-            const selectDate = async (e, gardenId) => {
-                if (!e.dataset.date) {
-                    return false
-                }
-                const classes = ['bg-primary', 'text-white', 'active']
+            info.appendChild(wBar)
+            info.appendChild(fBar)
+            cell.appendChild(info)
+          }
+          row.appendChild(cell);
+          currentDay++;
+        }
+        table.appendChild(row);
+      }
 
-                document.querySelector('#calendar td.active')?.classList.remove(...classes)
+      calendarEl.innerHTML = ""; // Clear previous calendar
+      calendarEl.appendChild(table);
+    }
 
-                e.classList.add(...classes)
+    const selectDate = async (e, gardenId) => {
+      if (!e.dataset.date) {
+        return false
+      }
+      const classes = ['bg-primary', 'text-white', 'active']
 
-                pickedDate = e.dataset.date
+      document.querySelector('#calendar td.active')?.classList.remove(...classes)
 
-                await scheduleGardenDetail(pickedDate, gardenId)
-            }
+      e.classList.add(...classes)
 
-            const scheduleGardenDetail = async (date, gardenId) => {
-                const eListDetailSchedules = document.querySelector('#list-detail-schedule')
+      pickedDate = e.dataset.date
 
-                eListDetailSchedules.innerHTML = `<div class="bg-white p-4 rounded-md shadow-md flex justify-center">
+      await scheduleGardenDetail(pickedDate, gardenId)
+    }
+
+    const scheduleGardenDetail = async (date, gardenId) => {
+      const eListDetailSchedules = document.querySelector('#list-detail-schedule')
+
+      eListDetailSchedules.innerHTML = `<div class="bg-white p-4 rounded-md shadow-md flex justify-center">
                             <x-loading />
                           </div>`
 
-                if (controllerDetailGardenSchedules) {
-                    controllerDetailGardenSchedules.abort()
-                }
+      if (controllerDetailGardenSchedules) {
+        controllerDetailGardenSchedules.abort()
+      }
 
-                controllerDetailGardenSchedules = new AbortController();
-                const signal = controllerDetailGardenSchedules.signal;
-                const data = await fetchData(
-                    "{{ route('activity-schedule.detail', ['date' => 'DATE', 'garden' => 'GARDEN']) }}"
-                    .replace('DATE', date)
-                    .replace('GARDEN', gardenId), {
-                        signal,
-                        method: "GET",
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
-                                .nodeValue,
-                            'Accept': 'application/json',
-                        },
-                    }
-                );
+      controllerDetailGardenSchedules = new AbortController();
+      const signal = controllerDetailGardenSchedules.signal;
+      const data = await fetchData(
+        "{{ route('activity-schedule.detail', ['date' => 'DATE', 'garden' => 'GARDEN']) }}"
+        .replace('DATE', date)
+        .replace('GARDEN', gardenId), {
+          signal,
+          method: "GET",
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+              .nodeValue,
+            'Accept': 'application/json',
+          },
+        }
+      );
 
-                eListDetailSchedules.innerHTML = ``
+      eListDetailSchedules.innerHTML = ``
 
-                if (!data) {
-                    return false
-                }
+      if (!data) {
+        return false
+      }
 
-                let eDetail = ``
+      let eDetail = ``
 
-                data.waterSchedules.forEach(waterSchedule => {
-                    eDetail += initWaterSchedules(waterSchedule)
-                });
+      data.waterSchedules.forEach(waterSchedule => {
+        eDetail += initWaterSchedules(waterSchedule)
+      });
 
-                data.fertilizerSchedules.forEach(fertilizerSchedule => {
-                    eDetail += initFertilizerSchedules(fertilizerSchedule)
-                });
+      data.fertilizerSchedules.forEach(fertilizerSchedule => {
+        eDetail += initFertilizerSchedules(fertilizerSchedule)
+      });
 
-                eListDetailSchedules.innerHTML = eDetail
-            }
+      eListDetailSchedules.innerHTML = eDetail
+    }
 
-            const initWaterSchedules = waterSchedule => {
-                const date1 = parseDatetime(waterSchedule.start_time);
-                const date2 = parseDatetime(waterSchedule.end_time);
+    const initWaterSchedules = waterSchedule => {
+      const date1 = parseDatetime(waterSchedule.start_time);
+      const date2 = parseDatetime(waterSchedule.end_time);
 
-                const diffInMiliseconds = date2 - date1
+      const diffInMiliseconds = date2 - date1
 
-                const diffInMinutes = diffInMiliseconds / (1000 * 60)
-                let actualDiffInMinutes = null
+      const diffInMinutes = diffInMiliseconds / (1000 * 60)
+      let actualDiffInMinutes = null
 
-                const diffDay = calculateDayDifference(
-                    new Date(waterSchedule.device_schedule.start_date),
-                    date1,
-                )
+      const diffDay = calculateDayDifference(
+        new Date(waterSchedule.device_schedule.start_date),
+        date1,
+      )
 
-                const newCommAge = diffDay + waterSchedule.device_schedule.commodity_age
+      const newCommAge = diffDay + waterSchedule.device_schedule.commodity_age
 
-                let eActual = ``
+      let eActual = ``
 
-                if (waterSchedule.device_schedule_execute) {
-                    const actualDate1 = parseDatetime(waterSchedule.device_schedule_execute.start_time);
-                    const actualDate2 = parseDatetime(waterSchedule.device_schedule_execute.end_time);
+      if (waterSchedule.device_schedule_execute) {
+        const actualDate1 = parseDatetime(waterSchedule.device_schedule_execute.start_time);
+        const actualDate2 = parseDatetime(waterSchedule.device_schedule_execute.end_time);
 
-                    actualDiffInMinutes = (actualDate2 - actualDate1) / (1000 * 60)
+        actualDiffInMinutes = (actualDate2 - actualDate1) / (1000 * 60)
 
-                    eActual = `<div class="grid grid-flow-row grid-cols-5 align-text-bottom">
+        eActual = `<div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
                                     <span class="text-sm font-bold text-slate-400">Aktual Volume</span>
                                 </div>
@@ -748,9 +763,9 @@
                                     <span class="col-span-3 text-sm text-slate-400" id="text-water-times">${actualDiffInMinutes.toFixed(2)} Menit</span>
                                 </div>
                             </div>`
-                }
+      }
 
-                return `<div class="bg-white p-4 rounded-md shadow-md">
+      return `<div class="bg-white p-4 rounded-md shadow-md">
                             <h3 class="text-xs md:text-base font-bold mb-4">Detail Informasi Jadwal Penyiraman</h3>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
@@ -794,26 +809,26 @@
                             </div>
                             ${eActual}
                           </div>`
-            }
+    }
 
-            const initFertilizerSchedules = fertilizerSchedules => {
-                const date1 = parseDatetime(fertilizerSchedules.execute_start);
-                const date2 = parseDatetime(fertilizerSchedules.execute_end);
+    const initFertilizerSchedules = fertilizerSchedules => {
+      const date1 = parseDatetime(fertilizerSchedules.execute_start);
+      const date2 = parseDatetime(fertilizerSchedules.execute_end);
 
-                const diffInMiliseconds = date2 - date1
+      const diffInMiliseconds = date2 - date1
 
-                const diffInMinutes = diffInMiliseconds / (1000 * 60)
-                let actualDiffInMinutes = null
+      const diffInMinutes = diffInMiliseconds / (1000 * 60)
+      let actualDiffInMinutes = null
 
-                let eActual = ``
+      let eActual = ``
 
-                if (fertilizerSchedules.schedule_execute) {
-                    const actualDate1 = parseDatetime(fertilizerSchedules.schedule_execute.execute_start);
-                    const actualDate2 = parseDatetime(fertilizerSchedules.schedule_execute.execute_end);
+      if (fertilizerSchedules.schedule_execute) {
+        const actualDate1 = parseDatetime(fertilizerSchedules.schedule_execute.execute_start);
+        const actualDate2 = parseDatetime(fertilizerSchedules.schedule_execute.execute_end);
 
-                    actualDiffInMinutes = (actualDate2 - actualDate1) / (1000 * 60)
+        actualDiffInMinutes = (actualDate2 - actualDate1) / (1000 * 60)
 
-                    eActual = `<div class="grid grid-flow-row grid-cols-5 align-text-bottom">
+        eActual = `<div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
                                     <span class="text-xs md:text-sm font-bold text-slate-400">Aktual Volume</span>
                                 </div>
@@ -829,9 +844,9 @@
                                     <span class="col-span-3 text-xs md:text-sm text-slate-400" id="text-water-times">${actualDiffInMinutes.toFixed(2)} Menit</span>
                                 </div>
                             </div>`
-                }
+      }
 
-                return `<div class="bg-white p-4 rounded-md shadow-md">
+      return `<div class="bg-white p-4 rounded-md shadow-md">
                             <h3 class="text-xs md:text-base font-bold mb-4">Detail Informasi Jadwal Pemupukan</h3>
                             <div class="grid grid-flow-row grid-cols-5 align-text-bottom">
                                 <div class="col-span-2">
@@ -859,56 +874,56 @@
                             </div>
                             ${eActual}
                           </div>`
-            }
+    }
 
-            function parseDatetime(datetimeStr) {
-                // Split the datetime string into date and time components
-                let [date, time] = datetimeStr.split(' ');
+    function parseDatetime(datetimeStr) {
+      // Split the datetime string into date and time components
+      let [date, time] = datetimeStr.split(' ');
 
-                // Split the date component into year, month, and day
-                let [year, month, day] = date.split('-');
+      // Split the date component into year, month, and day
+      let [year, month, day] = date.split('-');
 
-                // Split the time component into hours, minutes, and seconds
-                let [hours, minutes, seconds] = time.split(':');
+      // Split the time component into hours, minutes, and seconds
+      let [hours, minutes, seconds] = time.split(':');
 
-                // Create a new Date object (Note: months are 0-indexed in JavaScript Date)
-                return new Date(year, month - 1, day, hours, minutes, seconds);
-            }
+      // Create a new Date object (Note: months are 0-indexed in JavaScript Date)
+      return new Date(year, month - 1, day, hours, minutes, seconds);
+    }
 
-            const addMonth = async e => {
-                currentMonth++
-                if (currentMonth > 11) {
-                    currentMonth = 0
-                    currentYear++
-                }
+    const addMonth = async e => {
+      currentMonth++
+      if (currentMonth > 11) {
+        currentMonth = 0
+        currentYear++
+      }
 
-                const data = await getSchedules(e.dataset.gardenId, currentYear, currentMonth + 1)
+      const data = await getSchedules(e.dataset.gardenId, currentYear, currentMonth + 1)
 
-                generateCalendar(currentMonth, currentYear, e.dataset.gardenId, data.schedules);
-            }
+      generateCalendar(currentMonth, currentYear, e.dataset.gardenId, data.schedules);
+    }
 
-            const subMonth = async e => {
-                currentMonth--
-                if (currentMonth < 0) {
-                    currentMonth = 11
-                    currentYear--
-                }
+    const subMonth = async e => {
+      currentMonth--
+      if (currentMonth < 0) {
+        currentMonth = 11
+        currentYear--
+      }
 
-                const data = await getSchedules(e.dataset.gardenId, currentYear, currentMonth + 1)
+      const data = await getSchedules(e.dataset.gardenId, currentYear, currentMonth + 1)
 
-                generateCalendar(currentMonth, currentYear, e.dataset.gardenId, data.schedules);
-            }
+      generateCalendar(currentMonth, currentYear, e.dataset.gardenId, data.schedules);
+    }
 
-            const calculateDayDifference = (d1, d2) => {
+    const calculateDayDifference = (d1, d2) => {
 
-                // Calculate the time difference in milliseconds
-                const timeDiff = Math.abs(d2 - d1);
+      // Calculate the time difference in milliseconds
+      const timeDiff = Math.abs(d2 - d1);
 
-                // Convert milliseconds to days
-                const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+      // Convert milliseconds to days
+      const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-                return dayDiff - 1;
-            }
+      return dayDiff - 1;
+    }
 
             function adjustScale() {
                 const zoomLevel = window.devicePixelRatio;
@@ -933,32 +948,32 @@
                     .listen('ExportCompletedEvent', (event) => {
                         document.querySelector('#export-link').innerHTML = `Export Selesai... <a href="{{ route('telemetry-rsc.download-excel') }}"
                         target="_blank" class="text-sky-400 hover:text-blue-600 underline">Klik untuk mengunduh!</a>`
-                    })
+        })
 
-                initLandPolygon(1, map)
+      initLandPolygon(1, map)
 
-                const weatherElements = {
-                    eTemp: document.querySelector('#bmkg-temp'),
-                    eHumid: document.querySelector('#bmkg-humid'),
-                    eMaxT: document.querySelector('#bmkg-max-t'),
-                    eMinT: document.querySelector('#bmkg-min-t'),
-                    eWindSpeed: document.querySelector('#bmkg-ws'),
-                    eWeatherName: document.querySelector('#bmkg-weather-name'),
-                    eWeatherIcon: document.querySelector('#bmkg-weather-icon'),
-                    eTime: document.querySelector('#bmkg-times'),
-                    eDay: document.querySelector('#bmkg-day'),
-                }
+      const weatherElements = {
+        eTemp: document.querySelector('#bmkg-temp'),
+        eHumid: document.querySelector('#bmkg-humid'),
+        eMaxT: document.querySelector('#bmkg-max-t'),
+        eMinT: document.querySelector('#bmkg-min-t'),
+        eWindSpeed: document.querySelector('#bmkg-ws'),
+        eWeatherName: document.querySelector('#bmkg-weather-name'),
+        eWeatherIcon: document.querySelector('#bmkg-weather-icon'),
+        eTime: document.querySelector('#bmkg-times'),
+        eDay: document.querySelector('#bmkg-day'),
+      }
 
-                if (!weatherWidgetMode) {
-                    bmkgWether(weatherElements)
+      if (!weatherWidgetMode) {
+        bmkgWether(weatherElements)
 
-                    setInterval(() => {
-                        bmkgWether(weatherElements)
-                    }, 1000 * 10);
-                } else if (weatherWidgetMode != null) {
-                    awsWether(weatherWidgetMode, weatherElements)
-                }
-            }
-        </script>
-    @endpush
+        setInterval(() => {
+          bmkgWether(weatherElements)
+        }, 1000 * 10);
+      } else if (weatherWidgetMode != null) {
+        awsWether(weatherWidgetMode, weatherElements)
+      }
+    }
+  </script>
+  @endpush
 </x-app-layout>

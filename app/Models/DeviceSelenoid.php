@@ -96,4 +96,14 @@ class DeviceSelenoid extends Model
     {
         return $this->hasMany(DeviceFertilizerSchedule::class);
     }
+
+    public function deviceReport(): HasMany
+    {
+        return $this->hasMany(DeviceReport::class);
+    }
+
+    public function latestReport(): HasOne
+    {
+        return $this->hasOne(DeviceReport::class, 'device_selenoid_id')->latestOfMany();
+    }
 }

@@ -78,12 +78,12 @@
 
           <div class="mb-3">
             <h2 class="gemini-header">Klasifikasi Berdasarkan Cara Kerja</h2>
-            <p>{{ $weeds->klasifikasi_berdasarkan_cara_kerja }}</p>
+            <p>{!! $weeds->klasifikasi_berdasarkan_cara_kerja !!}</p>
           </div>
 
           <div class="mb-3">
             <h2 class="gemini-header">Golongan Senyawa Kimia</h2>
-            <p>{{ $weeds->golongan_senyawa_kimia }}</p>
+            <p>{!! $weeds->golongan_senyawa_kimia !!}</p>
           </div>
         </div>
       </div>

@@ -20,7 +20,7 @@
         <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;{{ session()->get('user-success') }}
       </div>
       @endif
-      <form action="{{ route('pest.store') }}" method="post" enctype="multipart/form-data">
+      <form action="{{ route('pest.store') }}" method="post" enctype="multipart/form-data" id="form">
         @csrf
         <div class="flex space-x-5">
           <div class="w-1/3">
@@ -32,7 +32,7 @@
               <img id='preview_img' class="z-10 h-[400px] w-[400px] object-cover rounded-lg absolute top-0 bottom-0 right-0 left-0" src="" />
               <label class="z-50 block mt-5 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full h-full opacity-0">
                 <span class="sr-only">Choose profile photo</span>
-                <input type="file" onchange="loadFile(event)" name="file" class="block w-full text-sm text-slate-500
+                <input type="file" onchange="loadFile(event)" name="file" id="file" class="block w-full text-sm text-slate-500
                     file:mr-4 file:py-2 file:px-4
                         file:rounded-full file:border-0
                         file:text-sm file:font-semibold
@@ -40,7 +40,9 @@
                         hover:file:bg-violet-100
                         " />
               </label>
+              <x-input-error :messages="$errors->get('file')" class="mt-2" />
             </div>
+            <span class="text-sm text-red-600 space-y-1" id="image-error"></span>
           </div>
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-full">
             <div class="flex space-x-5">
@@ -51,7 +53,7 @@
                   <option value="{{ $garden->id }}">{{ $garden->name }}</option>
                   @endforeach
                 </x-select-input>
-                <x-input-error :messages="$errors->get('garden_Id')" class="mt-2" />
+                <x-input-error :messages="$errors->get('garden_id')" class="mt-2" />
               </div>
               <div class="w-full">
                 <label for="" class="block">Komoditi</label>
@@ -85,9 +87,8 @@
 
   @push('scripts')
   <script>
-    var output = document.getElementById('preview_img');
-
-    var holder = document.getElementById('holder');
+    let output = document.getElementById('preview_img');
+    let holder = document.getElementById('holder');
 
     holder.ondragover = function() {
       this.className = 'hover';
@@ -111,7 +112,7 @@
       output.style.opacity = 0;
     }
 
-    var loadFile = function(event) {
+    let loadFile = function(event) {
 
       var input = event.target;
       var file = input.files[0];
@@ -123,6 +124,19 @@
         output.style.opacity = 1;
       }
     };
+
+    const form = document.querySelector('#form')
+
+    form.onsubmit = function(e) {
+      const inputFile = document.querySelector("#file")
+
+      if (inputFile.files.length < 1) {
+        alert("Foto tidak boleh kosong!")
+        return false
+      }
+
+      return true
+    }
   </script>
   @endpush
 </x-app-layout>
