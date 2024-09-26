@@ -29,9 +29,9 @@
       <tr>
         <th>Waktu</th>
         <th>Nama Gulma</th>
-        <th>Klasifikasi Kerja</th>
-        <th>Golongan Senyawa</th>
-        <th>Nama Obat</th>
+        <th>Cara Kerja</th>
+        <th>Golongan Senyawa Kimia</th>
+        <th>Bahan Aktif</th>
       </tr>
     </thead>
     <tbody>
@@ -40,8 +40,8 @@
         <td>{{ $weed->created_at->format('d M Y H:i:s') }}</td>
         <td>{{ $weed->nama_gulma }}</td>
         <td>{{ $weed->klasifikasi_berdasarkan_cara_kerja }}</td>
-        <td>{{ $weed->golongan_senyawa_kimia }}</td>
-        <td>{{ $weed->nama_obat }}</td>
+        <td>{!! $weed->golongan_senyawa_kimia !!}</td>
+        <td>{!! $weed->bahan_aktif !!}</td>
       </tr>
       @empty
       <tr>

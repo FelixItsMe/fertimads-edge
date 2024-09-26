@@ -39,8 +39,8 @@
       @foreach($reports as $report)
       <tr>
         <td>{{ $report->created_at->format('d M Y H:i:s') }}</td>
-        <td>{{ $report->deviceSelenoid->garden->land->name }}</td>
-        <td>{{ $report->deviceSelenoid->garden->name }}</td>
+        <td>{{ $report->deviceSelenoid?->garden?->land?->name ?? '-' }}</td>
+        <td>{{ $report->deviceSelenoid?->garden?->name ?? '-' }}</td>
         <td>{{ $report->pemupukan_type }}</td>
         <td>{{ number_format($report->total_volume, 2) }} Ltr</td>
         <td>{{ $report->time_in_hours }} Jam</td>

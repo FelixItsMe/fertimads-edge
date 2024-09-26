@@ -35,8 +35,8 @@
               <tr>
                 <th>Waktu</th>
                 <th>Nama Gulma</th>
-                <th>Klasifikasi Kerja</th>
-                <th>Golongan Senyawa</th>
+                <th>Cara Kerja</th>
+                <th>Golongan Senyawa Kimia</th>
                 <th>Bahan Aktif</th>
                 <th>Aksi</th>
               </tr>

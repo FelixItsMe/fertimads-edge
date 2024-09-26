@@ -19,9 +19,9 @@
         </x-card-info>
       </div>
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 flex justify-between">
+        <div class="p-6 md:flex justify-between">
           <h1 class="text-3xl font-extrabold">Tabel Laporan Penyakit</h1>
-          <div class="flex space-x-3">
+          <div class="flex space-x-3 mt-5 md:mt-0">
             <a href="{{ route('disease.create') }}" class="bg-indigo-500 text-white py-1.5 px-5 rounded-md">Tambah Data</a>
             @if ($diseases->total() > 0)
             <a href="{{ route('disease-report.export') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md"><i class="fa-regular fa-file-excel"></i> Excel</a>

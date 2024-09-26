@@ -3,7 +3,6 @@
   <style>
     .gemini-header {
       font-weight: bold;
-      border-bottom: 2px solid #ddd;
       padding-bottom: 5px;
     }
 
@@ -35,8 +34,8 @@
 
   <div class="py-12">
     <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
-      <div class="flex space-x-5">
-        <div class="w-4/12">
+      <div class="md:flex md:space-x-5">
+        <div class="md:w-4/12">
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-full">
             <img src="/{{ $pest->file }}" class="w-full aspect-square rounded-lg object-cover" alt="">
             <div class="mt-5">
@@ -84,6 +83,16 @@
           </ul>
           @else
           <p>{!! $response->penyebab !!}</p>
+          @endif
+          <h2 class="gemini-subhead">Pengendalian</h2>
+          @if (gettype($response->pengendalian) === 'array')
+          <ul class="gemini-list">
+            @foreach ($response->pengendalian as $pengendalian)
+            <li class="gemini-list-item">{!! $pengendalian !!}</li>
+            @endforeach
+          </ul>
+          @else
+          <p>{!! $response->pengendalian !!}</p>
           @endif
           <h2 class="gemini-subhead">Pengobatan</h2>
           @if (gettype($response->pengobatan) === 'array')
@@ -143,16 +152,6 @@
           <p>{!! $response->bahan_aktif === "" ? '-' :($response->bahan_aktif ?? '-') !!}</p>
           @endif
           @endisset
-          <h2 class="gemini-subhead">Pengendalian</h2>
-          @if (gettype($response->pengendalian) === 'array')
-          <ul class="gemini-list">
-            @foreach ($response->pengendalian as $pengendalian)
-            <li class="gemini-list-item">{!! $pengendalian !!}</li>
-            @endforeach
-          </ul>
-          @else
-          <p>{!! $response->pengendalian !!}</p>
-          @endif
         </div>
       </div>
     </div>

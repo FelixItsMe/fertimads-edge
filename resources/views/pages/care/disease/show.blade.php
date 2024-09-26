@@ -2,13 +2,13 @@
   @push('styles')
   <style>
     .gemini-header {
-      color: #333;
+      font-weight: bold;
       border-bottom: 2px solid #ddd;
       padding-bottom: 5px;
     }
 
     .gemini-subhead {
-      color: #666;
+      font-weight: bold;
       margin-top: 15px;
     }
 
@@ -98,7 +98,7 @@
           @else
           <p>{!! json_decode($disease->control) !!}</p>
           @endif
-          <h2 class="gemini-subhead">Pestisida</h2>
+          <h2 class="gemini-subhead">Jenis Pestisida</h2>
           @if (is_array(json_decode($disease->pestisida)))
           <ul class="gemini-list">
             @forelse (json_decode($disease->pestisida) as $pestisida)

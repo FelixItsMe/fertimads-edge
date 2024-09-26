@@ -18,13 +18,13 @@
   </x-slot>
 
   <div class="py-12">
-    <div class="mx-auto sm:px-6 lg:px-8">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="text-2xl font-bold">List Rangkuman</h1>
 
       <div class="mt-5">
         <div class="grid sm:grid-cols-1 2xl:grid-cols-2 gap-8">
           <div class="bg-white p-6">
-            <div class="flex gap-x-5">
+            <div class="md:flex gap-x-5">
               <div class="flex-1">
                 <div class="flex">
                   <div class="w-1/2">
@@ -73,7 +73,7 @@
                   </div>
                 </div>
               </div>
-              <div class="flex-1">
+              <div class="flex-1 mt-5 md:mt-5">
                 <div class="bg-gray-200 p-6">
                   <div class="text-teal-400 text-2xl font-bold">Rangkuman Unsur Tanah</div>
 
