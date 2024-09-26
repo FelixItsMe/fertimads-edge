@@ -4,133 +4,183 @@ const dayNames = [
     "Selasa",
     "Rabu",
     "Kamis",
-    "Jum\'at",
-    "Sabtu"
-]
+    "Jum'at",
+    "Sabtu",
+];
 
-const bmkgWether = async ({ eTemp, eHumid, eWindSpeed, eMaxT, eMinT, eWeatherName, eWeatherIcon, eTime, eDay }) => {
+const compareDates = (d1, d2) => {
+    let date1 = new Date(d1).getTime();
+    let date2 = new Date(d2).getTime();
+
+    if (date1 < date2) {
+        return "Less"
+    } else if (date1 > date2) {
+        return "Greater"
+    } else if (date1 <= date2) {
+        return "Less Or Equal"
+    } else if (date1 >= date2) {
+        return "Greater Or Equal"
+    } else {
+        return "Equal"
+    }
+};
+
+function filterWeatherByCurrentDatetime(weatherData) {
+    // Dapatkan waktu sekarang dalam format yang sesuai (YYYY-MM-DDTHH:00:00)
+    const currentDateTime = new Date();
+    currentDateTime.setHours(currentDateTime.getHours() + 7)
+    const formattedCurrentDateTime = currentDateTime.toISOString().slice(0, 16).replace('T', ' '); // Ambil YYYY-MM-DDTHH
+
+    // Gabungkan data cuaca dari array cuaca
+    const allWeatherData = weatherData.flat();
+
+    // Filter data cuaca yang sesuai dengan local_datetime hari ini dan jam ini
+    const filteredData = allWeatherData.filter(weather => {
+        const weatherDateTime = weather.local_datetime.slice(0, 16); // Ambil YYYY-MM-DDTHH
+        return compareDates(weatherDateTime, formattedCurrentDateTime) === "Less"
+    });
+
+    return filteredData;
+}
+
+function minMaxTemp(weatherData) {
+    const temps = filterWeatherByCurrentDatetime(weatherData).map((value) => value.t)
+
+    return {
+        min: Math.min(...temps),
+        max: Math.max(...temps)
+    }
+}
+
+const bmkgWether = async ({
+    eTemp,
+    eHumid,
+    eWindSpeed,
+    eMaxT,
+    eMinT,
+    eWeatherName,
+    eWeatherIcon,
+    eTime,
+    eDay,
+}) => {
     const res = await fetch(
-        "https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/DigitalForecast-JawaBarat.xml", {
+        "https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=32.01.06.2011",
+        {
             method: "GET",
         }
     );
 
     if (!res.ok) {
-      return false
+        return false;
     }
 
-    const now = new Date()
+    const now = new Date();
 
-    const str = await res.text()
-    const data = await new window.DOMParser().parseFromString(str, "text/xml")
+    const str = await res.json();
+    const data = str.data[0].cuaca;
+    const filteredData = filterWeatherByCurrentDatetime(data)
+    const parameters = filteredData[filteredData.length - 1];
+    const minMaxT = minMaxTemp(data)
 
-    const currentHours = Math.round(now.getHours() / 6) * 6
-    const parameters = data.getElementsByTagName('area')[16].getElementsByTagName('parameter')
-    const humidities = parameters.hu
-    const temperatures = parameters.t
-    const maxTs = parameters.tmax
-    const minTs = parameters.tmin
-    const windSpeeds = parameters.ws
-    const weathers = parameters.weather
+    const humidities = parameters.hu;
+    const temperatures = parameters.t;
+    const maxTs = minMaxT.max
+    const minTs = minMaxT.min
+    const windSpeeds = parameters.ws;
+    const weathers = parameters.weather_desc;
 
-    eTime.textContent = now.getHours() + ":" + now.getMinutes()
-    eDay.textContent = dayNames[now.getDay()]
+    eTime.textContent = now.getHours() + ":" + now.getMinutes();
+    eDay.textContent = dayNames[now.getDay()];
 
-    for (const humidity of humidities.children) {
-      if (humidity.attributes.h.nodeValue == currentHours) {
-        eHumid.textContent = humidity.children[0].textContent
-      }
+    eHumid.textContent = humidities;
+    eTemp.textContent = temperatures;
+    eWindSpeed.textContent = windSpeeds;
+    eWeatherName.textContent = weathers;
+    eMaxT.textContent = maxTs;
+    eMinT.textContent = minTs;
+    eWeatherIcon.innerHTML = `<img src="${parameters.image}" class="w-24 mx-auto"></img>`;
+};
+
+const awsWether = async (
+    awsDeviceId,
+    {
+        eTemp,
+        eHumid,
+        eWindSpeed,
+        eMaxT,
+        eMinT,
+        eWeatherName,
+        eWeatherIcon,
+        eTime,
+        eDay,
     }
-    for (const temperature of temperatures.children) {
-      if (temperature.attributes.h.nodeValue == currentHours) {
-        eTemp.textContent = temperature.children[0].textContent
-      }
-    }
+) => {
+    const now = new Date();
 
-    eMaxT.textContent = maxTs.children[0].children[0].textContent
-    eMinT.textContent = minTs.children[0].children[0].textContent
+    eTime.textContent = now.getHours() + ":" + now.getMinutes();
+    eDay.textContent = dayNames[now.getDay()];
 
-    for (const windSpeed of windSpeeds.children) {
-      if (windSpeed.attributes.h.nodeValue == currentHours) {
-        eWindSpeed.textContent = windSpeed.children[2].textContent
-      }
-    }
-    for (const weather of weathers.children) {
-      if (weather.attributes.h.nodeValue == currentHours) {
-        const [weatherName, weatherIcon] = weatherNames(parseInt(weather.children[0].textContent))
-        eWeatherName.textContent = weatherName
-        eWeatherIcon.innerHTML = `<i class="fa-solid fa-${weatherIcon}"></i>`
-      }
-    }
-}
+    eHumid.textContent = "-";
+    eTemp.textContent = "-";
 
-const awsWether = async (awsDeviceId, { eTemp, eHumid, eWindSpeed, eMaxT, eMinT, eWeatherName, eWeatherIcon, eTime, eDay }) => {
-    const now = new Date()
+    eMaxT.textContent = "-";
+    eMinT.textContent = "-";
 
-    eTime.textContent = now.getHours() + ":" + now.getMinutes()
-    eDay.textContent = dayNames[now.getDay()]
+    eWindSpeed.textContent = "-";
+    eWeatherName.textContent = "-";
+    eWeatherIcon.innerHTML = `<i class="fa-solid fa-moon"></i>`;
+};
 
-    eHumid.textContent = "-"
-    eTemp.textContent = "-"
-
-    eMaxT.textContent = "-"
-    eMinT.textContent = "-"
-
-    eWindSpeed.textContent = "-"
-    eWeatherName.textContent = "-"
-    eWeatherIcon.innerHTML = `<i class="fa-solid fa-moon"></i>`
-}
-
-const weatherNames = code => {
+const weatherNames = (code) => {
     switch (code) {
         case 0:
-            return ["Cerah", "sun"]
+            return ["Cerah", "sun"];
             break;
         case 1:
-            return ["Cerah Berawan", "cloud-sun"]
+            return ["Cerah Berawan", "cloud-sun"];
             break;
         case 2:
-            return ["Cerah Berawan", "cloud-sun"]
+            return ["Cerah Berawan", "cloud-sun"];
             break;
         case 3:
-            return ["Berawan", "cloud"]
+            return ["Berawan", "cloud"];
             break;
         case 4:
-            return ["Berawan Tebal", "cloud"]
+            return ["Berawan Tebal", "cloud"];
             break;
         case 5:
-            return ["Udara Kabur", "smog"]
+            return ["Udara Kabur", "smog"];
             break;
         case 10:
-            return ["Asap", "smog"]
+            return ["Asap", "smog"];
             break;
         case 45:
-            return ["Kabut", "smog"]
+            return ["Kabut", "smog"];
             break;
         case 60:
-            return ["Hujan Ringan", "cloud-rain"]
+            return ["Hujan Ringan", "cloud-rain"];
             break;
         case 61:
-            return ["Hujan Sedang", "cloud-showers-heavy"]
+            return ["Hujan Sedang", "cloud-showers-heavy"];
             break;
         case 63:
-            return ["Hujan Lebat", "cloud-showers-heavy"]
+            return ["Hujan Lebat", "cloud-showers-heavy"];
             break;
         case 80:
-            return ["Hujan Lokal", "cloud-showers-heavy"]
+            return ["Hujan Lokal", "cloud-showers-heavy"];
             break;
         case 95:
-            return ["Hujan Petir", "cloud-bolt"]
+            return ["Hujan Petir", "cloud-bolt"];
             break;
         case 97:
-            return ["Hujan Petir", "cloud-bolt"]
+            return ["Hujan Petir", "cloud-bolt"];
             break;
 
         default:
-            return ["", ""]
+            return ["", ""];
             break;
     }
-}
+};
 
 const weatherHtml = () => {
     return `<div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-gradient-to-br from-blue-600 to-blue-900 rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline" id="wether-modal">
@@ -154,9 +204,9 @@ const weatherHtml = () => {
             </div>
             </div>
             <div class="text-center">
-            <div class="text-4xl md:text-8xl" id="bmkg-weather-icon"><i class="fa-solid fa-moon"></i></div>
+            <div class="text-2xl md:text-8xl" id="bmkg-weather-icon"><i class="fa-solid fa-moon"></i></div>
             <div class="text-lg text-slate-50/50" id="bmkg-weather-name">Clear</div>
             </div>
         </div>
     </div>`;
-}
+};
