@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
         <style>
             #map {
-                /* height: 90vh; */
+                height: 80vh;
                 z-index: 50;
             }
         </style>
@@ -41,7 +41,7 @@
                 </x-card-info>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div id="map" class="h-96 md:h-dvh max-sm:mx-6"></div>
+                <div id="map"></div>
             </div>
             <div class="grid grid-flow-row grid-cols-1 md:grid-cols-3 max-sm:gap-y-4 md:gap-4">
                 <div class="col-span-2">
@@ -230,7 +230,7 @@
 
                 div.innerHTML = `
                   <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full hidden" id="garden-detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                    <div class="px-2 pt-2 pb-2 bg-white sm:p-3 sm:pb-4 max-h-48 md:max-h-96 overflow-y-scroll">
+                    <div class="px-2 pt-2 pb-2 bg-white sm:p-3 sm:pb-4 max-h-48 md:max-h-80 overflow-y-scroll">
                       <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:text-left">
                           <div class="mt-2">
