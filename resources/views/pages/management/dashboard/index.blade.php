@@ -1101,7 +1101,7 @@
                 // Convert milliseconds to days
                 const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-                return dayDiff;
+                return dayDiff - 1;
             }
 
             window.onload = () => {
