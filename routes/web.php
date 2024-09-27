@@ -10,6 +10,9 @@ use App\Http\Controllers\v1\Care\HarvestReportController;
 use App\Http\Controllers\v1\Care\PestController;
 use App\Http\Controllers\v1\Care\RSCDataController;
 use App\Http\Controllers\v1\Care\WeedsController;
+use App\Http\Controllers\v1\Management\{
+    PortableDeviceController
+};
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -90,6 +93,8 @@ Route::middleware('auth')->group(function () {
             Route::resource('daily-irrigation', \App\Http\Controllers\v1\Management\DailyIrrigationController::class)->only(['index', 'create', 'store']);
 
             Route::resource('aws-device', \App\Http\Controllers\v1\Management\AwsDeviceController::class)->except('show');
+
+            Route::resource('portable-device', PortableDeviceController::class);
         });
     Route::get('activity-schedule/year/{year}/month/{month}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'scheduleInMonth'])->name('activity-schedule.schedule-in-month');
     Route::get('activity-schedule/date/{date}/garden/{garden}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'detailGardenScheduleDay'])->name('activity-schedule.detail');
