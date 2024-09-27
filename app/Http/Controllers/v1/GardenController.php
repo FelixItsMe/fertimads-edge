@@ -16,6 +16,7 @@ use App\Models\DeviceScheduleRun;
 use App\Models\DeviceSelenoid;
 use App\Models\Garden;
 use App\Models\Land;
+use App\Models\SmsGarden;
 use App\Services\GardenService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -118,7 +119,13 @@ class GardenController extends Controller
             'deviceSelenoid.device:id,series',
         ]);
 
-        return view('pages.garden.show', compact('garden'));
+        $smsGardens = SmsGarden::query()
+            ->with('portableDevice:id,series')
+            ->where('garden_id', $garden->id)
+            ->orderByDesc('created_at')
+            ->paginate(5);
+
+        return view('pages.garden.show', compact('garden', 'smsGardens'));
     }
 
     /**

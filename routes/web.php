@@ -11,7 +11,8 @@ use App\Http\Controllers\v1\Care\PestController;
 use App\Http\Controllers\v1\Care\RSCDataController;
 use App\Http\Controllers\v1\Care\WeedsController;
 use App\Http\Controllers\v1\Management\{
-    PortableDeviceController
+    PortableDeviceController,
+    SmsGardenController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -61,6 +62,8 @@ Route::middleware('auth')->group(function () {
 
             Route::resource('garden', \App\Http\Controllers\v1\GardenController::class);
             Route::get('garden/export/excel', [\App\Http\Controllers\v1\GardenController::class, 'exportExcel'])->name('garden.export-excel');
+
+            Route::get('sms-garden/{smsGarden}', [SmsGardenController::class, 'show'])->name('sms-garden.show');
 
             Route::resource('commodity', \App\Http\Controllers\v1\CommodityController::class);
             Route::get('commodity/export/excel', [\App\Http\Controllers\v1\CommodityController::class, 'exportExcel'])->name('commodity.export-excel');
