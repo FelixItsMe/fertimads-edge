@@ -22,7 +22,7 @@ class UpdatePortableDeviceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'series'            => 'required|alpha_num:ascii|max:255|unique:portable_devices,series,' . $this->route('portable_device')->id,
+            'series'            => 'required|alpha_dash:ascii|max:255|unique:portable_devices,series,' . $this->route('portable_device')->id,
             'version'           => 'required|string|max:255|regex:/^[0-9.]+$/',
             'image'             => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'production_date'   => 'required|date',

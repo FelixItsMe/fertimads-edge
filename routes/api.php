@@ -4,6 +4,10 @@ use App\Http\Controllers\Api\v1\Care\PestController;
 use App\Http\Controllers\Api\v1\CommodityController;
 use App\Http\Controllers\Api\v1\DiseaseController;
 use App\Http\Controllers\Api\v1\WeedsController;
+use App\Http\Controllers\Api\v1\Control\{
+    PortableDeviceController,
+    SmsGardenTelemetryController,
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +51,10 @@ Route::prefix('mobile/v1')->group(function(){
         Route::get('/commodities', [CommodityController::class, 'index']);
         Route::get('/diseases', [DiseaseController::class, 'index']);
         Route::get('/weeds', [WeedsController::class, 'index']);
+
+        Route::post('portable-device/check-device', [PortableDeviceController::class, 'checkSeriesDevice']);
+
+        Route::post('sms', [SmsGardenTelemetryController::class, 'store']);
     });
 
     Route::get('/user', function (Request $request) {

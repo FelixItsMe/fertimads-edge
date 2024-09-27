@@ -22,7 +22,7 @@ class StorePortableDeviceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'series'            => 'required|alpha_num:ascii|max:255|unique:portable_devices,series',
+            'series'            => 'required|alpha_dash:ascii|max:255|unique:portable_devices,series',
             'version'           => 'required|string|max:255|regex:/^[0-9.]+$/',
             'image'             => 'required|image|mimes:png,jpg,jpeg|max:2048',
             'production_date'   => 'required|date',
