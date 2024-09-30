@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Laporan Hama</title>
+  <title>Laporan Penyakit</title>
   <style>
     table {
       width: 100%;
@@ -30,7 +30,7 @@
         <th>Waktu</th>
         <th>Nama Penyakit</th>
         <th>Kategori</th>
-        <th>Pestisida</th>
+        <th>Jenis Pestisida</th>
         <th>Kategori Kerja</th>
       </tr>
     </thead>
@@ -40,7 +40,17 @@
         <td>{{ $disease->created_at->format('d M Y H:i:s') }}</td>
         <td>{{ $disease->name }}</td>
         <td>{{ $disease->category }}</td>
-        <td>{{ $disease->pestisida }}</td>
+        <td>
+          @if (gettype($disease->pestisida) === 'array')
+          <ul class="gemini-list">
+            @foreach ($disease->pestisida as $pestisida)
+            <li class="gemini-list-item">{!! $pestisida !!}</li>
+            @endforeach
+          </ul>
+          @else
+          <p>{!! $disease->pestisida !!}</p>
+          @endif
+        </td>
         <td>{{ $disease->works_category }}</td>
       </tr>
       @empty

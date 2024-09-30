@@ -31,19 +31,50 @@
         <th>Nama Penyakit</th>
         <th>Nama Hama</th>
         <th>Kebun</th>
-        <th>Komoditi</th>
-        <th>Populasi Terinfeksi</th>
+        <th>Penyebab</th>
+        <th>Pengedalian</th>
       </tr>
     </thead>
     <tbody>
       @forelse ($reports as $pest)
+      <?php
+      $response = json_decode($pest->gemini_response);
+      ?>
       <tr>
         <td>{{ $pest->created_at->format('d M Y H:i:s') }}</td>
         <td>{{ $pest->disease_name }}</td>
         <td>{{ $pest->pest_name }}</td>
         <td>{{ $pest->garden->name }}</td>
-        <td>{{ $pest->commodity->name }}</td>
-        <td>{{ $pest->infected_count }}</td>
+        <td>
+          @if (!is_null($response))
+          @if (gettype($response->penyebab) === 'array')
+          <ul class="gemini-list">
+            @foreach ($response->penyebab as $penyebab)
+            <li class="gemini-list-item">{!! $penyebab !!}</li>
+            @endforeach
+          </ul>
+          @else
+          <p>{!! $response->penyebab !!}</p>
+          @endif
+          @else
+          <p>-</p>
+          @endif
+        </td>
+        <td>
+          @if (!is_null($response))
+          @if (gettype($response->pengendalian) === 'array')
+          <ul class="gemini-list">
+            @foreach ($response->pengendalian as $pengendalian)
+            <li class="gemini-list-item">{!! $pengendalian !!}</li>
+            @endforeach
+          </ul>
+          @else
+          <p>{!! $response->pengendalian !!}</p>
+          @endif
+          @else
+          <p>-</p>
+          @endif
+        </td>
       </tr>
       @empty
       <tr>

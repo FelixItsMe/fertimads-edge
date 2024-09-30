@@ -37,7 +37,7 @@ class DiseaseReportExport implements FromCollection, WithMapping, WithHeadings, 
             'Waktu',
             'Nama Penyakit',
             'Kategori',
-            'Pestisida',
+            'Jenis Pestisida',
             'Kategori Kerja'
         ];
     }

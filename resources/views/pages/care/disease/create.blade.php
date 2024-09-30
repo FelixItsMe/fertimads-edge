@@ -28,7 +28,7 @@
       @endif
       <form action="{{ route('disease.store') }}" method="post" enctype="multipart/form-data" id="form">
         @csrf
-        <div class="md:flex md:space-x-5">
+        <div class="md:flex md:space-x-5 flex-wrap">
           <div class="md:w-1/3 p-6">
             <div class="relative h-[400px] w-[400px]">
               <div id="holder" class="z-0 absolute grid text-center place-items-center text-gray-800 bg-slate-400 top-0 bottom-0 right-0 left-0 border-2 border-dashed">
@@ -58,7 +58,7 @@
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
               </div>
               <div class="w-full">
-                <label for="category" class="block">Kategori</label>
+                <label for="category" class="block">Klasifikasi Berdasarkan Cara Kerja</label>
                 <x-text-input class="w-full" name="category" id="category"></x-text-input>
                 <x-input-error :messages="$errors->get('category')" class="mt-2" />
               </div>

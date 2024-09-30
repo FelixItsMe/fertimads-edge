@@ -71,22 +71,6 @@
       @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::MANAGEMENT->value || Auth::user()->role == 'su', 'layouts.management-navlink')
       @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::CONTROL->value || Auth::user()->role == 'su', 'layouts.control-navlink')
       @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::CARE->value || Auth::user()->role == 'su', 'layouts.care-navlink')
-    </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{ 'block': open, 'hidden': !open }" class="block sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard.index')" :active="request()->routeIs('dashboard.*')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::MANAGEMENT->value || Auth::user()->role == 'su', 'layouts.management-navlink')
-            @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::CONTROL->value || Auth::user()->role == 'su', 'layouts.control-navlink')
-            @includeWhen(Auth::user()->role == \App\Enums\UserRoleEnums::CARE->value || Auth::user()->role == 'su', 'layouts.care-navlink')
-
-            <x-responsive-nav-link :href="route('weather.index')" :active="request()->routeIs('weather.*')">
-              {{ __('Cuaca') }}
-            </x-responsive-nav-link>
-        </div>
 
       <div class="mt-3 space-y-1">
         <x-responsive-nav-link :href="route('weather.index')">

@@ -55,11 +55,6 @@
                   <td>:</td>
                   <td>{!! $weeds->bahan_aktif !!}</td>
                 </tr>
-                <tr>
-                  <td class="font-bold">Golongan Senyawa</td>
-                  <td>:</td>
-                  <td>{!! $weeds->golongan_senyawa_kimia !!}</td>
-                </tr>
               </table>
             </div>
           </div>

@@ -23,13 +23,15 @@ class PestReportExport implements FromCollection, WithMapping, WithHeadings, Sho
 
     public function map($row): array
     {
+        $response = json_decode($row->gemini_response);
+
         return [
             $row->created_at->format('d M Y H:i:s'),
             $row->disease_name,
             $row->pest_name,
             $row->garden->name,
-            $row->commodity->name,
-            $row->infected_count
+            $response?->penyebab ?? '-',
+            $response?->pengendalian ?? '-'
         ];
     }
 
@@ -40,8 +42,8 @@ class PestReportExport implements FromCollection, WithMapping, WithHeadings, Sho
             'Nama Penyakit',
             'Nama Hama',
             'Nama Kebun',
-            'Komoditi',
-            'Populasi Terinfeksi'
+            'Penyebab',
+            'Pengendalian'
         ];
     }
 }
