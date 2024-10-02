@@ -35,6 +35,7 @@
                                 <th>P</th>
                                 <th>K</th>
                                 <th>EC</th>
+                                <th>pH</th>
                                 <th>Suhu</th>
                                 <th>Kelembapan</th>
                                 <th>Suhu Tanah</th>
@@ -51,6 +52,7 @@
                                     <td class="text-center">{{ $smsTelemetry->samples->p }} mg/kg</td>
                                     <td class="text-center">{{ $smsTelemetry->samples->k }} mg/kg</td>
                                     <td class="text-center">{{ $smsTelemetry->samples->ec ?? '-' }}</td>
+                                    <td class="text-center">{{ $smsTelemetry->samples?->ph ?? '-' }}</td>
                                     <td class="text-center">{{ $smsTelemetry->samples->temperature ?? '-' }}°C</td>
                                     <td class="text-center">{{ $smsTelemetry->samples->moisture ?? '-' }}%</td>
                                     <td class="text-center">{{ $smsTelemetry->samples->soil_temperature ?? '-' }}°C</td>
