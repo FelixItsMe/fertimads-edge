@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
   <style>
     #map {
-      height: 90vh;
+      height: 800px;
       font-family: 'Figtree', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
 

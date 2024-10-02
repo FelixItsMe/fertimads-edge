@@ -27,7 +27,9 @@ class DiseaseReportExport implements FromCollection, WithMapping, WithHeadings, 
             $row->name,
             $row->category,
             $row->pestisida,
-            $row->works_category
+            filter_var($row->works_category, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES),
+            strip_tags($row->chemical),
+            strip_tags($row->active_materials)
         ];
     }
 
@@ -38,7 +40,9 @@ class DiseaseReportExport implements FromCollection, WithMapping, WithHeadings, 
             'Nama Penyakit',
             'Kategori',
             'Jenis Pestisida',
-            'Kategori Kerja'
+            'Cara Kerja',
+            'Golongan Senyawa Kimia',
+            'Bahan Aktif'
         ];
     }
 }

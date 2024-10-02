@@ -26,8 +26,8 @@ class WeedsReportExport implements FromCollection, WithMapping, WithHeadings, Sh
             $row->created_at->format('d M Y H:i:s'),
             $row->nama_gulma,
             $row->klasifikasi_berdasarkan_cara_kerja,
-            $row->golongan_senyawa_kimia,
-            $row->nama_obat
+            strip_tags($row->golongan_senyawa_kimia),
+            strip_tags($row->bahan_aktif)
         ];
     }
 
@@ -36,9 +36,9 @@ class WeedsReportExport implements FromCollection, WithMapping, WithHeadings, Sh
         return [
             "Waktu",
             "Nama Gulma",
-            "Klasifikasi Kerja",
-            "Golongan Senyawa",
-            "Nama Obat",
+            "Cara Kerja",
+            "Golongan Senyawa Kimia",
+            "Bahan Aktif",
         ];
     }
 }

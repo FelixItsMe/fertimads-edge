@@ -44,18 +44,18 @@
       <div class="flex space-x-5">
         <div>
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-full">
-            <img src="/{{ $disease->image }}" class="w-full aspect-square rounded-lg object-cover" alt="" style="width: 500px">
+            <img src="{{ asset($disease->image) }}" class="w-full aspect-square rounded-lg object-cover" alt="" style="width: 500px">
             <div class="mt-5">
               <table class="w-full">
                 <tr>
                   <td class="font-bold">Nama Penyakit</td>
                   <td>:</td>
-                  <td>{{ json_decode($disease->name) }}</td>
+                  <td>{{ $disease->name }}</td>
                 </tr>
                 <tr>
                   <td class="font-bold">Kategori</td>
                   <td>:</td>
-                  <td>{{ json_decode($disease->category) }}</td>
+                  <td>{{ $disease->category }}</td>
                 </tr>
               </table>
             </div>
@@ -72,7 +72,7 @@
             @endforelse
           </ul>
           @else
-          <p>{!! json_decode($disease->symptoms) !!}</p>
+          <p>{!! $disease->symptoms !!}</p>
           @endif
           <h2 class="gemini-subhead">Penyebab</h2>
           @if (is_array(json_decode($disease->cause)))
@@ -84,7 +84,7 @@
             @endforelse
           </ul>
           @else
-          <p>{!! json_decode($disease->cause) !!}</p>
+          <p>{!! $disease->cause !!}</p>
           @endif
           <h2 class="gemini-subhead">Pengendalian</h2>
           @if (is_array(json_decode($disease->control)))
@@ -96,7 +96,7 @@
             @endforelse
           </ul>
           @else
-          <p>{!! json_decode($disease->control) !!}</p>
+          <p>{!! $disease->control !!}</p>
           @endif
           <h2 class="gemini-subhead">Jenis Pestisida</h2>
           @if (is_array(json_decode($disease->pestisida)))
@@ -108,7 +108,7 @@
             @endforelse
           </ul>
           @else
-          <p>{!! json_decode($disease->pestisida) !!}</p>
+          <p>{!! $disease->pestisida !!}</p>
           @endif
           <h2 class="gemini-subhead">Cara Kerja</h2>
           @if (is_array(json_decode($disease->works_category)))
@@ -120,7 +120,7 @@
             @endforelse
           </ul>
           @else
-          <p>{!! json_decode($disease->works_category) !!}</p>
+          <p>{!! $disease->works_category !!}</p>
           @endif
           <h2 class="gemini-subhead">Golongan Senyawa Kimia</h2>
           @if (is_array(json_decode($disease->chemical)))
@@ -132,7 +132,7 @@
             @endforelse
           </ul>
           @else
-          <p>{!! json_decode($disease->chemical) !!}</p>
+          <p>{!! $disease->chemical !!}</p>
           @endif
           <h2 class="gemini-subhead">Bahan Aktif</h2>
           @if (is_array(json_decode($disease->active_materials)))
@@ -144,7 +144,7 @@
             @endforelse
           </ul>
           @else
-          <p>{!! json_decode($disease->active_materials) !!}</p>
+          <p>{!! $disease->active_materials !!}</p>
           @endif
         </div>
       </div>

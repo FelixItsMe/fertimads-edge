@@ -31,7 +31,9 @@
         <th>Nama Penyakit</th>
         <th>Kategori</th>
         <th>Jenis Pestisida</th>
-        <th>Kategori Kerja</th>
+        <th>Cara Kerja</th>
+        <th>Golongan Senyawa Kimia</th>
+        <th>Bahan Aktif</th>
       </tr>
     </thead>
     <tbody>
@@ -41,9 +43,9 @@
         <td>{{ $disease->name }}</td>
         <td>{{ $disease->category }}</td>
         <td>
-          @if (gettype($disease->pestisida) === 'array')
+          @if (is_array(json_decode($disease->pestisida)))
           <ul class="gemini-list">
-            @foreach ($disease->pestisida as $pestisida)
+            @foreach (json_decode($disease->pestisida) as $pestisida)
             <li class="gemini-list-item">{!! $pestisida !!}</li>
             @endforeach
           </ul>
@@ -51,7 +53,45 @@
           <p>{!! $disease->pestisida !!}</p>
           @endif
         </td>
-        <td>{{ $disease->works_category }}</td>
+        <td>
+          @if (is_array(json_decode($disease->works_category)))
+          <ul class="gemini-list">
+            @forelse (json_decode($disease->works_category) as $works_category)
+            <li class="gemini-list-item">{!! $works_category !!}</li>
+            @empty
+            <p>-</p>
+            @endforelse
+          </ul>
+          @else
+          <p>{!! json_decode($disease->works_category) !!}</p>
+          @endif
+        </td>
+        <td>
+          @if (is_array(json_decode($disease->chemical)))
+          <ul class="gemini-list">
+            @forelse (json_decode($disease->chemical) as $chemical)
+            <li class="gemini-list-item">{!! $chemical !!}</li>
+            @empty
+            <p>-</p>
+            @endforelse
+          </ul>
+          @else
+          <p>{!! json_decode($disease->chemical) !!}</p>
+          @endif
+        </td>
+        <td>
+          @if (is_array(json_decode($disease->active_materials)))
+          <ul class="gemini-list">
+            @forelse (json_decode($disease->active_materials) as $active_material)
+            <li class="gemini-list-item">{!! $active_material !!}</li>
+            @empty
+            <p>-</p>
+            @endforelse
+          </ul>
+          @else
+          <p>{!! json_decode($disease->active_materials) !!}</p>
+          @endif
+        </td>
       </tr>
       @empty
       <tr>

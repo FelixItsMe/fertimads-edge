@@ -1,18 +1,19 @@
 <x-app-layout>
-    @push('styles')
-        <link rel="stylesheet" href="{{ asset('leaflet/leaflet.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
-        <style>
-            #map {
-                height: 80vh;
-                z-index: 50;
-            }
+  @push('styles')
+  <link rel="stylesheet" href="{{ asset('leaflet/leaflet.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
+  <style>
+    #map {
+      height: 800px;
+      z-index: 0;
+    }
 
-            #garden-detail-modal, #wether-modal {
-              transform-origin: top right;
-            }
-        </style>
-    @endpush
+    #garden-detail-modal,
+    #wether-modal {
+      transform-origin: top right;
+    }
+  </style>
+  @endpush
 
   <div class="py-12">
     <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8 flex flex-col gap-4">
@@ -74,7 +75,7 @@
         </div>
         @if ($deviceTelemetries->hasPages())
         <div class="p-6">
-          {{ $deviceTelemetries->links() }}
+          {{ $deviceTelemetries->onEachSide(1)->links() }}
         </div>
         @endif
       </div>
@@ -110,73 +111,73 @@
         </div>
       </div>
 
-            <div class="mt-6 flex justify-between">
-                <div>
-                    <div id="export-status">
-                    </div>
-                    <div id="export-link">
-                    </div>
-                </div>
-                <div>
-                    <x-secondary-button x-on:click="$dispatch('close')">
-                        {{ __('Batalkan') }}
-                    </x-secondary-button>
+      <div class="mt-6 flex justify-between">
+        <div>
+          <div id="export-status">
+          </div>
+          <div id="export-link">
+          </div>
+        </div>
+        <div>
+          <x-secondary-button x-on:click="$dispatch('close')">
+            {{ __('Batalkan') }}
+          </x-secondary-button>
 
-                    <x-primary-button class="ms-3" type="button" id="btn-export-excel"
-                        x-on:click="exportTelemetry('btn-export-excel')">
-                        {{ __('Export Excel') }}
-                    </x-primary-button>
-                </div>
-            </div>
-        </form>
-    </x-modal>
+          <x-primary-button class="ms-3" type="button" id="btn-export-excel"
+            x-on:click="exportTelemetry('btn-export-excel')">
+            {{ __('Export Excel') }}
+          </x-primary-button>
+        </div>
+      </div>
+    </form>
+  </x-modal>
 
-    @push('scripts')
-        <script src="{{ asset('leaflet/leaflet.js') }}"></script>
-        <script src="{{ asset('js/extend.js') }}"></script>
-        <script src="{{ asset('js/map.js') }}"></script>
-        <script src="{{ asset('js/api.js') }}"></script>
-        <script src="{{ asset('js/weather.js') }}"></script>
-        <script>
-            // Get current date
-            let today = new Date();
-            let currentDate = today.getDate();
-            let currentMonth = today.getMonth();
-            let currentYear = today.getFullYear();
-            let currentFullDate =
-                `${currentYear}-${(currentMonth + 1).toString().padStart(2, "0")}-${currentDate.toString().padStart(2, "0")}`;
-            let controller
-            let controllerDetailGardenSchedules
-            let pickedDate = currentFullDate
+  @push('scripts')
+  <script src="{{ asset('leaflet/leaflet.js') }}"></script>
+  <script src="{{ asset('js/extend.js') }}"></script>
+  <script src="{{ asset('js/map.js') }}"></script>
+  <script src="{{ asset('js/api.js') }}"></script>
+  <script src="{{ asset('js/weather.js') }}"></script>
+  <script>
+    // Get current date
+    let today = new Date();
+    let currentDate = today.getDate();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+    let currentFullDate =
+      `${currentYear}-${(currentMonth + 1).toString().padStart(2, "0")}-${currentDate.toString().padStart(2, "0")}`;
+    let controller
+    let controllerDetailGardenSchedules
+    let pickedDate = currentFullDate
 
-            const weatherWidgetMode = "{{ getWeatherWidgetMode()->aws_device_id }}"
+    const weatherWidgetMode = "{{ getWeatherWidgetMode()->aws_device_id }}"
 
-            const eExportStatus = document.getElementById('export-status')
-            let stateData = {
-                polygon: null,
-                layerPolygon: null,
-                latitude: null,
-                longitude: null,
-            }
-            let currentMarkerLayer = null
-            let currentPolygonLayer = null
-            let currentLand = {
-                polygonLayer: null,
-                markerLayer: null,
-            }
-            let currentGroupGarden = L.layerGroup()
-            // Layer MAP
-            let googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            });
-            let googleStreetsSecond = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            });
-            let googleStreetsThird = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            });
+    const eExportStatus = document.getElementById('export-status')
+    let stateData = {
+      polygon: null,
+      layerPolygon: null,
+      latitude: null,
+      longitude: null,
+    }
+    let currentMarkerLayer = null
+    let currentPolygonLayer = null
+    let currentLand = {
+      polygonLayer: null,
+      markerLayer: null,
+    }
+    let currentGroupGarden = L.layerGroup()
+    // Layer MAP
+    let googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+    let googleStreetsSecond = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+    let googleStreetsThird = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
 
     // Layer MAP
     const map = L.map('map', {
@@ -194,23 +195,23 @@
       position: 'topright'
     });
 
-            map.modalWether.onAdd = function(map) {
-                const div = L.DomUtil.create('div', 'leaflet-control');
+    map.modalWether.onAdd = function(map) {
+      const div = L.DomUtil.create('div', 'leaflet-control');
 
-                div.innerHTML = weatherHtml()
+      div.innerHTML = weatherHtml()
 
-                L.DomEvent.disableClickPropagation(div)
-                L.DomEvent.disableScrollPropagation(div)
-                return div;
-            };
-            map.modalWether.addTo(map);
+      L.DomEvent.disableClickPropagation(div)
+      L.DomEvent.disableScrollPropagation(div)
+      return div;
+    };
+    map.modalWether.addTo(map);
 
-            map.modalControl = L.control({
-                position: 'topright'
-            });
+    map.modalControl = L.control({
+      position: 'topright'
+    });
 
-            map.modalControl.onAdd = function(map) {
-                const div = L.DomUtil.create('div', 'leaflet-control');
+    map.modalControl.onAdd = function(map) {
+      const div = L.DomUtil.create('div', 'leaflet-control');
 
       div.innerHTML = `
                   <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full hidden ml-5" id="garden-detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
@@ -488,24 +489,24 @@
       document.querySelector('#hama').textContent = data.garden.latest_pest?.pest_name || "-"
       document.querySelector('#jenis_pupuk').textContent = data.garden.device_selenoid?.device_report?.length > 0 ? data.garden.device_selenoid?.device_report[data.garden.device_selenoid?.device_report?.length - 1].pemupukan_type : '-'
 
-      document.querySelector('#telemetry-n').textContent = parseFloat(data.telemetry.soil_sensor.N).toFixed(
-        2) + " mg/kg"
-      document.querySelector('#telemetry-f').textContent = parseFloat(data.telemetry.soil_sensor.P).toFixed(
-        2) + " mg/kg"
-      document.querySelector('#telemetry-k').textContent = parseFloat(data.telemetry.soil_sensor.K).toFixed(
-        2) + " mg/kg"
-      document.querySelector('#telemetry-ec').textContent = parseFloat(data.telemetry.soil_sensor.EC).toFixed(
-        2) + " uS/cm"
-      document.querySelector('#telemetry-ph').textContent = parseFloat(data.telemetry.soil_sensor.pH).toFixed(
-        2)
-      document.querySelector('#telemetry-t-tanah').textContent = parseFloat(data.telemetry.soil_sensor.T)
-        .toFixed(2) + "°C"
-      document.querySelector('#telemetry-h-tanah').textContent = parseFloat(data.telemetry.soil_sensor.H)
-        .toFixed(2) + "%"
-      document.querySelector('#telemetry-t-dht').textContent = parseFloat(data.telemetry.dht1.T).toFixed(2) +
-        "°C"
-      document.querySelector('#telemetry-h-dht').textContent = parseFloat(data.telemetry.dht1.H).toFixed(2) +
-        "%"
+      document.querySelector('#telemetry-n').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.N).toFixed(
+        2) + " mg/kg" : "-"
+      document.querySelector('#telemetry-f').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.P).toFixed(
+        2) + " mg/kg" : '-'
+      document.querySelector('#telemetry-k').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.K).toFixed(
+        2) + " mg/kg" : '-'
+      document.querySelector('#telemetry-ec').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.EC).toFixed(
+        2) + " uS/cm" : '-'
+      document.querySelector('#telemetry-ph').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.pH).toFixed(
+        2) : '-'
+      document.querySelector('#telemetry-t-tanah').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.T)
+        .toFixed(2) + "°C" : '-'
+      document.querySelector('#telemetry-h-tanah').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.soil_sensor.H)
+        .toFixed(2) + "%" : '-'
+      document.querySelector('#telemetry-t-dht').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.dht1.T).toFixed(2) +
+        "°C" : '-'
+      document.querySelector('#telemetry-h-dht').textContent = data.telemetry?.soil_sensor ? parseFloat(data.telemetry.dht1.H).toFixed(2) +
+        "%" : '-'
 
       document.querySelector('#calendar-add-month').dataset.gardenId = data.garden.id
       document.querySelector('#calendar-sub-month').dataset.gardenId = data.garden.id
@@ -617,18 +618,7 @@
             const schedule = availableSchedules.find(schedule => {
               return schedule.date == formatDate
             })
-            if (eButton) {
-                eButton.disabled = false
-                eButton.classList.replace('bg-green-700', 'bg-primary')
-            }
 
-            if (!data) {
-                eExportStatus.textContent = 'Gagal melakukan export'
-
-                return false
-            }
-
-            eExportStatus.textContent = `Export sedang berlangsung! Harap tunggu...`
             if (schedule?.schedule.includes(1)) {
               wBar.classList.add('bg-primary', 'w-full', 'h-1');
             }
@@ -923,28 +913,28 @@
       return dayDiff - 1;
     }
 
-            function adjustScale() {
-                const zoomLevel = window.devicePixelRatio;
-                const gardenCard = document.querySelector('#garden-detail-modal');
-                // const weatherCard = document.querySelector('#wether-modal');
+    function adjustScale() {
+      const zoomLevel = window.devicePixelRatio;
+      const gardenCard = document.querySelector('#garden-detail-modal');
+      // const weatherCard = document.querySelector('#wether-modal');
 
-                // Adjust the scale of the element based on the zoom level
-                if (gardenCard) {
-                  gardenCard.style.transform = 'scale(' + (1 / zoomLevel) + ')';
-                }
-                // weatherCard.style.transform = 'scale(' + (1 / zoomLevel) + ')';
+      // Adjust the scale of the element based on the zoom level
+      if (gardenCard) {
+        gardenCard.style.transform = 'scale(' + (1 / zoomLevel) + ')';
+      }
+      // weatherCard.style.transform = 'scale(' + (1 / zoomLevel) + ')';
 
-                map.invalidateSize();
-            }
+      map.invalidateSize();
+    }
 
-            window.addEventListener('resize', adjustScale);
+    window.addEventListener('resize', adjustScale);
 
-            window.onload = () => {
-                console.log('Hello world');
+    window.onload = () => {
+      console.log('Hello world');
 
-                window.Echo.private('export-completed.{{ auth()->user()->id }}')
-                    .listen('ExportCompletedEvent', (event) => {
-                        document.querySelector('#export-link').innerHTML = `Export Selesai... <a href="{{ route('telemetry-rsc.download-excel') }}"
+      window.Echo.private('export-completed.{{ auth()->user()->id }}')
+        .listen('ExportCompletedEvent', (event) => {
+          document.querySelector('#export-link').innerHTML = `Export Selesai... <a href="{{ route('telemetry-rsc.download-excel') }}"
                         target="_blank" class="text-sky-400 hover:text-blue-600 underline">Klik untuk mengunduh!</a>`
         })
 

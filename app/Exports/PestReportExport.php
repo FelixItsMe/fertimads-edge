@@ -11,8 +11,8 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class PestReportExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         return Pest::query()
@@ -30,8 +30,13 @@ class PestReportExport implements FromCollection, WithMapping, WithHeadings, Sho
             $row->disease_name,
             $row->pest_name,
             $row->garden->name,
-            $response?->penyebab ?? '-',
-            $response?->pengendalian ?? '-'
+            $response?->penyebab
+                ? (is_array($response?->penyebab) ? str_replace(['["', '","', '"]'], ['', ",", ""], json_encode($response?->penyebab))
+                    : $response?->penyebab)
+                : '-',
+            $response?->pengendalian ? (is_array($response?->pengendalian) ? str_replace(['["', '","', '"]'], ['', ", ", ""], json_encode($response?->pengendalian))
+                : $response?->pengendalian)
+                : '-'
         ];
     }
 
