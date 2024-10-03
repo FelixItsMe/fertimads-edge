@@ -53,8 +53,8 @@
                                     <td class="text-center">{{ $smsTelemetry->samples->k }} mg/kg</td>
                                     <td class="text-center">{{ $smsTelemetry->samples->ec ?? '-' }}</td>
                                     <td class="text-center">{{ $smsTelemetry->samples?->ph ?? '-' }}</td>
-                                    <td class="text-center">{{ $smsTelemetry->samples->temperature ?? '-' }}°C</td>
-                                    <td class="text-center">{{ $smsTelemetry->samples->moisture ?? '-' }}%</td>
+                                    <td class="text-center">{{ $smsTelemetry->samples->ambient_temperature ?? '-' }}°C</td>
+                                    <td class="text-center">{{ $smsTelemetry->samples->ambient_humidity ?? '-' }}%</td>
                                     <td class="text-center">{{ $smsTelemetry->samples->soil_temperature ?? '-' }}°C</td>
                                     <td class="text-center">{{ $smsTelemetry->samples->soil_moisture ?? '-' }}%</td>
                                 </tr>
