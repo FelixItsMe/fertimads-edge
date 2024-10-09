@@ -9,6 +9,8 @@ use App\Models\DeviceScheduleRun;
 use App\Models\DeviceTelemetry;
 use App\Models\Garden;
 use App\Models\Land;
+use App\Models\SmsGarden;
+use App\Models\SmsTelemetry;
 use App\Services\GardenService;
 use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Builder;
@@ -51,12 +53,21 @@ class GardenController extends Controller
 
             $currentTargetVolume += $fertilizerSchedule->total_volume;
         }
+
+        $smsTelemetries = SmsTelemetry::query()
+            ->whereHas('smsGarden', function(Builder $query)use($garden){
+                $query->where('garden_id', $garden->id);
+            })
+            ->latest('created_at')
+            ->paginate(10);
+
         return response()->json([
             'message' => 'Detail Garden',
             'garden' => $garden,
             'telemetry'  => $this->gardenService->formatedLatestTelemetry($garden),
             'currentType' => $currentType,
             'currentTargetVolume' => $currentTargetVolume,
+            'portableSmsTelemetries' => $smsTelemetries
         ]);
     }
 
