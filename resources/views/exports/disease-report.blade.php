@@ -63,7 +63,7 @@
             @endforelse
           </ul>
           @else
-          <p>{!! json_decode($disease->works_category) !!}</p>
+          <p>{!! $disease->works_category !!}</p>
           @endif
         </td>
         <td>
@@ -76,7 +76,7 @@
             @endforelse
           </ul>
           @else
-          <p>{!! json_decode($disease->chemical) !!}</p>
+          <p>{!! $disease->chemical !!}</p>
           @endif
         </td>
         <td>
@@ -89,7 +89,7 @@
             @endforelse
           </ul>
           @else
-          <p>{!! json_decode($disease->active_materials) !!}</p>
+          <p>{!! $disease->active_materials !!}</p>
           @endif
         </td>
       </tr>

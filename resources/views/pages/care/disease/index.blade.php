@@ -49,10 +49,58 @@
                 <td>{{ $disease->created_at->format('d M Y H:i:s') }}</td>
                 <td>{{ $disease->name }}</td>
                 <td>{{ $disease->category }}</td>
-                <td>{{ $disease->pestisida }}</td>
-                <td>{{ $disease->works_category }}</td>
-                <td>{!! $disease->chemical !!}</td>
-                <td>{!! $disease->active_materials !!}</td>
+                <td>
+                  @if (is_array(json_decode($disease->pestisida)))
+                  <ul class="list-inside">
+                    @forelse (json_decode($disease->pestisida) as $pestisida)
+                    <li class="list-disc">{!! $pestisida !!}</li>
+                    @empty
+                    <p>-</p>
+                    @endforelse
+                  </ul>
+                  @else
+                  <p>{!! $disease->pestisida !!}</p>
+                  @endif
+                </td>
+                <td>
+                  @if (is_array(json_decode($disease->works_category)))
+                  <ul class="list-inside">
+                    @forelse (json_decode($disease->works_category) as $works_category)
+                    <li class="list-disc">{!! $works_category !!}</li>
+                    @empty
+                    <p>-</p>
+                    @endforelse
+                  </ul>
+                  @else
+                  <p>{!! $disease->works_category !!}</p>
+                  @endif
+                </td>
+                <td>
+                  @if (is_array(json_decode($disease->chemical)))
+                  <ul class="list-inside">
+                    @forelse (json_decode($disease->chemical) as $chemical)
+                    <li class="list-disc">{!! $chemical !!}</li>
+                    @empty
+                    <p>-</p>
+                    @endforelse
+                  </ul>
+                  @else
+                  <p>{!! $disease->chemical !!}</p>
+                  @endif
+                </td>
+                <td>
+                  @if (is_array(json_decode($disease->active_materials)))
+                  <ul class="list-inside">
+                    @forelse (json_decode($disease->active_materials) as $active_material)
+                    <li class="list-disc">{!! $active_material !!}</li>
+                    @empty
+                    <p>-</p>
+                    @endforelse
+                  </ul>
+                  @else
+                  <p>{!! $disease->active_materials !!}</p>
+                  @endif
+                </td>
                 <td>
                   <div class="flex flex-row space-x-2">
                     <a href="{{ route('disease.show', $disease->id) }}" title="Lihat Penyakit" class="text-sm text-warning">

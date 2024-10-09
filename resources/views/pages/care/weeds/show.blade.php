@@ -2,12 +2,12 @@
   @push('styles')
   <style>
     .gemini-header {
-      color: #333;
+      font-weight: bold;
       padding-bottom: 5px;
     }
 
     .gemini-subhead {
-      color: #666;
+      font-weight: bold;
       margin-top: 15px;
     }
 

@@ -30,7 +30,6 @@ class StoreWeedsRequest extends FormRequest
             'klasifikasi_berdasarkan_cara_kerja' => 'required|string|max:255',
             'golongan_senyawa_kimia' => 'required|string',
             'bahan_aktif' => 'required|string|max:255',
-            'nama_obat' => 'required|string|max:255',
         ];
     }
 }

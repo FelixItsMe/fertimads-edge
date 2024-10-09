@@ -35,7 +35,7 @@ class WeedsController extends Controller
     public function store(StoreWeedsRequest $request)
     {
         // Access the validated data
-        $validatedData = $request->safe()->except('foto');
+        $validatedData = $request->safe()->except('foto', 'nama_obat') + ['nama_obat' => '-'];
 
         if ($request->hasFile('foto')) {
             $filePath = $this->imageService->image_intervention($request->file('foto'), 'fertimads/images/weeds/', 1/1);
