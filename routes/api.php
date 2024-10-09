@@ -38,6 +38,7 @@ Route::prefix('mobile/v1')->group(function(){
 
         Route::get('get-gardens-list-land/{land}', [App\Http\Controllers\Api\v1\GardenController::class, 'getListGardensFromLands']);
         Route::get('garden/{garden}/detail', [App\Http\Controllers\Api\v1\GardenController::class, 'detailGarden']);
+        Route::get('garden/{garden}/portable-sms-telemetry', [App\Http\Controllers\Api\v1\Management\PortableSmsTelemetryController::class, 'index']);
         Route::get('garden/{garden}/list-telemetry', [App\Http\Controllers\Api\v1\GardenController::class, 'gardenListTelemetries']);
         Route::get('garden/{garden}/latest-telemetry', [App\Http\Controllers\Api\v1\GardenController::class, 'gardenLatestTelemetry']);
         Route::get('garden/{garden}/calendar-schedule/year/{year}/month/{month}', [App\Http\Controllers\Api\v1\ScheduleController::class, 'gardenSchedulesInMonth']);
