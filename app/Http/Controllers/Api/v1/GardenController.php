@@ -51,6 +51,7 @@ class GardenController extends Controller
 
             $currentTargetVolume += $fertilizerSchedule->total_volume;
         }
+
         return response()->json([
             'message' => 'Detail Garden',
             'garden' => $garden,
