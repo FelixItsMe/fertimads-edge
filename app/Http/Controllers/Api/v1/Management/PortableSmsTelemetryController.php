@@ -17,7 +17,7 @@ class PortableSmsTelemetryController extends Controller
                 $query->where('garden_id', $garden->id);
             })
             ->latest('created_at')
-            ->paginate(1);
+            ->paginate(15);
 
         return response()
             ->json([
