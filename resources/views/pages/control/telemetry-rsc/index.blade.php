@@ -8,9 +8,22 @@
       z-index: 0;
     }
 
-    #garden-detail-modal,
-    #wether-modal {
-      transform-origin: top right;
+    .modal-header {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .modal-body {
+      margin-bottom: 10px;
+    }
+
+    .modal-footer {
+      text-align: right;
+    }
+
+    .modal-footer button {
+      margin-left: 5px;
     }
   </style>
   @endpush

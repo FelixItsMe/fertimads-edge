@@ -87,11 +87,6 @@
               <x-input-error :messages="$errors->get('pestisida')" class="mt-2" />
             </div>
             <div class="w-full mt-5">
-              <label for="works_category" class="block">Kategori Kerja</label>
-              <x-text-input class="w-full" name="works_category" id="works_category"></x-text-input>
-              <x-input-error :messages="$errors->get('works_category')" class="mt-2" />
-            </div>
-            <div class="w-full mt-5">
               <label for="chemical" class="block">Bahan Kimia</label>
               <x-text-input type="hidden" class="w-full h-full block" name="chemical" id="chemical"></x-text-input>
               <div id="chemical-editor"></div>
