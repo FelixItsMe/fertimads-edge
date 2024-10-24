@@ -5,6 +5,7 @@
   <style>
     #map {
       height: 800px;
+      font-family: 'Figtree', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
 
     .modal-header {
@@ -232,7 +233,7 @@
       const div = L.DomUtil.create('div', 'leaflet-control');
 
       div.innerHTML = `
-                 <div class="inline-block overflow-hidden text-left align-bottom bg-white rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full hidden ml-5" id="garden-detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                  <div class="inline-block overflow-hidden text-left align-bottom bg-white rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full hidden ml-5" id="garden-detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
                     <div class="px-2 pt-2 pb-2 bg-white sm:p-3 sm:pb-4 max-h-48 md:max-h-96 overflow-y-scroll">
                       <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:text-left">
@@ -930,22 +931,6 @@
 
       return dayDiff - 1;
     }
-
-    function adjustScale() {
-      const zoomLevel = window.devicePixelRatio;
-      const gardenCard = document.querySelector('#garden-detail-modal');
-      // const weatherCard = document.querySelector('#wether-modal');
-
-      // Adjust the scale of the element based on the zoom level
-      if (gardenCard) {
-        gardenCard.style.transform = 'scale(' + (1 / zoomLevel) + ')';
-      }
-      // weatherCard.style.transform = 'scale(' + (1 / zoomLevel) + ')';
-
-      map.invalidateSize();
-    }
-
-    window.addEventListener('resize', adjustScale);
 
     window.onload = () => {
       console.log('Hello world');

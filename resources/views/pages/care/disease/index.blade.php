@@ -47,8 +47,8 @@
               @forelse ($diseases as $disease)
               <tr>
                 <td>{{ $disease->created_at->format('d M Y H:i:s') }}</td>
-                <td>{{ $disease->name }}</td>
-                <td>{{ $disease->category }}</td>
+                <td>{{ json_decode($disease->name) }}</td>
+                <td>{{ json_decode($disease->category) }}</td>
                 <td>
                   @if (is_array(json_decode($disease->pestisida)))
                   <ul class="list-inside">
