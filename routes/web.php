@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
             Route::get('garden/export/excel', [\App\Http\Controllers\v1\GardenController::class, 'exportExcel'])->name('garden.export-excel');
 
             Route::get('sms-garden/{smsGarden}', [SmsGardenController::class, 'show'])->name('sms-garden.show');
+            Route::get('sms-garden/{smsGarden}/export/excel', [SmsGardenController::class, 'exportExcel'])->name('sms-garden.export-excel');
 
             Route::resource('commodity', \App\Http\Controllers\v1\CommodityController::class);
             Route::get('commodity/export/excel', [\App\Http\Controllers\v1\CommodityController::class, 'exportExcel'])->name('commodity.export-excel');
