@@ -66,7 +66,7 @@ class PortableDeviceController extends Controller
 
         return redirect()
             ->route('portable-device.index')
-            ->with('portable-success-success', 'Berhasil disimpan!');
+            ->with('portable-device-success', 'Berhasil disimpan!');
     }
 
     /**
@@ -108,7 +108,7 @@ class PortableDeviceController extends Controller
         );
 
         return redirect()
-            ->back()
+            ->route('portable-device.index')
             ->with('portable-device-success', 'Berhasil disimpan!');
     }
 

@@ -122,7 +122,7 @@ class GardenController extends Controller
         $smsGardens = SmsGarden::query()
             ->with('portableDevice:id,series')
             ->where('garden_id', $garden->id)
-            ->orderByDesc('created_at')
+            ->latest('created_at')
             ->paginate(5);
 
         return view('pages.garden.show', compact('garden', 'smsGardens'));
