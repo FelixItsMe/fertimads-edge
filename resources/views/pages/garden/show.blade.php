@@ -79,6 +79,9 @@
                 </div>
                 <div class="w-full col-span-4">
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-4">
+                            <h1 class="text-lg font-semibold">Data SMS Portable</h1>
+                        </div>
                         <div class="overflow-x-scroll">
                             <table class="w-full align-middle border-slate-400 table mb-0">
                                 <thead>
