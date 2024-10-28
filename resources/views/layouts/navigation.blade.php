@@ -2,9 +2,11 @@
   <!-- Primary Navigation Menu -->
   <div class="md:max-w-7x xl:max-w-full mx-auto px-4 md:px-6 lg:px-8">
     <div class="flex justify-between h-16">
-      <div class="flex py-2">
-        <img src="{{ asset('assets/logos/Logo_IPB_University_Horizontal.png') }}" alt="" srcset=""
-          class="h-full object-cover" />
+      <div class="flex py-2 md:space-x-5 md:items-center">
+        <button id="toggle-sidebar" class="md:block hidden">
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+        <img src="{{ asset('assets/logos/Logo_IPB_University_Horizontal.png') }}" alt="" srcset="" class="h-full object-cover" />
       </div>
 
       <!-- Settings Dropdown -->

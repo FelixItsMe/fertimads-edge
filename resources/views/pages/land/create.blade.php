@@ -2,9 +2,10 @@
   @push('styles')
   <link rel="stylesheet" href="{{ asset('leaflet/leaflet.css') }}">
   <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
+
   <style>
     #map {
-      height: 50vh;
+      height: 80vh;
       z-index: 50;
     }
   </style>
