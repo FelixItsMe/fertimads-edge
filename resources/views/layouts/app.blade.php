@@ -130,7 +130,7 @@
             'false': 'View Fullscreen',
             'true': 'Exit Fullscreen'
           },
-          position: "bottomleft"
+          position: "topleft"
         }));
       }
     }

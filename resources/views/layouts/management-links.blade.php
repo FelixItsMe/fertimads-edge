@@ -10,6 +10,17 @@
     </a>
 </li>
 <li class="menu-item">
+    <a href="{{ route('map-object.index') }}" class="menu-link">
+        <i @class([
+            'menu-icon',
+            'active-icon' => request()->routeIs('map-object.*'),
+            'fa-solid',
+            'fa-location-dot',
+            ]) ></i>
+        <div class="text-slate-400">Manajemen Peta</div>
+    </a>
+</li>
+<li class="menu-item">
     <a href="{{ route('land.index') }}" class="menu-link">
         <i @class([
             'menu-icon',
