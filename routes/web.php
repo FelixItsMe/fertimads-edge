@@ -11,6 +11,7 @@ use App\Http\Controllers\v1\Care\PestController;
 use App\Http\Controllers\v1\Care\RSCDataController;
 use App\Http\Controllers\v1\Care\WeedsController;
 use App\Http\Controllers\v1\Management\{
+    MapObjectController,
     PortableDeviceController,
     SmsGardenController,
 };
@@ -61,6 +62,7 @@ Route::middleware('auth')->group(function () {
             Route::get('land/export/excel', [\App\Http\Controllers\v1\LandController::class, 'exportExcel'])->name('land.export-excel');
 
             Route::resource('garden', \App\Http\Controllers\v1\GardenController::class);
+            Route::resource('map-object', \App\Http\Controllers\v1\Management\MapObjectController::class);
             Route::get('garden/export/excel', [\App\Http\Controllers\v1\GardenController::class, 'exportExcel'])->name('garden.export-excel');
 
             Route::get('sms-garden/{smsGarden}', [SmsGardenController::class, 'show'])->name('sms-garden.show');
@@ -171,6 +173,7 @@ Route::middleware('auth')->group(function () {
         Route::get('activity-schedule', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'index'])->name('activity-schedule.index');
         Route::get('activity-schedule/year/{year}/month/{month}', [ActivityScheduleController::class, 'scheduleInMonth'])->name('activity-schedule.schedule-in-month');
         Route::get('activity-schedule/date/{date}', [ActivityScheduleController::class, 'detailScheduleDay'])->name('activity-schedule.date');
+        Route::get('map-object-geojson', [MapObjectController::class, 'geojson'])->name('map-object.geojson');
     });
 });
 

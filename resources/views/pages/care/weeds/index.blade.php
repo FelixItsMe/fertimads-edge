@@ -19,8 +19,8 @@
         </x-card-info>
       </div>
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 flex justify-between">
-          <h1 class="text-3xl font-extrabold">Tabel Laporan Gulma</h1>
+        <div class="p-6 md:flex md:justify-between">
+          <h1 class="text-3xl font-extrabold mb-3 md:mb-3">Tabel Laporan Gulma</h1>
           <div class="flex space-x-3">
             <a href="{{ route('weeds.create') }}" class="bg-indigo-500 text-white py-1.5 px-5 rounded-md">Tambah Data</a>
             @if ($weeds->total() > 0)

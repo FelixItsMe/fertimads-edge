@@ -2,10 +2,9 @@
   @push('styles')
   <link rel="stylesheet" href="{{ asset('leaflet/leaflet.css') }}">
   <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
-
   <style>
     #map {
-      height: 80vh;
+      height: 70vh;
       z-index: 50;
     }
   </style>
@@ -14,71 +13,58 @@
     <h2 class="leading-tight">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="{{ route('land.index') }}">Manajemen Lahan</a>
+          <a href="{{ route('garden.index') }}">Manajemen Objek Peta</a>
         </li>
-        <li class="breadcrumb-item breadcrumb-active">{{ __('Tambah Lahan Baru') }}</li>
+        <li class="breadcrumb-item breadcrumb-active">{{ __('Tambah Objek Baru') }}</li>
       </ol>
     </h2>
   </x-slot>
 
   <div class="py-12">
     <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
-      <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <form action="{{ route('land.store') }}" method="POST">
-          @csrf
-          <div class="p-6 flex flex-col gap-2">
-            <div class="flex flex-col lg:flex-row max-sm:gap-2 lg:space-x-2">
-              <div class="w-full lg:w-1/2 flex-shrink">
-                <x-input-label for="name">{{ __('Nama Lahan') }}</x-input-label>
-                <x-text-input id="name" class="block mt-1 w-full rounded-xl" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-                <x-input-error :messages="$errors->get('name')" class="mt-2" />
-              </div>
-              <div class="w-full lg:w-1/2 flex-shrink">
-                <x-input-label for="area">{{ __('Luas Lahan') }} (m²)</x-input-label>
-                <x-text-input id="area" class="block mt-1 w-full rounded-xl" type="number" min="0" step=".01" name="area" :value="old('area')" required autofocus autocomplete="area" />
-                <x-input-error :messages="$errors->get('area')" class="mt-2" />
-              </div>
+      @if ($errors->has('lat') || $errors->has('lng'))
+      <div class="bg-red-500 text-white w-full p-6 sm:rounded-lg flex items-center">
+        <i class="fa-solid fa-circle-warning text-3xl mr-3"></i> Posisi marker harus diisi!
+      </div>
+      @endif
+      <form action="{{ route('map-object.store') }}" method="POST">
+        @csrf
+        <div class="w-full mb-3">
+          <div class="p-6 bg-white overflow-hidden shadow-sm sm:rounded-lg flex gap-x-4 w-full">
+            <div class="w-3/12">
+              <x-input-label for="type">{{ __('Pilih Tipe') }}</x-input-label>
+              <x-select-input id="type" class="block mt-1 w-full rounded-xl" name="type">
+                <option value="">Pilih Tipe</option>
+                @foreach ($objectTypes as $id => $type)
+                <option value="{{ $id }}">{{ $type }}</option>
+                @endforeach
+              </x-select-input>
+              <x-input-error :messages="$errors->get('type')" class="mt-2" />
             </div>
-            <div class="flex flex-col">
-              <div class="w-full">
-                <x-input-label for="address">{{ __('Alamat') }}</x-input-label>
-                <x-textarea id="address" class="block mt-1 w-full rounded-xl" type="number" min="0" step=".01" name="address" required autofocus autocomplete="address">{{ old('address') }}</x-textarea>
-                <x-input-error :messages="$errors->get('address')" class="mt-2" />
-              </div>
+            <div class="w-3/12">
+              <x-input-label for="name">{{ __('Nama Objek') }}</x-input-label>
+              <x-text-input id="name" class="block mt-1 w-full rounded-xl" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+              <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
-            <div class="flex flex-col lg:flex-row max-sm:gap-2 lg:space-x-2">
-              <div class="w-full lg:w-1/3 flex-shrink">
-                <x-input-label for="latitude">{{ __('Latitude') }}</x-input-label>
-                <x-text-input id="latitude" class="block mt-1 w-full rounded-xl" type="text" name="latitude" :value="old('latitude')" required autofocus autocomplete="latitude" />
-                <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
-              </div>
-              <div class="w-full lg:w-1/3 flex-shrink">
-                <x-input-label for="longitude">{{ __('Longitude') }}</x-input-label>
-                <x-text-input id="longitude" class="block mt-1 w-full rounded-xl" type="text" name="longitude" :value="old('longitude')" required autofocus autocomplete="longitude" />
-                <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
-              </div>
-              <div class="w-full lg:w-1/3 flex-shrink">
-                <x-input-label for="altitude">{{ __('Altitude') }} (mdpl)</x-input-label>
-                <x-text-input id="altitude" class="block mt-1 w-full rounded-xl" type="number" step=".01" name="altitude" :value="old('altitude')" required autofocus autocomplete="altitude" />
-                <x-input-error :messages="$errors->get('altitude')" class="mt-2" />
-              </div>
+            <div class="w-5/12">
+              <x-input-label for="description">{{ __('Deskripsi') }}</x-input-label>
+              <x-text-input id="description" class="block mt-1 w-full rounded-xl" type="text" name="description" :value="old('description')" required autofocus autocomplete="description" />
+              <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
-            <div class="flex flex-col">
-              <div class="w-full">
-                <div id="map" class="rounded-md"></div>
-                <input type="hidden" name="polygon" id="polygon">
-              </div>
-            </div>
-            <div class="flex flex-col">
-              <div class="w-full flex justify-end">
-                <x-primary-button>
-                  {{ __('Simpan') }}
-                </x-primary-button>
-              </div>
+            <div class="w-1/12 flex items-end pb-1">
+              <x-primary-button>
+                {{ __('Simpan') }}
+              </x-primary-button>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+        <div class="w-full sm:h-3/4">
+          <div id="map" class="rounded-md"></div>
+          <input type="hidden" name="polygon" id="polygon">
+          <x-text-input id="lat" class="block mt-1 w-full rounded-xl" type="hidden" name="lat" :value="old('lat')" required autofocus autocomplete="lat" />
+          <x-text-input id="lng" class="block mt-1 w-full rounded-xl" type="hidden" name="lng" :value="old('lng')" required autofocus autocomplete="lng" />
+        </div>
+      </form>
     </div>
   </div>
 
@@ -86,6 +72,7 @@
   <script src="{{ asset('leaflet/leaflet.js') }}"></script>
   <script src="{{ asset('js/extend.js') }}"></script>
   <script src="{{ asset('js/map.js') }}"></script>
+  <script src="{{ asset('js/api.js') }}"></script>
   <script>
     let stateData = {
       polygon: null,
@@ -95,6 +82,11 @@
     }
     let currentMarkerLayer = null
     let currentPolygonLayer = null
+    let currentLand = {
+      polygonLayer: null,
+      markerLayer: null,
+    }
+    let currentGroupGarden = L.layerGroup()
     let baseMapOptions = {
       'Open Street Map': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
@@ -132,12 +124,7 @@
       position: 'topright',
       draw: {
         polyline: false,
-        polygon: {
-          allowIntersection: false, // Restricts shapes to simple polygons
-          drawError: {
-            message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
-          },
-        },
+        polygon: false,
         circle: false, // Turns off this drawing tool
         circlemarker: false, // Turns off this drawing tool
         rectangle: false,
@@ -190,26 +177,13 @@
         layer = e.layer;
 
       switch (type) {
-        case 'polygon':
-          if (currentPolygonLayer) {
-            editableLayers.removeLayer(currentPolygonLayer);
-          }
-
-          editableLayers.removeLayer(layer);
-          stateData.polygon = layer.getLatLngs()[0];
-
-          fillPolygon(JSON.stringify(stateData.polygon.map((val, _) => [val.lat, val.lng])), 'polygon')
-          stateData.layerPolygon = layer
-          currentPolygonLayer = layer
-          editableLayers.addLayer(currentPolygonLayer);
-          break;
         case 'marker':
           if (currentMarkerLayer) {
             editableLayers.removeLayer(currentMarkerLayer);
           }
           stateData.latitude = layer.getLatLng().lat
           stateData.longitude = layer.getLatLng().lng
-          fillPosition(layer.getLatLng().lat, layer.getLatLng().lng, 'latitude', 'longitude')
+          fillPosition(layer.getLatLng().lat, layer.getLatLng().lng, 'lat', 'lng')
           currentMarkerLayer = layer
           editableLayers.addLayer(currentMarkerLayer);
           break
@@ -237,13 +211,7 @@
         if (layer instanceof L.Marker) {
           stateData.latitude = layer.getLatLng().lat
           stateData.longitude = layer.getLatLng().lng
-          fillPosition(layer.getLatLng().lat, layer.getLatLng().lng, 'latitude', 'longitude')
-        }
-        if (layer instanceof L.Polygon) {
-          stateData.polygon = layer.getLatLngs()[0];
-
-          fillPolygon(JSON.stringify(stateData.polygon.map((val, _) => [val.lat, val.lng])), 'polygon')
-          stateData.layerPolygon = layer
+          fillPosition(layer.getLatLng().lat, layer.getLatLng().lng, 'lat', 'lng')
         }
 
         let content = getPopupContent(layer);
@@ -257,6 +225,56 @@
       stateData.polygon = null
       stateData.layerPolygon = null
     });
+
+    const getLand = async id => {
+      const data = await fetchData(
+        "{{ route('extra.land.get-land-polygon', 'ID') }}".replace('ID', id), {
+          method: "GET",
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
+            'Accept': 'application/json',
+          },
+        }
+      );
+
+      return data?.land
+    }
+
+    const initLandPolygon = async (id, map) => {
+      const land = await getLand(id)
+
+      if (currentLand.polygonLayer) {
+        currentLand.polygonLayer.remove()
+      }
+
+      if (!land) {
+        return false
+      }
+
+      currentLand.polygonLayer = initPolygon(map, land.polygon, {
+        dashArray: '10, 10',
+        dashOffset: '20',
+        color: '#bdbdbd',
+      })
+
+      map.fitBounds(currentLand.polygonLayer.getBounds());
+
+      currentGroupGarden.clearLayers()
+
+      land.gardens.forEach(garden => {
+        currentGroupGarden.addLayer(
+          L.polygon(garden.polygon, {
+            dashArray: '10, 10',
+            dashOffset: '20',
+            color: '#' + garden.color + "55",
+          }).bindPopup(garden.name)
+        )
+      })
+
+      currentGroupGarden.addTo(map)
+
+      return true
+    }
   </script>
   @endpush
 </x-app-layout>

@@ -23,6 +23,8 @@
 
     <!-- Page CSS -->
     @stack('styles')
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'
+        rel='stylesheet' />
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -87,6 +89,7 @@
         integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @stack('scripts')
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
     <script>
         const showLoading = () => {
             document.getElementById('loading-spinner').classList.remove('hidden');
@@ -97,12 +100,50 @@
             document.getElementById('layout-wrapper').classList.remove('hidden');
         }
 
+        const initSidebar = () => {
+            const toggleSidebar = document.getElementById("toggle-sidebar")
+            const sidebarMain = document.getElementById("sidebar-main")
+            const mainContent = document.getElementById("main-content")
+            let isSidebarOpen = true
+
+            toggleSidebar.addEventListener("click", function(e) {
+                mainContent.classList.toggle("lg:pl-64")
+                if (isSidebarOpen) {
+                    sidebarMain.classList.add("sidebar-close")
+                    sidebarMain.classList.remove("sidebar-open")
+                    isSidebarOpen = false
+                } else {
+                    sidebarMain.classList.add("sidebar-open")
+                    sidebarMain.classList.remove("sidebar-close")
+                    isSidebarOpen = true
+                }
+
+                setTimeout(() => {
+                    map.invalidateSize(true)
+                }, 500)
+            })
+        }
+
+        const initMapPlugin = () => {
+            if (map) {
+                map.addControl(new L.Control.Fullscreen({
+                    title: {
+                        'false': 'View Fullscreen',
+                        'true': 'Exit Fullscreen'
+                    },
+                    position: "topleft"
+                }));
+            }
+        }
+
         // Show the loading spinner when the page starts loading
         showLoading()
 
         // Hide the loading spinner when the page has fully loaded
         window.addEventListener('load', function() {
             hideLoading()
+            initSidebar()
+            initMapPlugin()
         });
     </script>
 </body>
