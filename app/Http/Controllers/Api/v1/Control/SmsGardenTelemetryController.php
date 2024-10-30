@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api\v1\Control;
 
+use App\Enums\DeviceTypeEnums;
 use App\Http\Controllers\Controller;
+use App\Models\Device;
 use App\Models\Garden;
 use App\Models\PortableDevice;
 use App\Models\SmsGarden;
 use App\Models\SmsTelemetry;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -30,14 +33,17 @@ class SmsGardenTelemetryController extends Controller
             'samples.*.soil_moisture' => ['required', 'numeric'],
         ]);
 
-        $device = PortableDevice::query()
+        $device = Device::query()
             ->where('series', $validated['device_id'])
+            ->whereHas('deviceType', function(Builder $query){
+                $query->where('type', DeviceTypeEnums::PORTABLE);
+            })
             ->firstOrFail();
 
         $now = now();
 
         $sms_garden = SmsGarden::create([
-            'portable_device_id' => $device->id,
+            'device_id' => $device->id,
             'garden_id' => $validated['garden_id'],
         ]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Enums\DeviceTypeEnums;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Device\StoreDeviceRequest;
 use App\Http\Requests\Device\UpdateDeviceRequest;
@@ -10,18 +11,18 @@ use App\Models\DeviceSelenoid;
 use App\Models\DeviceType;
 use App\Services\ImageService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class DeviceController extends Controller
 {
     public function __construct(
         private ImageService $imageService,
-    )
-    {
-    }
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -30,10 +31,16 @@ class DeviceController extends Controller
     {
         $devices = Device::query()
             ->with('deviceType:id,version,name,image')
-            ->orderBy('id')
+            ->when(request()->query('device_type_id'), function (Builder $query, $type) {
+                $query->where('device_type_id', $type);
+            })
+            ->oldest('id')
             ->paginate(10);
 
-        return view('pages.device.index', compact('devices'));
+        $deviceTypes = DeviceType::query()
+            ->get(['name', 'id', 'type']);
+
+        return view('pages.device.index', compact('devices', 'deviceTypes'));
     }
 
     /**
@@ -41,10 +48,21 @@ class DeviceController extends Controller
      */
     public function create()
     {
-        $deviceTypes = DeviceType::query()
-            ->pluck('name', 'id');
+        $deviceType = DeviceType::query()
+            ->findOrFail(request()->query('type'));
 
-        return view('pages.device.create', compact('deviceTypes'));
+        switch ($deviceType->type->value) {
+            case DeviceTypeEnums::HEAD_UNIT->value:
+                return view('pages.device.create-headunit');
+                break;
+            case DeviceTypeEnums::PORTABLE->value:
+                return view('pages.device.create-portable');
+                break;
+
+            default:
+                return back()->with('failed', 'Tipe tidak diketahui!');
+                break;
+        }
     }
 
     /**
@@ -54,33 +72,48 @@ class DeviceController extends Controller
     {
         $image = null;
         if ($request->safe()->image) {
-            $image = $this->imageService->image_intervention($request->safe()->image, 'fertimads/images/device/', 1/1);
+            $image = $this->imageService->image_intervention($request->safe()->image, 'fertimads/images/device/', 1 / 1);
+        }
+
+        $deviceType = DeviceType::query()
+            ->findOrFail($request->safe()->device_type_id);
+
+        $pumps = (object) [
+            'main' => 0,
+            'water' => 0,
+            'fertilizer_n' => 0,
+            'fertilizer_p' => 0,
+            'fertilizer_k' => 0,
+        ];
+
+        $is_headunit = true;
+
+        if ($deviceType->type->value == DeviceTypeEnums::PORTABLE->value) {
+            $pumps = (object) [];
+
+            $is_headunit = false;
         }
 
         $device = Device::create(
             $request->safe()->except('image') + [
                 'image' => $image,
-                'pumps' => (object) [
-                    'main' => 0,
-                    'water' => 0,
-                    'fertilizer_n' => 0,
-                    'fertilizer_p' => 0,
-                    'fertilizer_k' => 0,
-                ]
+                'pumps' => $pumps,
             ]
         );
 
-        $now = now();
-        $selenoids = [];
-        for ($i=1; $i <= 4; $i++) {
-            $selenoids[] = [
-                'device_id'     => $device->id,
-                'selenoid'      => $i,
-                'created_at'    => $now,
-            ];
-        }
+        if ($is_headunit) {
+            $now = now();
+            $selenoids = [];
+            for ($i = 1; $i <= 4; $i++) {
+                $selenoids[] = [
+                    'device_id'     => $device->id,
+                    'selenoid'      => $i,
+                    'created_at'    => $now,
+                ];
+            }
 
-        DeviceSelenoid::insert($selenoids);
+            DeviceSelenoid::insert($selenoids);
+        }
 
         activity()
             ->performedOn($device)
@@ -105,10 +138,8 @@ class DeviceController extends Controller
      */
     public function edit(Device $device): View
     {
-        $deviceTypes = DeviceType::query()
-            ->pluck('name', 'id');
-
-        return view('pages.device.edit', compact('deviceTypes', 'device'));
+        $device->load('deviceType');
+        return view('pages.device.edit', compact('device'));
     }
 
     /**
@@ -116,18 +147,19 @@ class DeviceController extends Controller
      */
     public function update(UpdateDeviceRequest $request, Device $device): RedirectResponse
     {
-        $image = $device->image;
+        $update = [];
 
         if ($request->safe()->image) {
-            $image = $this->imageService->image_intervention($request->safe()->image, 'fertimads/images/device/', 1/1);
+            $image = $this->imageService->image_intervention($request->safe()->image, 'fertimads/images/device/', 1 / 1);
 
             $this->imageService->deleteImage($device->image);
+            $update = [
+                'image' => $image,
+            ];
         }
 
         $device->update(
-            $request->safe()->except('image') + [
-                'image' => $image
-            ]
+            $request->safe()->except('image') + $update
         );
 
         activity()

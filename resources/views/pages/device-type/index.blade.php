@@ -19,9 +19,25 @@
                 </x-card-info>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 flex justify-between">
-                    <h1 class="text-3xl font-extrabold">Daftar Tipe Perangkat IoT</h1>
-                    <a href="{{ route('device-type.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Tipe Perangkat IoT</a>
+                <div class="p-6">
+                    <div class="flex justify-between">
+                      <div>
+                          <h1 class="text-3xl font-extrabold">Daftar Tipe Perangkat IoT</h1>
+                      </div>
+                      <a href="{{ route('device-type.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Tipe Perangkat IoT</a>
+                    </div>
+                    <div class="mt-4">
+                      <form action="" method="get" onchange="this.submit()">
+                        <div class="grid grid-cols-1 md:grid-cols-3">
+                            <x-select-input id="type" class="block mt-1 w-full rounded-xl" name="type">
+                                <option value="">Semua</option>
+                                @foreach (\App\Enums\DeviceTypeEnums::cases() as $deviceTypeEnum)
+                                    <option value="{{ $deviceTypeEnum->value }}" @selected($deviceTypeEnum->value == request()->query('type'))>{{ $deviceTypeEnum->getLabelText() }}</option>
+                                @endforeach
+                            </x-select-input>
+                        </div>
+                      </form>
+                    </div>
                 </div>
             </div>
             <div class="grid grid-flow-row grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -36,7 +52,7 @@
                                 <span class="text-base mb-2">{{ $deviceType->name }}</span>
                             </div>
                             <div class="mt-2 flex flex-row justify-between items-center">
-                                <span>v{{ $deviceType->version }}</span>
+                                <span>{{ $deviceType->type->getLabelText() }} v{{ $deviceType->version }}</span>
                                 <div class="flex flex-row-reverse gap-2">
                                     <a href="javascript:void(0);" onclick="deleteData({{ $deviceType->id }})" title="{{ __('Hapus Tipe Perangkat IoT') }}" class="text-xs text-danger">
                                         <i class="fa-solid fa-trash-can pointer-events-none"></i>

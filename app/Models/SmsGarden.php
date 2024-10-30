@@ -16,16 +16,16 @@ class SmsGarden extends Model
      *
      * @var array
      */
-    protected $fillable = ['portable_device_id', 'garden_id'];
+    protected $fillable = ['device_id', 'garden_id'];
 
     /**
-     * Get the PortableDevice that owns the SmsGarden
+     * Get the Device that owns the SmsGarden
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function portableDevice(): BelongsTo
+    public function device(): BelongsTo
     {
-        return $this->belongsTo(PortableDevice::class);
+        return $this->belongsTo(Device::class);
     }
 
     /**

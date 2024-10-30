@@ -75,7 +75,7 @@
         <div class="text-slate-400">Manajemen Perangkat IoT</div>
     </a>
 </li>
-<li class="menu-item">
+{{-- <li class="menu-item">
     <a href="{{ route('portable-device.index') }}" class="menu-link">
         <i @class([
             'menu-icon',
@@ -85,7 +85,7 @@
             ]) ></i>
         <div class="text-slate-400">Manajemen Perangkat Portable SMS</div>
     </a>
-</li>
+</li> --}}
 <li class="menu-item">
     <a href="{{ route('aws-device.index') }}" class="menu-link">
         <i @class([

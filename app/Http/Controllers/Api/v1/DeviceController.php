@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Enums\DeviceTypeEnums;
 use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\DeviceTelemetry;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -14,6 +16,9 @@ class DeviceController extends Controller
         $devices = Device::query()
             ->select(['id', 'device_type_id', 'series', 'image'])
             ->with('deviceType:id,name,version,image')
+            ->whereHas('deviceType', function(Builder $query){
+                $query->where('type', DeviceTypeEnums::HEAD_UNIT);
+            })
             ->get();
 
         return response()->json([

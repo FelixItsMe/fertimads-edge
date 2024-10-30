@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Enums\DeviceTypeEnums;
 use App\Exports\GardenExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Garden\StoreGardenRequest;
@@ -80,6 +81,9 @@ class GardenController extends Controller
                     $query->whereNull('garden_id');
                 }
             ])
+            ->whereHas('deviceType', function(Builder $query){
+                $query->where('type', DeviceTypeEnums::HEAD_UNIT);
+            })
             ->having('device_selenoids_count', '>', 0)
             ->pluck('series', 'id');
 
@@ -120,7 +124,7 @@ class GardenController extends Controller
         ]);
 
         $smsGardens = SmsGarden::query()
-            ->with('portableDevice:id,series')
+            ->with('device:id,series')
             ->where('garden_id', $garden->id)
             ->latest('created_at')
             ->paginate(5);
@@ -144,6 +148,9 @@ class GardenController extends Controller
                         ->orWhereNull('garden_id');
                 }
             ])
+            ->whereHas('deviceType', function(Builder $query){
+                $query->where('type', DeviceTypeEnums::HEAD_UNIT);
+            })
             ->having('device_selenoids_count', '>', 0)
             ->pluck('series', 'id');
         $garden->load('deviceSelenoid:id,garden_id,device_id');
