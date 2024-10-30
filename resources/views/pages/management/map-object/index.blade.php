@@ -61,11 +61,7 @@
                 <td class="text-center">{{ $object->lat }},&nbsp;{{ $object->lng }}</td>
                 <td class="text-center">
                   <div class="flex flex-row space-x-2">
-                    <a href="{{ route('garden.show', $object->id) }}" title="Detail Kebun"
-                      class="text-sm text-info">
-                      <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                    <a href="{{ route('garden.edit', $object->id) }}" title="Edit Kebun"
+                    <a href="{{ route('map-object.edit', $object->id) }}" title="Edit Kebun"
                       class="text-sm text-warning">
                       <i class="fa-solid fa-pen"></i>
                     </a>
@@ -104,7 +100,7 @@
       }
 
       const data = await fetchData(
-        "{{ route('garden.destroy', 'ID') }}".replace('ID', id), {
+        "{{ route('map-object.destroy', 'ID') }}".replace('ID', id), {
           method: "DELETE",
           headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
