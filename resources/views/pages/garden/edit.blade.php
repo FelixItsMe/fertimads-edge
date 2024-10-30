@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
   <style>
     #map {
-      height: 100vh;
+      height: 90vh;
       z-index: 50;
     }
   </style>
@@ -25,13 +25,30 @@
       <form action="{{ route('garden.update', $garden->id) }}" method="POST">
         @csrf
         @method('PUT')
-        <div class="flex flex-col sm:flex-row max-sm:gap-2 sm:space-x-2">
-          <div class="w-full sm:h-3/4">
+        <div class="grid grid-cols-1 gap-2">
+          <div class="w-full">
             <div id="map" class="rounded-md"></div>
             <input type="hidden" name="polygon" id="polygon" value="{{ json_encode($garden->polygon) }}">
           </div>
-          <div class="w-full sm:w-1/4">
+          <div class="w-full">
             <div class="p-6 bg-white overflow-hidden shadow-sm sm:rounded-lg flex flex-col gap-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <div class="w-full">
+                  <x-input-label for="latitude">{{ __('Latitude') }}</x-input-label>
+                  <x-text-input id="latitude" class="block mt-1 w-full rounded-xl" type="text" name="latitude" :value="$garden->latitude" required autofocus autocomplete="latitude" />
+                  <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
+                </div>
+                <div class="w-full">
+                  <x-input-label for="longitude">{{ __('Longitude') }}</x-input-label>
+                  <x-text-input id="longitude" class="block mt-1 w-full rounded-xl" type="text" name="longitude" :value="$garden->longitude" required autofocus autocomplete="longitude" />
+                  <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
+                </div>
+                <div class="w-full">
+                  <x-input-label for="altitude">{{ __('Altitude') }}&nbsp;(mdpl)</x-input-label>
+                  <x-text-input id="altitude" class="block mt-1 w-full rounded-xl" type="number" step=".01" name="altitude" :value="$garden->altitude" required autofocus autocomplete="altitude" />
+                  <x-input-error :messages="$errors->get('altitude')" class="mt-2" />
+                </div>
+              </div>
               <div class="w-full">
                 <x-input-label for="land_id">{{ __('Pilih Lahan') }}</x-input-label>
                 <x-select-input id="land_id" class="block mt-1 w-full rounded-xl" name="land_id">
@@ -73,34 +90,21 @@
                 <x-input-error :messages="$errors->get('device_id')" class="mt-2" />
               </div>
               <div class="w-full">
-                <x-input-label for="latitude">{{ __('Latitude') }}</x-input-label>
-                <x-text-input id="latitude" class="block mt-1 w-full rounded-xl" type="text" name="latitude" :value="$garden->latitude" required autofocus autocomplete="latitude" />
-                <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
-              </div>
-              <div class="w-full">
-                <x-input-label for="longitude">{{ __('Longitude') }}</x-input-label>
-                <x-text-input id="longitude" class="block mt-1 w-full rounded-xl" type="text" name="longitude" :value="$garden->longitude" required autofocus autocomplete="longitude" />
-                <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
-              </div>
-              <div class="w-full">
-                <x-input-label for="altitude">{{ __('Altitude') }}&nbsp;(mdpl)</x-input-label>
-                <x-text-input id="altitude" class="block mt-1 w-full rounded-xl" type="number" step=".01" name="altitude" :value="$garden->altitude" required autofocus autocomplete="altitude" />
-                <x-input-error :messages="$errors->get('altitude')" class="mt-2" />
-              </div>
-              <div class="w-full">
                 <x-input-label for="color">{{ __('Warna') }}</x-input-label>
                 <x-text-input id="color" class="block mt-1 w-full p-1" type="color" name="color" :value="'#' . $garden->color" required autofocus autocomplete="color" />
                 <x-input-error :messages="$errors->get('altitude')" class="mt-2" />
               </div>
-              <div class="w-full">
-                <x-input-label for="count_block">{{ __('Blok') }}</x-input-label>
-                <x-text-input id="count_block" class="count_block mt-1 w-full rounded-xl" type="number" step=".01" name="count_block" :value="$garden->count_block" required autofocus autocomplete="count_block" />
-                <x-input-error :messages="$errors->get('count_block')" class="mt-2" />
-              </div>
-              <div class="w-full">
-                <x-input-label for="population">{{ __('Populasi') }}</x-input-label>
-                <x-text-input id="population" class="population mt-1 w-full rounded-xl" type="number" step=".01" name="population" :value="$garden->population" required autofocus autocomplete="population" />
-                <x-input-error :messages="$errors->get('population')" class="mt-2" />
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div class="w-full">
+                  <x-input-label for="count_block">{{ __('Blok') }}</x-input-label>
+                  <x-text-input id="count_block" class="count_block mt-1 w-full rounded-xl" type="number" step=".01" name="count_block" :value="$garden->count_block" required autofocus autocomplete="count_block" />
+                  <x-input-error :messages="$errors->get('count_block')" class="mt-2" />
+                </div>
+                <div class="w-full">
+                  <x-input-label for="population">{{ __('Populasi') }}</x-input-label>
+                  <x-text-input id="population" class="population mt-1 w-full rounded-xl" type="number" step=".01" name="population" :value="$garden->population" required autofocus autocomplete="population" />
+                  <x-input-error :messages="$errors->get('population')" class="mt-2" />
+                </div>
               </div>
               <div class="flex flex-col">
                 <div class="w-full flex justify-end">
