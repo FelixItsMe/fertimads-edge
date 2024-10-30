@@ -416,7 +416,25 @@
 
       const onEachFeature = (feature, layer) => {
         if (feature.properties && feature.properties.name) {
-          layer.bindPopup(feature.properties.name);
+          const popupContent = `
+            <h6 class="font-bold text-lg mb-3 font-sans">Informasi Marker</h6>
+            <div class="font-sans">
+                <div class="mb-2">
+                  <div class="font-bold">Nama</div>
+                  <div class="col-sm-8">${feature.properties.name}</div>
+                </div>
+                <div class="mb-2">
+                  <div class="font-bold">Tipe</div>
+                  <div class="col-sm-8">${feature.properties.type}</div>
+                </div>
+                <div class="mb-2">
+                  <div class="font-bold">Deskripsi</div>
+                  <div class="col-sm-8">${feature.properties.description}</div>
+                </div>
+            </div>
+          `
+
+          layer.bindPopup(popupContent);
         }
 
         if (feature.properties && feature.properties.icon) {

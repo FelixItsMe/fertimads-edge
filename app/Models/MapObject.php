@@ -6,6 +6,7 @@ use App\Enums\MapObjectType;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class MapObject extends Model
 {
@@ -14,6 +15,11 @@ class MapObject extends Model
     protected $guarded = [];
 
     public $appends = ['custom_icon'];
+
+    public function objectable(): MorphTo
+    {
+        return $this->morphTo('objectable');
+    }
 
     public function type(): Attribute
     {
