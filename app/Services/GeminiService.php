@@ -75,7 +75,7 @@ class GeminiService
                 ->create([
                     'symptoms' => json_encode($response->gejala),
                     'cause' => json_encode($response->penyebab),
-                    'name' => json_encode($response->nama_penyakit),
+                    'name' => $response->nama_penyakit,
                     'control' => json_encode($response->pengendalian),
                     'pestisida' => json_encode($response->jenis_pestisida),
                     'works_category' => json_encode($response->cara_kerja),
