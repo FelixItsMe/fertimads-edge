@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Api\v1\Control;
 
+use App\Enums\DeviceTypeEnums;
 use App\Http\Controllers\Controller;
+use App\Models\Device;
 use App\Models\PortableDevice;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -14,7 +17,10 @@ class PortableDeviceController extends Controller
             'device_id' => 'required|string|max:255',
         ]);
 
-        $portableDevice = PortableDevice::query()
+        $portableDevice = Device::query()
+            ->whereHas('deviceType', function(Builder $query){
+                $query->where('type', DeviceTypeEnums::PORTABLE);
+            })
             ->firstWhere('series', $request->device_id);
 
         if (!$portableDevice) {

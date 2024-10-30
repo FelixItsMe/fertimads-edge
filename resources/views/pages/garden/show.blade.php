@@ -97,7 +97,7 @@
                                     <tr>
                                       <td class="text-center">{{ ($smsGardens->currentPage() - 1) * $smsGardens->perPage() + $loop->iteration }}</td>
                                       <td class="text-center">{{ $smsGarden->created_at }}</td>
-                                      <td class="text-center">{{ $smsGarden->portableDevice->series }}</td>
+                                      <td class="text-center">{{ $smsGarden->device->series }}</td>
                                       <td>
                                         <div class="flex flex-row space-x-2 justify-center">
                                           <a href="{{ route('sms-garden.show', $smsGarden->id) }}" title="Detail Kebun"

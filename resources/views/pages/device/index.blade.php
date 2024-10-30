@@ -19,17 +19,38 @@
                 </x-card-info>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 flex justify-between">
-                    <h1 class="text-3xl font-extrabold">Daftar Perangkat IoT</h1>
-                    <a href="{{ route('device.create') }}" class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Tambah Perangkat IoT</a>
+                <div class="p-6">
+                    <div class="flex justify-between">
+                        <div>
+                            <h1 class="text-3xl font-extrabold">Daftar Perangkat IoT</h1>
+                        </div>
+                        <button x-on:click.prevent="$dispatch('open-modal', 'export-data')"
+                            class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">
+                          Tambah Perangkat IoT
+                        </button>
+                    </div>
+                    <div class="mt-4">
+                      <form action="" method="get" onchange="this.submit()">
+                        <div class="grid grid-cols-1 md:grid-cols-4">
+                            <x-select-input id="device_type_id" class="block mt-1 w-full rounded-xl" name="device_type_id">
+                                <option value="" data-type="">Semua</option>
+                                @foreach ($deviceTypes as $deviceType)
+                                    <option value="{{ $deviceType->id }}" data-type="{{ $deviceType->type->value }}"
+                                        @selected($deviceType->id == request()->query('device_type_id'))>
+                                        {{ $deviceType->name }}</option>
+                                @endforeach
+                            </x-select-input>
+                        </div>
+                      </form>
+                    </div>
                 </div>
             </div>
             <div class="grid grid-flow-row grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 @forelse ($devices as $device)
                     <div class="flex flex-col gap-y-2 bg-white rounded-md overflow-hidden p-4">
                         <a href="{{ route('device.show', $device->id) }}">
-                          <img src="{{ asset($device->image ?? $device->deviceType->image) }}" alt="Device Img"
-                              class="w-full aspect-square object-cover rounded-md">
+                            <img src="{{ asset($device->image ?? $device->deviceType->image) }}" alt="Device Img"
+                                class="w-full aspect-square object-cover rounded-md">
                         </a>
                         <div class="h-full flex flex-col justify-between">
                             <div>
@@ -39,12 +60,14 @@
                                     onclick="disabledClipTest(this)">{{ $device->note }}</p>
                             </div>
                             <div class="mt-2 flex flex-row justify-between items-center">
-                                <span>v{{ $device->deviceType->version }}</span>
+                                <span>{{ $device->deviceType->name }}</span>
                                 <div class="flex flex-row-reverse gap-2">
-                                    <a href="javascript:void(0);" onclick="deleteData({{ $device->id }})" title="{{ __('Hapus Perangkat IoT') }}" class="text-xs text-danger">
+                                    <a href="javascript:void(0);" onclick="deleteData({{ $device->id }})"
+                                        title="{{ __('Hapus Perangkat IoT') }}" class="text-xs text-danger">
                                         <i class="fa-solid fa-trash-can pointer-events-none"></i>
                                     </a>
-                                    <a href="{{ route('device.edit', $device->id) }}" title="{{ __('Edit Perangkat IoT') }}" class="text-xs text-warning">
+                                    <a href="{{ route('device.edit', $device->id) }}"
+                                        title="{{ __('Edit Perangkat IoT') }}" class="text-xs text-warning">
                                         <i class="fa-solid fa-pen pointer-events-none"></i>
                                     </a>
                                 </div>
@@ -52,7 +75,8 @@
                         </div>
                     </div>
                 @empty
-                    <div class="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-5 flex flex-col gap-y-2 bg-white rounded-md overflow-hidden p-4">
+                    <div
+                        class="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-5 flex flex-col gap-y-2 bg-white rounded-md overflow-hidden p-4">
                         <div>
                             <p class="text-xs">{{ __('Data tidak ada') }}</p>
                         </div>
@@ -67,6 +91,7 @@
             @endif
         </div>
     </div>
+    @include('pages.device._modal')
     @push('scripts')
         <script src="{{ asset('js/api.js') }}"></script>
         <script>
@@ -74,17 +99,17 @@
                 const isDelete = confirm(`Apakah anda yakin ingin menghapus perangkat IoT ${name}?`)
 
                 if (!isDelete) {
-                  return false
+                    return false
                 }
 
                 showLoading()
 
                 const data = await fetchData(
-                    "{{ route('device.destroy', 'ID') }}".replace('ID', id),
-                    {
+                    "{{ route('device.destroy', 'ID') }}".replace('ID', id), {
                         method: "DELETE",
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+                                .nodeValue,
                             'Accept': 'application/json',
                         },
                     }

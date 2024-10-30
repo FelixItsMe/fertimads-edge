@@ -9,6 +9,7 @@ use App\Models\DeviceType;
 use App\Services\DeviceTypeService;
 use App\Services\ImageService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
@@ -27,7 +28,10 @@ class DeviceTypeController extends Controller
     public function index(): View
     {
         $deviceTypes = DeviceType::query()
-            ->orderBy('id')
+            ->when(request()->query('type'), function(Builder $query, $type){
+                $query->where('type', $type);
+            })
+            ->oldest('id')
             ->paginate(10);
 
         return view('pages.device-type.index', compact('deviceTypes'));

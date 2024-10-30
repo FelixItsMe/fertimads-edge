@@ -49,12 +49,22 @@
                                 <x-input-error :messages="$errors->get('image')" class="mt-2" />
                             </div>
                         </div>
-                        <div class="grid grid-flow-col grid-cols-1 sm:grid-flow-row sm:grid-cols-2 gap-2">
+                        <div class="grid grid-flow-col grid-cols-1 sm:grid-flow-row sm:grid-cols-3 gap-2">
                             <div class="w-full">
                                 <x-input-label for="name">{{ __('Nama Perangkat') }}</x-input-label>
                                 <x-text-input id="name" class="block mt-1 w-full rounded-xl" type="text"
                                     name="name" :value="old('name')" required autofocus autocomplete="name" />
                                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                            </div>
+                            <div class="w-full">
+                                <x-input-label for="type">{{ __('Tipe') }}</x-input-label>
+                                <x-select-input id="type" class="block mt-1 w-full rounded-xl" name="type">
+                                    <option value="">Pilih Tipe</option>
+                                    @foreach (\App\Enums\DeviceTypeEnums::cases() as $deviceType)
+                                        <option value="{{ $deviceType->value }}">{{ $deviceType->getLabelText() }}</option>
+                                    @endforeach
+                                </x-select-input>
+                                <x-input-error :messages="$errors->get('type')" class="mt-2" />
                             </div>
                             <div class="w-full">
                                 <x-input-label for="version">{{ __('Versi Perangkat') }}</x-input-label>

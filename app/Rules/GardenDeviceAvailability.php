@@ -2,10 +2,12 @@
 
 namespace App\Rules;
 
+use App\Enums\DeviceTypeEnums;
 use App\Models\DeviceSelenoid;
 use App\Models\Garden;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Database\Eloquent\Builder;
 
 class GardenDeviceAvailability implements ValidationRule
 {
@@ -22,6 +24,9 @@ class GardenDeviceAvailability implements ValidationRule
     {
         $count = DeviceSelenoid::query()
             ->where('device_id', $value)
+            ->whereHas('device.deviceType', function(Builder $query){
+                $query->where('type', DeviceTypeEnums::HEAD_UNIT);
+            })
             ->when($this->garden_id, function($query, $garden_id){
                 $query->where('garden_id', $garden_id)
                     ->orWhereNull('garden_id');

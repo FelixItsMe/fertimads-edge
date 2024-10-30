@@ -17,13 +17,13 @@
                     @csrf
                     @method('PUT')
                     <div class="p-6 flex flex-col gap-2">
-                        <div class="grid grid-flow-col sm:grid-flow-row sm:grid-cols-3 gap-2">
+                        <div class="grid grid-flow-col sm:grid-flow-row sm:grid-cols-4 gap-2">
                             <div class="w-full">
                                 <x-input-label for="name">{{ __('Gambar') }}</x-input-label>
                                 <img src="{{ asset($device->image ?? 'images/default/default-image.jpg') }}" alt="Preview Image"
                                     class="aspect-square object-cover w-full" id="preview-img">
                             </div>
-                            <div class="w-full col-span-2">
+                            <div class="w-full col-span-3">
                                 <x-input-label for="image">{{ __('File Gambar') }} <span class="text-danger">*Tidak wajib</span></x-input-label>
                                 <input id="image" class="block w-full px-3 py-2 text-base font-normal text-gray-700 bg-white border border-solid border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     type="file"
@@ -35,15 +35,13 @@
                                 <x-input-error :messages="$errors->get('image')" class="mt-2" />
                             </div>
                         </div>
-                        <div class="w-full">
-                            <x-input-label for="device_type_id">{{ __('Pilih Tipe') }}</x-input-label>
-                            <x-select-input id="device_type_id" class="block mt-1 w-full rounded-xl" name="device_type_id">
-                                <option value="">Pilih Tipe</option>
-                                @foreach ($deviceTypes as $id => $deviceType)
-                                    <option value="{{ $id }}" @selected($id == $device->device_type_id)>{{ $deviceType }}</option>
-                                @endforeach
-                            </x-select-input>
-                            <x-input-error :messages="$errors->get('device_type_id')" class="mt-2" />
+                        <div class="flex flex-col">
+                            <div class="w-full">
+                                <x-input-label for="type">{{ __('Tipe') }}</x-input-label>
+                                <x-text-input id="type" class="block mt-1 w-full rounded-xl bg-slate-300" type="text"
+                                    :value="$device->deviceType->type->getLabelText()" required autofocus autocomplete="type"
+                                    disabled />
+                            </div>
                         </div>
                         <div class="flex flex-col">
                             <div class="w-full">
@@ -53,15 +51,17 @@
                                 <x-input-error :messages="$errors->get('series')" class="mt-2" />
                             </div>
                         </div>
-                        <div class="flex flex-col">
-                            <div class="w-full">
-                                <x-input-label for="debit">{{ __('Debit (Liter)') }}</x-input-label>
-                                <x-text-input id="debit" class="block mt-1 w-full rounded-xl" type="number"
-                                    min="0" step=".01"
-                                    name="debit" :value="$device->debit" required autofocus autocomplete="debit" />
-                                <x-input-error :messages="$errors->get('debit')" class="mt-2" />
+                        @if ($device->deviceType->type->value == \App\Enums\DeviceTypeEnums::PORTABLE)
+                            <div class="flex flex-col">
+                                <div class="w-full">
+                                    <x-input-label for="debit">{{ __('Debit (Liter)') }}</x-input-label>
+                                    <x-text-input id="debit" class="block mt-1 w-full rounded-xl" type="number"
+                                        min="0" step=".01"
+                                        name="debit" :value="$device->debit" required autofocus autocomplete="debit" />
+                                    <x-input-error :messages="$errors->get('debit')" class="mt-2" />
+                                </div>
                             </div>
-                        </div>
+                        @endif
                         <div class="flex flex-col">
                             <div class="w-full">
                                 <x-input-label for="note">{{ __('Note') }}</x-input-label>

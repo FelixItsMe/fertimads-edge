@@ -15,14 +15,15 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form action="{{ route('device.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="device_type_id" value="{{ request()->query('type') }}">
                     <div class="p-6 flex flex-col gap-2">
-                        <div class="grid grid-flow-col sm:grid-flow-row sm:grid-cols-3 gap-2">
+                        <div class="grid grid-flow-col sm:grid-flow-row sm:grid-cols-4 gap-2">
                             <div class="w-full">
                                 <x-input-label for="name">{{ __('Gambar') }}</x-input-label>
                                 <img src="{{ asset('images/default/default-image.jpg') }}" alt="Preview Image"
                                     class="aspect-square object-cover w-full" id="preview-img">
                             </div>
-                            <div class="w-full col-span-2">
+                            <div class="w-full sm:col-span-3">
                                 <x-input-label for="image">{{ __('File Gambar') }} <span class="text-danger">*Tidak wajib</span></x-input-label>
                                 <input id="image" class="block w-full px-3 py-2 text-base font-normal text-gray-700 bg-white border border-solid border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     type="file"
@@ -34,31 +35,12 @@
                                 <x-input-error :messages="$errors->get('image')" class="mt-2" />
                             </div>
                         </div>
-                        <div class="w-full">
-                            <x-input-label for="device_type_id">{{ __('Pilih Tipe') }}</x-input-label>
-                            <x-select-input id="device_type_id" class="block mt-1 w-full rounded-xl" name="device_type_id">
-                                <option value="">Pilih Tipe</option>
-                                @foreach ($deviceTypes as $id => $deviceType)
-                                    <option value="{{ $id }}">{{ $deviceType }}</option>
-                                @endforeach
-                            </x-select-input>
-                            <x-input-error :messages="$errors->get('device_type_id')" class="mt-2" />
-                        </div>
                         <div class="flex flex-col">
                             <div class="w-full">
                                 <x-input-label for="series">{{ __('Series') }}</x-input-label>
                                 <x-text-input id="series" class="block mt-1 w-full rounded-xl" type="text"
                                     name="series" :value="old('series')" required autofocus autocomplete="series" />
                                 <x-input-error :messages="$errors->get('series')" class="mt-2" />
-                            </div>
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="w-full">
-                                <x-input-label for="debit">{{ __('Debit (Liter)') }}</x-input-label>
-                                <x-text-input id="debit" class="block mt-1 w-full rounded-xl" type="number"
-                                    min="0" step=".01"
-                                    name="debit" :value="old('debit')" required autofocus autocomplete="debit" />
-                                <x-input-error :messages="$errors->get('debit')" class="mt-2" />
                             </div>
                         </div>
                         <div class="flex flex-col">
@@ -113,6 +95,26 @@
                 }
             }
 
+            function checkType(type) {
+              const debitElement = document.getElementById('debit')
+
+              switch (type) {
+                case 'head_unit':
+                  debitElement.disabled = false
+                  debitElement.parentElement.parentElement.classList.remove('hidden')
+
+                  break;
+                case 'portable':
+                  debitElement.disabled = true
+                  debitElement.parentElement.parentElement.classList.add('hidden')
+
+                  break;
+
+                default:
+                  break;
+              }
+            }
+
             document.addEventListener("DOMContentLoaded", () => {
                 console.log("Hello World!");
 
@@ -123,6 +125,12 @@
                     } else {
                         eventFile(e.target);
                     }
+                })
+
+                document.getElementById('device_type_id').addEventListener('change', e => {
+                  const selectElement = document.getElementById('device_type_id')
+                  checkType(selectElement.options[selectElement.selectedIndex].dataset.type);
+
                 })
 
             })

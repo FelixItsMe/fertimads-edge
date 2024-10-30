@@ -25,6 +25,8 @@ class Device extends Model
         'note',
         'debit',
         'pumps',
+        'latitude',
+        'longitude',
     ];
 
     /**
