@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('devices', function (Blueprint $table) {
             $table->json('pumps')->nullable()->change();
+            $table->double('debit')->nullable()->change();
         });
     }
 

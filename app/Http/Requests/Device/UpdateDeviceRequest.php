@@ -24,6 +24,8 @@ class UpdateDeviceRequest extends FormRequest
         return [
             'series'            => 'required|alpha_dash:ascii|max:255|unique:devices,series,' . $this->route('device')->id,
             'debit'             => 'sometimes|required|numeric|min:0',
+            'latitude'          => 'sometimes|required|regex:/^(-?\d+(\.\d+)?)$/',
+            'longitude'         => 'sometimes|required|regex:/^(-?\d+(\.\d+)?)$/',
             'image'             => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'note'              => 'nullable|string|max:255',
         ];
