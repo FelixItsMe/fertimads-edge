@@ -139,7 +139,19 @@ class DeviceController extends Controller
     public function edit(Device $device): View
     {
         $device->load('deviceType');
-        return view('pages.device.edit', compact('device'));
+
+        switch ($device->deviceType->type->value) {
+            case DeviceTypeEnums::HEAD_UNIT->value:
+                return view('pages.device.edit-headunit', compact('device'));
+                break;
+            case DeviceTypeEnums::PORTABLE->value:
+                return view('pages.device.edit-portable', compact('device'));
+                break;
+
+            default:
+                return back()->with('failed', 'Tipe tidak diketahui!');
+                break;
+        }
     }
 
     /**
