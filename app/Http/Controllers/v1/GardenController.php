@@ -126,6 +126,7 @@ class GardenController extends Controller
         $smsGardens = SmsGarden::query()
             ->with('device:id,series')
             ->where('garden_id', $garden->id)
+            ->whereNotNull('device_id')
             ->latest('created_at')
             ->paginate(5);
 
