@@ -207,7 +207,7 @@
       .setView([-6.869080223722067, 107.72491693496704], 12);
 
     L.control.zoom({
-      position: 'bottomright'
+      position: 'topleft'
     }).addTo(map);
 
     map.modalWether = L.control({

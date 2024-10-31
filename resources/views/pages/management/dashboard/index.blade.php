@@ -2,19 +2,10 @@
   @push('styles')
   <link rel="stylesheet" href="{{ asset('leaflet/leaflet.css') }}">
   <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
-  <link href="https://cdn.jsdelivr.net/gh/aazuspan/leaflet-feature-legend/src/feature-legend.css" rel="stylesheet" />
   <style>
     #map {
       height: 80vh;
       z-index: 50;
-    }
-
-    .legend-spacing {
-      margin-bottom: .5em;
-    }
-
-    .legend-spacing i {
-      margin-right: 1em;
     }
   </style>
   @endpush
@@ -157,7 +148,6 @@
   <script src="{{ asset('js/map.js') }}"></script>
   <script src="{{ asset('js/api.js') }}"></script>
   <script src="{{ asset('js/weather.js') }}"></script>
-  <script src="https://cdn.jsdelivr.net/gh/aazuspan/leaflet-feature-legend/src/feature-legend.js"></script>
   <script>
     // Get current date
     let today = new Date();
@@ -184,8 +174,6 @@
       markerLayer: null,
     }
     let currentGroupGarden = L.layerGroup()
-    let mapObjectsGroup = L.layerGroup()
-    let mapObjectsLegends = {}
     let baseMapOptions = {
       'Open Street Map': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
@@ -376,20 +364,6 @@
     };
     map.modalControl.addTo(map);
 
-    const getObjects = async () => {
-      const data = await fetchData(
-        "{{ route('extra.map-object.geojson') }}", {
-          method: 'GET',
-          headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content.nodeValue,
-            'Accept': 'application/json',
-          }
-        }
-      )
-
-      return data
-    }
-
     const getLands = async () => {
       const data = await fetchData(
         "{{ route('extra.land.polygon.garden') }}", {
@@ -403,86 +377,6 @@
       );
 
       return data?.lands
-    }
-
-    const initMapObjects = async (map) => {
-      const objects = await getObjects()
-
-      if (!objects) {
-        return false
-      }
-
-      mapObjectsGroup.clearLayers()
-
-      const onEachFeature = (feature, layer) => {
-        if (feature.properties && feature.properties.name) {
-          const popupContent = `
-            <h6 class="font-bold text-lg mb-3 font-sans">Informasi Marker</h6>
-            <div class="font-sans">
-                <div class="mb-2">
-                  <div class="font-bold">Nama</div>
-                  <div class="col-sm-8">${feature.properties.name}</div>
-                </div>
-                <div class="mb-2">
-                  <div class="font-bold">Tipe</div>
-                  <div class="col-sm-8">${feature.properties.type}</div>
-                </div>
-                <div class="mb-2">
-                  <div class="font-bold">Deskripsi</div>
-                  <div class="col-sm-8">${feature.properties.description}</div>
-                </div>
-            </div>
-          `
-
-          layer.bindPopup(popupContent);
-        }
-
-        if (feature.properties && feature.properties.icon) {
-          let icon = L.icon({
-            iconUrl: feature.properties.icon,
-            iconSize: [25, 25],
-            iconAnchor: [12, 12],
-          })
-
-          layer.setIcon(icon)
-        }
-
-        if (feature.properties && feature.properties.icon) {
-          let icon = L.icon({
-            iconUrl: feature.properties.icon,
-            iconSize: [25, 25],
-            iconAnchor: [12, 12],
-          })
-
-          layer.setIcon(icon)
-        }
-
-        if (feature.properties && feature.properties.type) {
-          mapObjectsLegends[feature.properties.type] = layer
-        }
-      }
-
-      mapObjectsGroup.addLayer(L.geoJSON(objects, {
-        onEachFeature: onEachFeature
-      }))
-      mapObjectsGroup.addTo(map)
-      L.control.featureLegend(mapObjectsLegends, {
-        position: "bottomleft",
-        title: "Legenda",
-        symbolContainerSize: 24,
-        symbolScaling: "clamped",
-        maxSymbolSize: 24,
-        minSymbolSize: 2,
-        collapsed: false,
-        drawShadows: true,
-      }).addTo(map);
-
-      const legendTitle = document.querySelector('.leaflet-control-feature-legend-title')
-      const legendContents = document.querySelectorAll('.leaflet-control-feature-legend-contents div')
-      legendTitle.classList.add("font-bold", "mb-3")
-      legendContents.forEach((item) => {
-        item.classList.add("legend-spacing")
-      })
     }
 
     const initLandPolygon = async (id, map) => {
@@ -1213,7 +1107,6 @@
     window.onload = () => {
       console.log('Hello world');
       initLandPolygon(1, map)
-      initMapObjects(map)
 
       const weatherElements = {
         eTemp: document.querySelector('#bmkg-temp'),
