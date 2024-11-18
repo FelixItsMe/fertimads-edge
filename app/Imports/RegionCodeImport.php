@@ -39,6 +39,6 @@ class RegionCodeImport implements ToModel, WithBatchInserts
 
     public function batchSize(): int
     {
-        return 5000;
+        return 8000;
     }
 }
