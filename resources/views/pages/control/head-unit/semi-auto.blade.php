@@ -350,7 +350,7 @@
             map.modalControl.addTo(map);
 
             L.control.zoom({
-                position: 'bottomleft'
+                position: 'topleft'
             }).addTo(map);
 
             L.control.layers(baseMapOptions, null, {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Enums\DeviceTypeEnums;
+use App\Enums\MapObjectType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Device\StoreDeviceRequest;
 use App\Http\Requests\Device\UpdateDeviceRequest;
@@ -113,6 +114,14 @@ class DeviceController extends Controller
             }
 
             DeviceSelenoid::insert($selenoids);
+
+            $device->mapObject()->create([
+                'name' => $request->series,
+                'type' => MapObjectType::SAUNG_HEADUNIT->value,
+                'lat' => $request->latitude,
+                'lng' => $request->longitude,
+                'description' => $request->note
+            ]);
         }
 
         activity()
