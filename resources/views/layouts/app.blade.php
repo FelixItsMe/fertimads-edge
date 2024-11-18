@@ -139,10 +139,19 @@
         // Show the loading spinner when the page starts loading
         showLoading()
 
+        function scrollToActiveLink() {
+            const activeLink = document.querySelector('#sidebar .active-icon');
+
+            if (activeLink) {
+                setTimeout(() => {
+                    activeLink.scrollIntoView({ behavior: 'instant', block: 'center' });
+                }, 0);
+            }
+        }
         // Hide the loading spinner when the page has fully loaded
         window.addEventListener('load', function() {
+            scrollToActiveLink()
             hideLoading()
-            initSidebar()
             initMapPlugin()
         });
     </script>

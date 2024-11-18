@@ -83,6 +83,8 @@
     let controllerDetailGardenSchedules
     let pickedDate = currentFullDate
     const weatherWidgetMode = "{{ getWeatherWidgetMode()->aws_device_id }}"
+    const weatherWidgetRegionCode = "{{ getWeatherWidgetMode()->region_code }}"
+    const weatherWidgetRegionName = "{{ getWeatherWidgetMode()->name }}"
 
     let stateData = {
       polygon: null,
@@ -826,6 +828,7 @@
 
     window.onload = () => {
       console.log('Hello world');
+
       initLandPolygon(1, map)
 
       const weatherElements = {
@@ -838,6 +841,9 @@
         eWeatherIcon: document.querySelector('#bmkg-weather-icon'),
         eTime: document.querySelector('#bmkg-times'),
         eDay: document.querySelector('#bmkg-day'),
+        eRegionName: document.querySelector('#bmkg-region-name'),
+        regionCode: weatherWidgetRegionCode,
+        regionName: weatherWidgetRegionName
       }
 
       if (!weatherWidgetMode) {

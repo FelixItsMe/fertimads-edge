@@ -15,7 +15,7 @@ class WetherWidget extends Model
      *
      * @var array
      */
-    protected $fillable = ['aws_device_id', 'open_api'];
+    protected $fillable = ['aws_device_id', 'open_api', 'region_code'];
 
     /**
      * Get the awsDevice that owns the WetherWidget

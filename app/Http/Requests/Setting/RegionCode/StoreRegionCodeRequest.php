@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Setting\Weather;
+namespace App\Http\Requests\Setting\RegionCode;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateWeatherRequest extends FormRequest
+class StoreRegionCodeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class UpdateWeatherRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'aws_device_id' => 'nullable|exists:aws_devices,id',
-            'region_code' => 'sometimes|required|string|regex:/^\d{2}\.\d{2}\.\d{2}\.\d{4}$/',
+            'csv_file' => 'required|file|mimes:csv'
         ];
     }
 }

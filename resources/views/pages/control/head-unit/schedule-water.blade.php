@@ -162,6 +162,8 @@
             let pickedDate = currentFullDate
 
             const weatherWidgetMode = "{{ getWeatherWidgetMode()->aws_device_id }}"
+            const weatherWidgetRegionCode = "{{ getWeatherWidgetMode()->region_code }}"
+            const weatherWidgetRegionName = "{{ getWeatherWidgetMode()->name }}"
 
             let stateData = {
                 polygon: null,
@@ -977,7 +979,7 @@
             }
 
             const eLoading = elementId => {
-              document.getElementById(elementId).innerHTML = `<div
+                document.getElementById(elementId).innerHTML = `<div
                 class="bg-white px-4 py-2 rounded-md shadow-md flex justify-center">
                   <x-loading />
                 </div>`
@@ -988,10 +990,10 @@
                 pListSchedule.innerHTML = ``
 
                 if (listWaterSchedule.length == 0) {
-                  pListSchedule.innerHTML = `<div class="bg-slate-500/50 py-2 px-4 rounded-lg text-center">
+                    pListSchedule.innerHTML = `<div class="bg-slate-500/50 py-2 px-4 rounded-lg text-center">
                       Tidak ada
                   </div>`
-                  return false
+                    return false
                 }
 
                 listWaterSchedule.forEach(waterSchedule => {
@@ -1041,6 +1043,9 @@
                     eWeatherIcon: document.querySelector('#bmkg-weather-icon'),
                     eTime: document.querySelector('#bmkg-times'),
                     eDay: document.querySelector('#bmkg-day'),
+                    eRegionName: document.querySelector('#bmkg-region-name'),
+                    regionCode: weatherWidgetRegionCode,
+                    regionName: weatherWidgetRegionName
                 }
 
                 if (!weatherWidgetMode) {
