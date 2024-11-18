@@ -4,8 +4,9 @@ namespace App\Imports;
 
 use App\Models\RegionCode;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
 
-class RegionCodeImport implements ToModel
+class RegionCodeImport implements ToModel, WithBatchInserts
 {
     /**
      * @param array $row
@@ -34,5 +35,10 @@ class RegionCodeImport implements ToModel
             'full_code' => $full_code,
             'region_name' => $region_name,
         ]);
+    }
+
+    public function batchSize(): int
+    {
+        return 5000;
     }
 }
