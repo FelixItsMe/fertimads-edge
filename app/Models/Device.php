@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Device extends Model
 {
@@ -37,6 +38,11 @@ class Device extends Model
     protected $casts = [
         'pumps' => 'object',
     ];
+
+    public function mapObject(): MorphOne
+    {
+        return $this->morphOne(MapObject::class, 'objectable');
+    }
 
     /**
      * Get the deviceType that owns the Device

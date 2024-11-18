@@ -6,6 +6,7 @@ use App\Enums\MapObjectType;
 use App\Http\Controllers\Controller;
 use App\Models\MapObject;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -34,6 +35,13 @@ class MapObjectController extends Controller
         return view('pages.management.map-object.create', compact('objectTypes'));
     }
 
+    public function edit(MapObject $mapObject)
+    {
+        $objectTypes = MapObjectType::getLabelTexts();
+
+        return view('pages.management.map-object.edit', compact('objectTypes', 'mapObject'));
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $mapObject = MapObject::create(
@@ -50,6 +58,26 @@ class MapObjectController extends Controller
             ->performedOn($mapObject)
             ->event('create')
             ->log('Objek peta baru ditambahkan');
+
+        return redirect()->route('map-object.index')->with('map-object-success', 'Berhasil disimpan');
+    }
+
+    public function update(Request $request, MapObject $mapObject)
+    {
+        $mapObject->update(
+            $request->validate([
+                'name' => 'required',
+                'type' => 'required',
+                'lat' => 'required',
+                'lng' => 'required',
+                'description' => 'nullable'
+            ])
+        );
+
+        activity()
+            ->performedOn($mapObject)
+            ->event('update')
+            ->log('Objek peta di update');
 
         return redirect()->route('map-object.index')->with('map-object-success', 'Berhasil disimpan');
     }
@@ -80,6 +108,25 @@ class MapObjectController extends Controller
         return response()->json([
             'type' => 'FeatureCollection',
             'features' => $features
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(MapObject $mapObject): JsonResponse
+    {
+        $mapObject->delete();
+
+        session()->flash('map-object-success', 'Berhasil dihapus!');
+
+        activity()
+            ->performedOn($mapObject)
+            ->event('delete')
+            ->log($mapObject->name . ' dihapus');
+
+        return response()->json([
+            'message' => 'Berhasil dihapus'
         ]);
     }
 }

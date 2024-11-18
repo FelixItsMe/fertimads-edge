@@ -244,7 +244,7 @@
                 .setView([-6.46958, 107.033339], 18);
 
             L.control.zoom({
-                position: 'bottomleft'
+                position: 'topleft'
             }).addTo(map);
 
             L.control.layers(baseMapOptions, null, {
