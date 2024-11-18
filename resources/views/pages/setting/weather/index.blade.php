@@ -29,6 +29,12 @@
                           </x-select-input>
                           <x-input-error :messages="$errors->get('aws_device_id')" class="mt-2" />
                       </div>
+                      <div @class(['w-full', 'hidden' => ($wetherWidget->aws_device_id) ? true : false]) id="region-code-field">
+                          <x-input-label for="region-code">{{ __('Kode Wilayah') }}</x-input-label>
+                          <x-text-input id="region-code" class="block mt-1 w-full rounded-xl" type="text"
+                              name="region_code" :value="$wetherWidget->region_code" />
+                          <x-input-error :messages="$errors->get('region_code')" class="mt-2" />
+                      </div>
                       <div class="flex flex-col">
                           <div class="w-full flex justify-end">
                               <x-primary-button>
@@ -48,6 +54,15 @@
           document.addEventListener("DOMContentLoaded", () => {
               console.log("Hello World!");
 
+              document.querySelector('#aws_device_id').addEventListener("change", e => {
+                console.log(e.target.value);
+
+                if (!e.target.value) {
+                  document.getElementById('region-code-field').classList.remove('hidden')
+                } else {
+                  document.getElementById('region-code-field').classList.add('hidden')
+                }
+              })
           })
       </script>
   @endpush

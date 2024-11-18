@@ -21,6 +21,17 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/test', function () {
+    $input = "12.07.28.1007,\"Lubuk Pakam I,II\"";
+
+    // Extract the region name using regular expression
+    preg_match('/"(.*?)"/', $input, $matches);
+
+    $region = $matches[1];
+
+    echo "Region: " . $region . "\n";
+});
+
 Route::get('/dashboard', function () {
     switch (auth()->user()->role) {
         case UserRoleEnums::MANAGEMENT->value:
@@ -121,7 +132,7 @@ Route::middleware('auth')->group(function () {
             Route::post('head-unit/schedule-fertilizer', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'storeControlScheduleFertilizer'])->name('head-unit.schedule-fertilizer.store');
             Route::delete('head-unit/schedule-fertilizer/{deviceFertilizerSchedule}', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'deleteActiveFertilizerSchedule'])->name('head-unit.schedule-fertilizer.destroy');
             Route::post('head-unit/stop', [\App\Http\Controllers\v1\Control\ControlHeadUnitController::class, 'stopDevice'])->name('head-unit.stop.store');
-    });
+        });
 
     Route::middleware(['roleAccess:' . UserRoleEnums::CARE->value . ',' . UserRoleEnums::CONTROL->value])->prefix('control')->group(function () {
         Route::get('telemetry-rsc', [\App\Http\Controllers\v1\Control\TelemetryRscController::class, 'index'])->name('telemetry-rsc.index');
@@ -149,10 +160,15 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('setting')
-    ->group(function(){
-        Route::get('weather', [\App\Http\Controllers\v1\Setting\WeatherController::class, 'index'])->name('weather.index');
-        Route::put('weather', [\App\Http\Controllers\v1\Setting\WeatherController::class, 'update'])->name('weather.update');
-    });
+        ->group(function () {
+            Route::get('weather', [\App\Http\Controllers\v1\Setting\WeatherController::class, 'index'])->name('weather.index');
+            Route::put('weather', [\App\Http\Controllers\v1\Setting\WeatherController::class, 'update'])->name('weather.update');
+
+            Route::get('region-code', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'index'])->name('region-code.index');
+            Route::get('region-code/create', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'create'])->name('region-code.create');
+            Route::post('region-code', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'store'])->name('region-code.store');
+            Route::get('region-code/{regionCode}', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'show'])->name('region-code.show');
+        });
 
     // extra to get data
     Route::prefix('extra')->name('extra.')->group(function () {

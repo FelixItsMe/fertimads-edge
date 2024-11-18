@@ -62,9 +62,14 @@ const bmkgWether = async ({
     eWeatherIcon,
     eTime,
     eDay,
+    eRegionName,
+    regionCode = '32.01.06.2011',
+    regionName = null
 }) => {
+    // jongol 32.01.06.2011
+
     const res = await fetch(
-        "https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=32.01.06.2011",
+        `https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=${regionCode}`,
         {
             method: "GET",
         }
@@ -99,6 +104,7 @@ const bmkgWether = async ({
     eMaxT.textContent = maxTs;
     eMinT.textContent = minTs;
     eWeatherIcon.innerHTML = `<img src="${parameters.image}" class="w-24 mx-auto"></img>`;
+    eRegionName.textContent = regionName
 };
 
 const awsWether = async (
@@ -191,7 +197,7 @@ const weatherHtml = () => {
                 <div class="text-xs md:text-6xl lato-regular mt-2 relative"><span class="font-extrabold" id="bmkg-temp">26</span><span class="absolute md:-top-4">°</span></div>
             </div>
             <div class="text-xs font-semibold text-slate-50/50">Last Updated <span id="bmkg-times">11:50</span></div>
-            <div><i class="fa-solid fa-location-dot"></i>&nbsp;<span class="text-xs">Kota Bogor</span></div>
+            <div><i class="fa-solid fa-location-dot"></i>&nbsp;<span class="text-xs" id="bmkg-region-name">Kota Bogor</span></div>
             </div>
             <div class="grid grid-cols-1 content-between">
             <div>

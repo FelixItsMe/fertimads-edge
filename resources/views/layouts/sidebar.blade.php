@@ -1,7 +1,8 @@
 <div>
   <div
     :class="{ 'block': sideopen, 'hidden': !sideopen }"
-    class="flex-grow flex-col bg-white w-64 lg:fixed lg:top-0 lg:bottom-0 lg:left-0 lg:ml-0 lg:mr-0 max-md:hidden overflow-y-scroll styled-scrollbars">
+    class="flex-grow flex-col bg-white w-64 lg:fixed lg:top-0 lg:bottom-0 lg:left-0 lg:ml-0 lg:mr-0 max-md:hidden overflow-y-scroll styled-scrollbars"
+    id="sidebar">
     <div id="app-brand" class="w-full h-16 mt-3 px-8">
       <a href="#" class="flex items-center">
         @switch(Auth::user()->role)
@@ -51,6 +52,15 @@
             'fa-gear',
             ])></i>
           <div class="text-slate-400">Cuaca</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="{{ route('region-code.index') }}" class="menu-link">
+          <i @class([ 'menu-icon' , 'active-icon'=> request()->routeIs('region-code.*'),
+            'fa-solid',
+            'fa-gear',
+            ])></i>
+          <div class="text-slate-400">Kode Wilayah</div>
         </a>
       </li>
     </ul>

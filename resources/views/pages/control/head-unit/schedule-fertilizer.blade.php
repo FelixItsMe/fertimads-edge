@@ -187,6 +187,8 @@
             let currentYear = today.getFullYear();
 
             const weatherWidgetMode = "{{ getWeatherWidgetMode()->aws_device_id }}"
+            const weatherWidgetRegionCode = "{{ getWeatherWidgetMode()->region_code }}"
+            const weatherWidgetRegionName = "{{ getWeatherWidgetMode()->name }}"
 
             let stateData = {
                 polygon: null,
@@ -296,7 +298,7 @@
                             cell.textContent = currentDay;
                             cell.setAttribute('data-date',
                                 `${year}-${(month + 1).toString().padStart(2, "0")}-${currentDay.toString().padStart(2, "0")}`
-                                );
+                            );
 
                             cell.onclick = (e) => {
                                 selectDate(e.target)
@@ -588,16 +590,19 @@
                     eWeatherIcon: document.querySelector('#bmkg-weather-icon'),
                     eTime: document.querySelector('#bmkg-times'),
                     eDay: document.querySelector('#bmkg-day'),
+                    eRegionName: document.querySelector('#bmkg-region-name'),
+                    regionCode: weatherWidgetRegionCode,
+                    regionName: weatherWidgetRegionName
                 }
 
                 if (!weatherWidgetMode) {
-                  bmkgWether(weatherElements)
-
-                  setInterval(() => {
                     bmkgWether(weatherElements)
-                  }, 1000 * 10);
+
+                    setInterval(() => {
+                        bmkgWether(weatherElements)
+                    }, 1000 * 10);
                 } else if (weatherWidgetMode != null) {
-                  awsWether(weatherWidgetMode, weatherElements)
+                    awsWether(weatherWidgetMode, weatherElements)
                 }
             }
         </script>

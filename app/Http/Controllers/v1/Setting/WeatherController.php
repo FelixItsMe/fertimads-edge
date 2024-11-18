@@ -23,7 +23,10 @@ class WeatherController extends Controller
     public function update(UpdateWeatherRequest $request) : RedirectResponse {
         $wetherWidget = WetherWidget::first();
 
-        $wetherWidget->update($request->validated());
+        $wetherWidget->update([
+            'aws_device_id' => $request->safe()->aws_device_id,
+            'region_code' => !$request->safe()->aws_device_id ? $request->safe()->region_code : null
+        ]);
 
         Cache::forget('weather_widget');
 

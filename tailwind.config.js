@@ -18,6 +18,9 @@ export default {
         extend: {
             backgroundColor: {
                 'primary': '#05CD99'
+            },
+            textColor: {
+                'primary': '#4FD1C5'
             }
         }
     },
