@@ -25,6 +25,17 @@
     @stack('styles')
     <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'
         rel='stylesheet' />
+    <link href="https://cdn.jsdelivr.net/gh/aazuspan/leaflet-feature-legend/src/feature-legend.css" rel="stylesheet" />
+
+    <style>
+        .legend-spacing {
+            margin-bottom: .5em;
+        }
+
+        .legend-spacing i {
+            margin-right: 1em;
+        }
+    </style>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -89,6 +100,7 @@
         integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @stack('scripts')
+    <script src="https://cdn.jsdelivr.net/gh/aazuspan/leaflet-feature-legend/src/feature-legend.js"></script>
     <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
     <script>
         const showLoading = () => {
@@ -98,30 +110,6 @@
         const hideLoading = () => {
             document.getElementById('loading-spinner').classList.add('hidden');
             document.getElementById('layout-wrapper').classList.remove('hidden');
-        }
-
-        const initSidebar = () => {
-            const toggleSidebar = document.getElementById("toggle-sidebar")
-            const sidebarMain = document.getElementById("sidebar-main")
-            const mainContent = document.getElementById("main-content")
-            let isSidebarOpen = true
-
-            toggleSidebar.addEventListener("click", function(e) {
-                mainContent.classList.toggle("lg:pl-64")
-                if (isSidebarOpen) {
-                    sidebarMain.classList.add("sidebar-close")
-                    sidebarMain.classList.remove("sidebar-open")
-                    isSidebarOpen = false
-                } else {
-                    sidebarMain.classList.add("sidebar-open")
-                    sidebarMain.classList.remove("sidebar-close")
-                    isSidebarOpen = true
-                }
-
-                setTimeout(() => {
-                    map.invalidateSize(true)
-                }, 500)
-            })
         }
 
         const initMapPlugin = () => {
@@ -136,6 +124,109 @@
             }
         }
 
+        const initMap = () => {
+            const getObjects = async () => {
+                const data = await fetchData(
+                    "{{ route('extra.map-object.geojson') }}", {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes
+                                .content.nodeValue,
+                            'Accept': 'application/json',
+                        }
+                    }
+                )
+
+                return data
+            }
+
+            const initMapObjects = async (map) => {
+                const objects = await getObjects()
+                let mapObjectsGroup = L.layerGroup()
+                let mapObjectsLegends = {}
+
+                if (!objects) {
+                    return false
+                }
+
+                mapObjectsGroup.clearLayers()
+
+                const onEachFeature = (feature, layer) => {
+                    if (feature.properties && feature.properties.name) {
+                        const popupContent = `
+            <h6 class="font-bold text-lg mb-3 font-sans">Informasi Marker</h6>
+            <div class="font-sans">
+                <div class="mb-2">
+                  <div class="font-bold">Nama</div>
+                  <div class="col-sm-8">${feature.properties.name}</div>
+                </div>
+                <div class="mb-2">
+                  <div class="font-bold">Tipe</div>
+                  <div class="col-sm-8">${feature.properties.type}</div>
+                </div>
+                <div class="mb-2">
+                  <div class="font-bold">Deskripsi</div>
+                  <div class="col-sm-8">${feature.properties.description}</div>
+                </div>
+            </div>
+          `
+
+                        layer.bindPopup(popupContent);
+                    }
+
+                    if (feature.properties && feature.properties.icon) {
+                        let icon = L.icon({
+                            iconUrl: feature.properties.icon,
+                            iconSize: [25, 25],
+                            iconAnchor: [12, 12],
+                        })
+
+                        layer.setIcon(icon)
+                    }
+
+                    if (feature.properties && feature.properties.icon) {
+                        let icon = L.icon({
+                            iconUrl: feature.properties.icon,
+                            iconSize: [25, 25],
+                            iconAnchor: [12, 12],
+                        })
+
+                        layer.setIcon(icon)
+                    }
+
+                    if (feature.properties && feature.properties.type) {
+                        mapObjectsLegends[feature.properties.type] = layer
+                    }
+                }
+
+                mapObjectsGroup.addLayer(L.geoJSON(objects, {
+                    onEachFeature: onEachFeature
+                }))
+                mapObjectsGroup.addTo(map)
+                L.control.featureLegend(mapObjectsLegends, {
+                    position: "bottomleft",
+                    title: "Legenda",
+                    symbolContainerSize: 24,
+                    symbolScaling: "clamped",
+                    maxSymbolSize: 24,
+                    minSymbolSize: 2,
+                    collapsed: false,
+                    drawShadows: true,
+                }).addTo(map);
+
+                const legendTitle = document.querySelector('.leaflet-control-feature-legend-title')
+                const legendContents = document.querySelectorAll('.leaflet-control-feature-legend-contents div')
+                legendTitle.classList.add("font-bold", "mb-3")
+                legendContents.forEach((item) => {
+                    item.classList.add("legend-spacing")
+                })
+            }
+
+            if (map) {
+                initMapObjects(map)
+            }
+        }
+
         // Show the loading spinner when the page starts loading
         showLoading()
 
@@ -144,15 +235,20 @@
 
             if (activeLink) {
                 setTimeout(() => {
-                    activeLink.scrollIntoView({ behavior: 'instant', block: 'center' });
+                    activeLink.scrollIntoView({
+                        behavior: 'instant',
+                        block: 'center'
+                    });
                 }, 0);
             }
         }
+
         // Hide the loading spinner when the page has fully loaded
         window.addEventListener('load', function() {
             scrollToActiveLink()
             hideLoading()
             initMapPlugin()
+            initMap()
         });
     </script>
 </body>
