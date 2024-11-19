@@ -17,8 +17,6 @@
                 <div class="p-6 flex justify-between">
                     <h1 class="text-3xl font-extrabold">List Kode Wilayah</h1>
                     <div>
-                        <a href="{{ route('region-code.create') }}"
-                            class="bg-fertimads-2 text-white py-1.5 px-5 rounded-md">Import Kode Wilayah</a>
                     </div>
                 </div>
                 <div class="p-6 pt-0 grid grid-cols-4 gap-2">
