@@ -46,9 +46,9 @@ class RegionCodeController extends Controller
     {
         $file = $request->file('csv_file');
         $storedFile = $file->store('csv', 'public');
-        Cache::put('import', 1, 60 * 60 * 2);
-        dispatch(new ProcessImportJob(storage_path('app/public/' . $storedFile), Auth::user()->id))
+        ProcessImportJob::dispatch(storage_path('app/public/' . $storedFile), Auth::user()->id)
             ->onQueue('import');
+        Cache::put('import', 1, 60 * 60 * 2);
         // event(new ImportFinishEvent(Auth::user()->id));
 
         return response()
