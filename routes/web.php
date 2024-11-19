@@ -166,7 +166,7 @@ Route::middleware('auth')->group(function () {
 
             Route::get('region-code', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'index'])->name('region-code.index');
             Route::get('region-code/create', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'create'])->name('region-code.create');
-            Route::post('region-code', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'store'])->name('region-code.store');
+            // Route::post('region-code', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'store'])->name('region-code.store');
             Route::get('region-code/{regionCode}', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'show'])->name('region-code.show');
         });
 
