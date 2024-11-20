@@ -13,7 +13,7 @@
     <h2 class="leading-tight">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="{{ route('garden.index') }}">Manajemen Objek Peta</a>
+          <a href="{{ route('map-object.index') }}">Manajemen Objek Peta</a>
         </li>
         <li class="breadcrumb-item breadcrumb-active">{{ __('Edit Objek Peta') }}</li>
       </ol>
@@ -62,8 +62,8 @@
         <div class="w-full sm:h-3/4">
           <div id="map" class="rounded-md"></div>
           <input type="hidden" name="polygon" id="polygon">
-          <x-text-input id="lat" class="block mt-1 w-full rounded-xl" type="hidden" name="lat" :value="old('lat')" required autofocus autocomplete="lat" />
-          <x-text-input id="lng" class="block mt-1 w-full rounded-xl" type="hidden" name="lng" :value="old('lng')" required autofocus autocomplete="lng" />
+          <x-text-input id="lat" class="block mt-1 w-full rounded-xl" type="hidden" name="lat" :value="$mapObject->lat" required autofocus autocomplete="lat" />
+          <x-text-input id="lng" class="block mt-1 w-full rounded-xl" type="hidden" name="lng" :value="$mapObject->lng" required autofocus autocomplete="lng" />
         </div>
       </form>
     </div>
@@ -275,6 +275,16 @@
       currentGroupGarden.addTo(map)
 
       return true
+    }
+
+    window.onload = async () => {
+      console.log('Hello world');
+
+      stateData.latitude = parseFloat(document.querySelector('#lat').value)
+      stateData.longitude = parseFloat(document.querySelector('#lng').value)
+
+      currentMarkerLayer = initMarker(map, stateData.latitude, stateData.longitude)
+      editableLayers.addLayer(currentMarkerLayer);
     }
   </script>
   @endpush
