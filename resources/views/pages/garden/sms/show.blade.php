@@ -24,17 +24,40 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
+        <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8 flex flex-col space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                @foreach ($avg as $key => $avgValue)
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 flex flex-row justify-between">
+                        <div>
+                            <h5 class="text-xs text-slate-400">Rata rata
+                                {{ \App\Enums\SampleEnums::from($key)->getLabelTextWithUnit() }}</h5>
+                            <span class="font-bold">{{ number_format($avgValue, 2) }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-globe p-3 bg-primary text-white rounded-lg"></i>
+                        </div>
+                    </div>
+                @endforeach
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 flex flex-row justify-between">
+                    <div>
+                        <h5 class="text-xs text-slate-400">Total</h5>
+                        <span class="font-bold">{{ $smsTelemetries->total() }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-globe p-3 bg-primary text-white rounded-lg"></i>
+                    </div>
+                </div>
+            </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 flex justify-between">
-                  <div>
-                    {{-- Header Title --}}
-                  </div>
-                  <div>
-                    <a href="{{ route('sms-garden.export-excel', $smsGarden->id) }}"
-                      class="bg-green-500 text-white py-2 px-4 rounded-md text-center"
-                      title="Export Excel">Excel</a>
-                  </div>
+                    <div>
+
+                    </div>
+                    <div>
+                        <a href="{{ route('sms-garden.export-excel', $smsGarden->id) }}"
+                            class="bg-green-500 text-white py-2 px-4 rounded-md text-center"
+                            title="Export Excel">Excel</a>
+                    </div>
                 </div>
                 <div class="overflow-x-scroll">
                     <table class="w-full align-middle border-slate-400 table mb-0">
@@ -63,9 +86,11 @@
                                     <td class="text-center">{{ $smsTelemetry->samples->k }} mg/kg</td>
                                     <td class="text-center">{{ $smsTelemetry->samples->ec ?? '-' }} uS/cm</td>
                                     <td class="text-center">{{ $smsTelemetry->samples?->ph ?? '-' }}</td>
-                                    <td class="text-center">{{ $smsTelemetry->samples->ambient_temperature ?? '-' }}°C</td>
+                                    <td class="text-center">{{ $smsTelemetry->samples->ambient_temperature ?? '-' }}°C
+                                    </td>
                                     <td class="text-center">{{ $smsTelemetry->samples->ambient_humidity ?? '-' }}%</td>
-                                    <td class="text-center">{{ $smsTelemetry->samples->soil_temperature ?? '-' }}°C</td>
+                                    <td class="text-center">{{ $smsTelemetry->samples->soil_temperature ?? '-' }}°C
+                                    </td>
                                     <td class="text-center">{{ $smsTelemetry->samples->soil_moisture ?? '-' }}%</td>
                                 </tr>
                             @empty
