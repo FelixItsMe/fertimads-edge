@@ -93,7 +93,7 @@
   <script src="{{ asset('js/api.js') }}"></script>
   <script>
     const deleteData = async (id, name) => {
-      const isDelete = confirm(`Apakah anda yakin ingin menghapus kebun ${name}?`)
+      const isDelete = confirm(`Yakin ingin menghapus object ${name}?\nAksi ini bersifat permanen.`)
 
       if (!isDelete) {
         return false

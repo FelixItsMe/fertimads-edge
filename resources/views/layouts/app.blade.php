@@ -102,6 +102,7 @@
     @stack('scripts')
     <script src="https://cdn.jsdelivr.net/gh/aazuspan/leaflet-feature-legend/src/feature-legend.js"></script>
     <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+    <script src="{{ asset('js/api.js') }}"></script>
     <script>
         const showLoading = () => {
             document.getElementById('loading-spinner').classList.remove('hidden');
