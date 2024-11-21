@@ -14,6 +14,7 @@ use App\Http\Controllers\v1\Management\{
     MapObjectController,
     PortableDeviceController,
     SmsGardenController,
+    WaterPipelineController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -112,6 +113,8 @@ Route::middleware('auth')->group(function () {
             Route::resource('aws-device', \App\Http\Controllers\v1\Management\AwsDeviceController::class)->except('show');
 
             Route::resource('portable-device', PortableDeviceController::class);
+
+            Route::resource('water-pipeline', WaterPipelineController::class);
         });
     Route::get('activity-schedule/year/{year}/month/{month}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'scheduleInMonth'])->name('activity-schedule.schedule-in-month');
     Route::get('activity-schedule/date/{date}/garden/{garden}', [\App\Http\Controllers\v1\Management\ActivityScheduleController::class, 'detailGardenScheduleDay'])->name('activity-schedule.detail');
