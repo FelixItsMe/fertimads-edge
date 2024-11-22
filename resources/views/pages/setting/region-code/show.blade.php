@@ -28,8 +28,12 @@
                     @foreach ($regionCodes as $regionCodeData)
                         <div>
                             <span class="text-sm text-slate-400">{{ $regionCodeData->full_code }}</span>&nbsp;
-                            <a href="{{ route('region-code.show', $regionCodeData->full_code) }}"><span
-                                    class="text-primary font-bold">{{ $regionCodeData->region_name }}</span></a>
+                            @if (count(explode('.', $regionCodeData->full_code)) === 4)
+                                <span class="text-primary font-bold">{{ $regionCodeData->region_name }}</span>
+                            @else
+                                <a href="{{ route('region-code.show', $regionCodeData->full_code) }}"><span
+                                        class="text-primary font-bold">{{ $regionCodeData->region_name }}</span></a>
+                            @endif
                         </div>
                     @endforeach
                 </div>
