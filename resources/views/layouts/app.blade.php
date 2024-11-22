@@ -215,9 +215,9 @@
                 L.control.featureLegend(mapObjectsLegends, {
                     position: "bottomleft",
                     title: "Legenda",
-                    symbolContainerSize: 24,
+                    symbolContainerSize: 50,
                     symbolScaling: "clamped",
-                    maxSymbolSize: 24,
+                    maxSymbolSize: 50,
                     minSymbolSize: 2,
                     collapsed: false,
                     drawShadows: true,
