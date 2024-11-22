@@ -33,6 +33,11 @@
           }
       </style>
   @endpush
+  <x-slot name="header">
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+          {{ __('Data Telemetri Soil Monitoring System (SMS)') }}
+      </h2>
+  </x-slot>
 
   <div class="py-12">
       <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8 flex flex-col gap-4">
@@ -213,7 +218,7 @@
           }).addTo(map);
 
           map.modalWether = L.control({
-              position: 'topleft'
+              position: 'topright'
           });
 
           map.modalWether.onAdd = function(map) {
