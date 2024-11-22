@@ -144,6 +144,7 @@
             const initMapObjects = async (map) => {
                 const objects = await getObjects()
                 let mapObjectsGroup = L.layerGroup()
+                let waterPipelinesGroup = L.layerGroup()
                 let mapObjectsLegends = {}
 
                 if (!objects) {
@@ -151,38 +152,29 @@
                 }
 
                 mapObjectsGroup.clearLayers()
+                waterPipelinesGroup.clearLayers()
 
                 const onEachFeature = (feature, layer) => {
                     if (feature.properties && feature.properties.name) {
                         const popupContent = `
-            <h6 class="font-bold text-lg mb-3 font-sans">Informasi Marker</h6>
-            <div class="font-sans">
-                <div class="mb-2">
-                  <div class="font-bold">Nama</div>
-                  <div class="col-sm-8">${feature.properties.name}</div>
-                </div>
-                <div class="mb-2">
-                  <div class="font-bold">Tipe</div>
-                  <div class="col-sm-8">${feature.properties.type}</div>
-                </div>
-                <div class="mb-2">
-                  <div class="font-bold">Deskripsi</div>
-                  <div class="col-sm-8">${feature.properties.description}</div>
-                </div>
-            </div>
-          `
+                          <h6 class="font-bold text-lg mb-3 font-sans">Informasi Marker</h6>
+                          <div class="font-sans">
+                              <div class="mb-2">
+                                <div class="font-bold">Nama</div>
+                                <div class="col-sm-8">${feature.properties.name}</div>
+                              </div>
+                              <div class="mb-2">
+                                <div class="font-bold">Tipe</div>
+                                <div class="col-sm-8">${feature.properties.type}</div>
+                              </div>
+                              <div class="mb-2">
+                                <div class="font-bold">Deskripsi</div>
+                                <div class="col-sm-8">${feature.properties.description}</div>
+                              </div>
+                          </div>
+                        `
 
                         layer.bindPopup(popupContent);
-                    }
-
-                    if (feature.properties && feature.properties.icon) {
-                        let icon = L.icon({
-                            iconUrl: feature.properties.icon,
-                            iconSize: [25, 25],
-                            iconAnchor: [12, 12],
-                        })
-
-                        layer.setIcon(icon)
                     }
 
                     if (feature.properties && feature.properties.icon) {
@@ -204,6 +196,22 @@
                     onEachFeature: onEachFeature
                 }))
                 mapObjectsGroup.addTo(map)
+
+                let customIcon = L.icon({
+                    iconUrl: "{{ asset('assets/leaflet/water-pipeline.svg') }}",
+                    iconSize: [25, 25],
+                    iconAnchor: [12, 12],
+                })
+                const iconMarker = L.marker([51.505, -0.115], { icon: customIcon })
+
+                for (const waterPipeline of objects.waterPipelines) {
+                    waterPipelinesGroup.addLayer(L.polyline(waterPipeline.polyline))
+                }
+
+                waterPipelinesGroup.addTo(map)
+
+                mapObjectsLegends['Jalur Pipa Air'] = iconMarker
+
                 L.control.featureLegend(mapObjectsLegends, {
                     position: "bottomleft",
                     title: "Legenda",

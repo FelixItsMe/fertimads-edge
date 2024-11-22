@@ -21,6 +21,17 @@
     </a>
 </li>
 <li class="menu-item">
+    <a href="{{ route('water-pipeline.index') }}" class="menu-link">
+        <i @class([
+            'menu-icon',
+            'active-icon' => request()->routeIs('water-pipeline.*'),
+            'fa-solid',
+            'fa-grip-lines',
+            ]) ></i>
+        <div class="text-slate-400">Manajemen Jalur Pipa Air</div>
+    </a>
+</li>
+<li class="menu-item">
     <a href="{{ route('land.index') }}" class="menu-link">
         <i @class([
             'menu-icon',

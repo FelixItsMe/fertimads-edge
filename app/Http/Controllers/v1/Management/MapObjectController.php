@@ -5,10 +5,12 @@ namespace App\Http\Controllers\v1\Management;
 use App\Enums\MapObjectType;
 use App\Http\Controllers\Controller;
 use App\Models\MapObject;
+use App\Models\WaterPipeline;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MapObjectController extends Controller
 {
@@ -87,6 +89,11 @@ class MapObjectController extends Controller
         $objects = MapObject::query()
             ->get();
 
+        $waterPipelines = Cache::remember('water-pipeline', (60 * 60 * 1), function(){
+            return WaterPipeline::query()
+                ->get(['name', 'polyline']);
+        });
+
         $features = [];
 
         foreach ($objects as $object) {
@@ -107,7 +114,8 @@ class MapObjectController extends Controller
 
         return response()->json([
             'type' => 'FeatureCollection',
-            'features' => $features
+            'features' => $features,
+            'waterPipelines' => $waterPipelines,
         ]);
     }
 

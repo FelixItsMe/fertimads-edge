@@ -8,6 +8,7 @@ use App\Http\Requests\Management\WaterPipeline\UpdateWaterPipelineRequest;
 use App\Models\WaterPipeline;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class WaterPipelineController extends Controller
@@ -44,6 +45,8 @@ class WaterPipelineController extends Controller
             ->event('create')
             ->log('Kebun baru ditambahkan');
 
+        Cache::forget('water-pipeline');
+
         return redirect()
             ->route('water-pipeline.index')
             ->with('water-pipeline-success', 'Berhasil disimpan!');
@@ -77,6 +80,8 @@ class WaterPipelineController extends Controller
             ->event('update')
             ->log("Jalur pipa air " . $waterPipeline->name . " di update");
 
+        Cache::forget('water-pipeline');
+
         return redirect()
             ->route('water-pipeline.show', $waterPipeline->id)
             ->with('water-pipeline-success', 'berhasil disimpan!');
@@ -90,6 +95,8 @@ class WaterPipelineController extends Controller
         $waterPipeline->delete();
 
         session()->flash('water-pipeline-success', 'Berhasil dihapus');
+
+        Cache::forget('water-pipeline');
 
         if (request()->acceptsJson()) {
             return response()->json([

@@ -146,7 +146,6 @@
   <script src="{{ asset('leaflet/leaflet.js') }}"></script>
   <script src="{{ asset('js/extend.js') }}"></script>
   <script src="{{ asset('js/map.js') }}"></script>
-  <script src="{{ asset('js/api.js') }}"></script>
   <script src="{{ asset('js/weather.js') }}"></script>
   <script>
     // Get current date
