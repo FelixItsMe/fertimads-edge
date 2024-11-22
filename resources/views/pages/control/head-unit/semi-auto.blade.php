@@ -3,10 +3,10 @@
         <link rel="stylesheet" href="{{ asset('leaflet/leaflet.css') }}">
         <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
         <style>
-            #map {
+            /* #map {
                 height: 70vh;
                 z-index: 50;
-            }
+            } */
         </style>
     @endpush
     <x-slot name="header">
@@ -21,7 +21,7 @@
         <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-flow-row grid-cols-1 gap-2">
                 <div>
-                    <div id="map" class="rounded-md"></div>
+                    <div id="map" class="rounded-md h-screen md:h-[70vh]"></div>
                 </div>
                 <div class="grid grid-flow-row grid-cols-1 md:grid-cols-5 gap-2 max-md:px-4">
                     <div class="flex flex-col gap-2 pr-12">
@@ -137,7 +137,6 @@
         <script src="{{ asset('leaflet/leaflet.js') }}"></script>
         <script src="{{ asset('js/extend.js') }}"></script>
         <script src="{{ asset('js/map.js') }}"></script>
-        <script src="{{ asset('js/api.js') }}"></script>
         <script src="{{ asset('js/weather.js') }}"></script>
         <script>
             // Get current date
@@ -215,7 +214,7 @@
 
                 div.innerHTML = `
                   <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:align-middle sm:max-w-2xl sm:w-full hidden" id="garden-detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                    <div class="px-2 pt-2 pb-2 bg-white sm:p-3 sm:pb-4 max-h-48 md:max-h-80 overflow-y-scroll">
+                    <div class="px-2 pt-2 pb-2 bg-white sm:p-3 sm:pb-4 h-[8rem] xl:h-[18rem] overflow-y-scroll">
                       <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:text-left">
                           <div class="mt-2">
