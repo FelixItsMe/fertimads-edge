@@ -180,7 +180,7 @@
                     if (feature.properties && feature.properties.icon) {
                         let icon = L.icon({
                             iconUrl: feature.properties.icon,
-                            iconSize: [25, 25],
+                            iconSize: [50, 50],
                             iconAnchor: [12, 12],
                         })
 

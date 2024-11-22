@@ -35,22 +35,22 @@ class MapObject extends Model
 
             switch ($attributes['type']) {
                 case MapObjectType::GEDUNG_PUSAT->value:
-                    $icon = asset('assets/leaflet/building-solid.svg');
+                    $icon = asset('assets/leaflet/Pin-Building.svg');
                     break;
                 case MapObjectType::EMBUNG->value:
-                    $icon = asset('assets/leaflet/water-solid.svg');
+                    $icon = asset('assets/leaflet/Pin-Embung.svg');
                     break;
                 case MapObjectType::SAUNG_HEADUNIT->value:
-                    $icon = asset('assets/leaflet/house-flag-solid.svg');
+                    $icon = asset('assets/leaflet/Pin-House-Flag.svg');
                     break;
                 case MapObjectType::TOREN->value:
-                    $icon = asset('assets/leaflet/arrow-up-from-water-pump-solid.svg');
+                    $icon = asset('assets/leaflet/Pin-Water-Tank.svg');
                     break;
                 case MapObjectType::SMS_FIX_STATION->value:
-                    $icon = asset('assets/leaflet/charging-station-solid.svg');
+                    $icon = asset('assets/leaflet/Pin-SMS-Fix-Station.svg');
                     break;
                 case MapObjectType::PENANGKAL_PETIR->value:
-                    $icon = asset('assets/leaflet/tower-broadcast-solid.svg');
+                    $icon = asset('assets/leaflet/Pin-Lightning-Rod.svg');
                     break;
                 default:
                     $icon = null;
