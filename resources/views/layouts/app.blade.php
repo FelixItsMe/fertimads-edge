@@ -205,7 +205,7 @@
                 const iconMarker = L.marker([51.505, -0.115], { icon: customIcon })
 
                 for (const waterPipeline of objects.waterPipelines) {
-                    waterPipelinesGroup.addLayer(L.polyline(waterPipeline.polyline))
+                    waterPipelinesGroup.addLayer(L.polyline(waterPipeline.polyline).bringToBack())
                 }
 
                 waterPipelinesGroup.addTo(map)

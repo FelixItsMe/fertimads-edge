@@ -39,4 +39,16 @@ class UpdateWaterPipelineRequest extends FormRequest
             'polyline.*.*'  => 'required|regex:/^(-?\d+(\.\d+)?)$/',
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'polyline' => 'Jalur Pipa Air',
+        ];
+    }
 }

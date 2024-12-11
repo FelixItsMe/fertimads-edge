@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
         <style>
             #map {
-                height: 50vh;
+                height: 80vh;
                 z-index: 50;
             }
         </style>
@@ -47,7 +47,7 @@
                             <div class="w-full">
                                 <x-input-label class="text-slate-400"
                                     for="name">{{ __('Deskripsi') }}</x-input-label>
-                                <span>{{ $waterPipeline->description }} m2</span>
+                                <span>{{ $waterPipeline->description }}</span>
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                 .setView([-6.46958, 107.033339], 18);
 
             L.control.zoom({
-                position: 'bottomleft'
+                position: 'topleft'
             }).addTo(map);
 
             L.control.layers(baseMapOptions, null, {

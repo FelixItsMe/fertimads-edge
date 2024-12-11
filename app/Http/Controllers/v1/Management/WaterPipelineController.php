@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Management\WaterPipeline\StoreWaterPipelineRequest;
 use App\Http\Requests\Management\WaterPipeline\UpdateWaterPipelineRequest;
 use App\Models\WaterPipeline;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -19,6 +20,12 @@ class WaterPipelineController extends Controller
     public function index(): View
     {
         $waterPipelines = WaterPipeline::query()
+            ->when(request()->query('search'), function (Builder $query, $search) {
+                $search = '%' . trim($search) . '%';
+                $query->whereAny([
+                    'name',
+                ], 'LIKE', $search);
+            })
             ->latest()
             ->paginate(10);
 

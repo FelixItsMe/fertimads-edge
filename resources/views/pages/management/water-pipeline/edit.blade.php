@@ -34,6 +34,7 @@
                         <div id="map" class="rounded-md"></div>
                         <input type="hidden" name="polyline" id="polyline"
                             value="{{ json_encode($waterPipeline->polyline) }}">
+                        <x-input-error :messages="$errors->get('polyline')" class="mt-2" />
                     </div>
                     <div class="w-full">
                         <div class="p-6 bg-white overflow-hidden shadow-sm sm:rounded-lg flex flex-col gap-y-4">
@@ -273,6 +274,10 @@
                     color: 'blue'
                 }).addTo(map);
                 editableLayers.addLayer(currentPolygonLayer);
+
+                setTimeout(() => {
+                  currentPolygonLayer.bringToFront()
+                }, 1000);
 
                 map.fitBounds(currentPolygonLayer.getBounds());
             }
