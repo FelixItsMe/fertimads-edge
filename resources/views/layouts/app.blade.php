@@ -219,7 +219,7 @@
                     symbolScaling: "clamped",
                     maxSymbolSize: 50,
                     minSymbolSize: 2,
-                    collapsed: false,
+                    collapsed: true,
                     drawShadows: true,
                 }).addTo(map);
 
