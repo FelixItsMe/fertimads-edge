@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="{{ asset('css/extend.css') }}">
   <style>
     #map {
-      height: 50vh;
+      height: 80vh;
       z-index: 50;
     }
   </style>
@@ -97,7 +97,7 @@
       .setView([-6.46958, 107.033339], 18);
 
     L.control.zoom({
-      position: 'topleft'
+      position: 'bottomright'
     }).addTo(map);
 
     L.control.layers(baseMapOptions, null, {

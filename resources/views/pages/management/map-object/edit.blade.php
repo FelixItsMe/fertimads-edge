@@ -31,8 +31,8 @@
         @csrf
         @method('patch')
         <div class="w-full mb-3">
-          <div class="p-6 bg-white overflow-hidden shadow-sm sm:rounded-lg flex gap-x-4 w-full">
-            <div class="w-3/12">
+          <div class="p-6 bg-white overflow-hidden shadow-sm sm:rounded-lg grid grid-cols-1 gap-2 w-full">
+            <div>
               <x-input-label for="type">{{ __('Pilih Tipe') }}</x-input-label>
               <x-select-input id="type" class="block mt-1 w-full rounded-xl" name="type">
                 <option value="">Pilih Tipe</option>
@@ -42,17 +42,17 @@
               </x-select-input>
               <x-input-error :messages="$errors->get('type')" class="mt-2" />
             </div>
-            <div class="w-3/12">
+            <div>
               <x-input-label for="name">{{ __('Nama Objek') }}</x-input-label>
               <x-text-input id="name" class="block mt-1 w-full rounded-xl" type="text" name="name" :value="old('name') ?? $mapObject->name" required autofocus autocomplete="name" />
               <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
-            <div class="w-5/12">
+            <div>
               <x-input-label for="description">{{ __('Deskripsi') }}</x-input-label>
               <x-text-input id="description" class="block mt-1 w-full rounded-xl" type="text" name="description" :value="old('description') ?? $mapObject->description" required autofocus autocomplete="description" />
               <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
-            <div class="w-1/12 flex items-end pb-1">
+            <div class="flex justify-end pb-1">
               <x-primary-button>
                 {{ __('Simpan') }}
               </x-primary-button>

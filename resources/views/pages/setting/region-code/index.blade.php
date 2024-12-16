@@ -19,7 +19,7 @@
                     <div>
                     </div>
                 </div>
-                <div class="p-6 pt-0 grid grid-cols-4 gap-2">
+                <div class="p-6 pt-0 grid grid-cols-2 md:grid-cols-4 gap-2">
                     @foreach ($regionCodes as $regionCode)
                         <div>
                             <a href="{{ route('region-code.show', $regionCode->full_code) }}"><span

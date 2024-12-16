@@ -84,6 +84,9 @@
         <x-responsive-nav-link :href="route('weather.index')">
           {{ __('Cuaca') }}
         </x-responsive-nav-link>
+        <x-responsive-nav-link :href="route('region-code.index')">
+          {{ __('Kode Wilayah') }}
+        </x-responsive-nav-link>
         <x-responsive-nav-link :href="route('profile.edit')">
           {{ __('Profile') }}
         </x-responsive-nav-link>

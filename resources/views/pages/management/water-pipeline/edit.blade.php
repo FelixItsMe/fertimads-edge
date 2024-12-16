@@ -175,6 +175,9 @@
                     editableLayers.removeLayer(currentPolygonLayer);
                 }
                 editableLayers.removeLayer(layer);
+
+                layer.setStyle({color: 'red'})
+
                 stateData.polyline = layer.getLatLngs()
 
                 currentPolygonLayer = layer
@@ -271,7 +274,7 @@
 
                 stateData.polyline = JSON.parse(document.querySelector('#polyline').value)
                 currentPolygonLayer = L.polyline(stateData.polyline, {
-                    color: 'blue'
+                    color: 'red'
                 }).addTo(map);
                 editableLayers.addLayer(currentPolygonLayer);
 

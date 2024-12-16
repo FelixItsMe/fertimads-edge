@@ -24,7 +24,7 @@
                         <br>
                     </div>
                 </div>
-                <div class="p-6 pt-0 grid grid-cols-4 gap-2">
+                <div class="p-6 pt-0 grid grid-cols-2 md:grid-cols-4 gap-2">
                     @foreach ($regionCodes as $regionCodeData)
                         <div>
                             <span class="text-sm text-slate-400">{{ $regionCodeData->full_code }}</span>&nbsp;

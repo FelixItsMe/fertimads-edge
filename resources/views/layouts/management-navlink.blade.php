@@ -1,6 +1,12 @@
 <x-responsive-nav-link :href="route('activity-schedule.index')" :active="request()->routeIs('activity-schedule.*')">
   {{ __('Jadwal Kegiatan') }}
 </x-responsive-nav-link>
+<x-responsive-nav-link :href="route('map-object.index')" :active="request()->routeIs('map-object.*')">
+  {{ __('Manajemen Peta') }}
+</x-responsive-nav-link>
+<x-responsive-nav-link :href="route('water-pipeline.index')" :active="request()->routeIs('water-pipeline.*')">
+  {{ __('Manajemen Jalur Pipa Air') }}
+</x-responsive-nav-link>
 <x-responsive-nav-link :href="route('land.index')" :active="request()->routeIs('land.*')">
   {{ __('Manajemen Lahan') }}
 </x-responsive-nav-link>

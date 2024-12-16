@@ -35,6 +35,12 @@
         .legend-spacing i {
             margin-right: 1em;
         }
+
+        .legend {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+        }
     </style>
 
     <!-- Scripts -->
@@ -151,84 +157,121 @@
                     return false
                 }
 
-                mapObjectsGroup.clearLayers()
-                waterPipelinesGroup.clearLayers()
+                // mapObjectsGroup.clearLayers()
+                // waterPipelinesGroup.clearLayers()
 
-                const onEachFeature = (feature, layer) => {
-                    if (feature.properties && feature.properties.name) {
-                        const popupContent = `
-                          <h6 class="font-bold text-lg mb-3 font-sans">Informasi Marker</h6>
-                          <div class="font-sans">
-                              <div class="mb-2">
-                                <div class="font-bold">Nama</div>
-                                <div class="col-sm-8">${feature.properties.name}</div>
-                              </div>
-                              <div class="mb-2">
-                                <div class="font-bold">Tipe</div>
-                                <div class="col-sm-8">${feature.properties.type}</div>
-                              </div>
-                              <div class="mb-2">
-                                <div class="font-bold">Deskripsi</div>
-                                <div class="col-sm-8">${feature.properties.description}</div>
-                              </div>
-                          </div>
-                        `
+                // const onEachFeature = (feature, layer) => {
+                //     if (feature.properties && feature.properties.name) {
+                //         const popupContent = `
+            //           <h6 class="font-bold text-lg mb-3 font-sans">Informasi Marker</h6>
+            //           <div class="font-sans">
+            //               <div class="mb-2">
+            //                 <div class="font-bold">Nama</div>
+            //                 <div class="col-sm-8">${feature.properties.name}</div>
+            //               </div>
+            //               <div class="mb-2">
+            //                 <div class="font-bold">Tipe</div>
+            //                 <div class="col-sm-8">${feature.properties.type}</div>
+            //               </div>
+            //               <div class="mb-2">
+            //                 <div class="font-bold">Deskripsi</div>
+            //                 <div class="col-sm-8">${feature.properties.description}</div>
+            //               </div>
+            //           </div>
+            //         `
 
-                        layer.bindPopup(popupContent);
-                    }
+                //         layer.bindPopup(popupContent);
+                //     }
 
-                    if (feature.properties && feature.properties.icon) {
-                        let icon = L.icon({
-                            iconUrl: feature.properties.icon,
-                            iconSize: [50, 50],
-                            iconAnchor: [12, 12],
-                        })
+                //     if (feature.properties && feature.properties.icon) {
+                //         let icon = L.icon({
+                //             iconUrl: feature.properties.icon,
+                //             iconSize: [50, 50],
+                //             iconAnchor: [12, 12],
+                //         })
 
-                        layer.setIcon(icon)
-                    }
+                //         layer.setIcon(icon)
+                //     }
 
-                    if (feature.properties && feature.properties.type) {
-                        mapObjectsLegends[feature.properties.type] = layer
-                    }
+                //     if (feature.properties && feature.properties.type) {
+                //         mapObjectsLegends[feature.properties.type] = layer
+                //     }
+                // }
+
+                // mapObjectsGroup.addLayer(L.geoJSON(objects, {
+                //     onEachFeature: onEachFeature
+                // }))
+                // mapObjectsGroup.addTo(map)
+
+                // let customIcon = L.icon({
+                //     iconUrl: "{{ asset('assets/leaflet/water-pipeline.svg') }}",
+                //     iconSize: [25, 25],
+                //     iconAnchor: [12, 12],
+                // })
+                // const iconMarker = L.marker([51.505, -0.115], {
+                //     icon: customIcon
+                // })
+
+                // for (const waterPipeline of objects.waterPipelines) {
+                //     waterPipelinesGroup.addLayer(L.polyline(waterPipeline.polyline).bringToBack())
+                // }
+
+                // waterPipelinesGroup.addTo(map)
+
+                // mapObjectsLegends['Jalur Pipa Air'] = iconMarker
+
+                // L.control.featureLegend(mapObjectsLegends, {
+                //     position: "bottomleft",
+                //     title: "Legenda",
+                //     symbolContainerSize: 50,
+                //     symbolScaling: "clamped",
+                //     maxSymbolSize: 50,
+                //     minSymbolSize: 2,
+                //     collapsed: true,
+                //     drawShadows: true,
+                // }).addTo(map);
+
+                // const legendTitle = document.querySelector('.leaflet-control-feature-legend-title')
+                // const legendContents = document.querySelectorAll('.leaflet-control-feature-legend-contents div')
+                // legendTitle.classList.add("font-bold", "mb-3")
+                // legendContents.forEach((item) => {
+                //     item.classList.add("legend-spacing")
+                // })
+
+                let legend = L.control({
+                    position: 'bottomleft'
+                });
+
+                legend.onAdd = (map) => {
+                    const div = L.DomUtil.create('div', 'info legend');
+
+                    let listLegend = ``
+
+                    objects.features.forEach(feature => {
+                        listLegend +=
+                            `<div class="flex flex-row items-center"><img class="w-12 h-12" src="${feature.properties.icon}" /> <span>${feature.properties.name}</span></div>`
+                    });
+
+                    listLegend +=
+                        `<div class="flex flex-row items-center"><img class="w-12 h-12" src="{{ asset('assets/leaflet/water-pipeline.svg') }}" /> <span>Jalur Pipa Air</span></div>`
+
+                    div.innerHTML = `<div class="flex flex-row justify-between space-x-4">
+                      <h4 id="map-legend" class="cursor-pointer" title="Klik untuk melihat legenda">Legenda</h4>
+                    </div>
+                    <div id="map-legend-body" class="flex flex-row flex-wrap space-x-2 hidden">${listLegend}</div>`;
+
+                    return div;
+                };
+
+                legend.addTo(map);
+
+                const mapLegend = document.getElementById('map-legend')
+
+                if (mapLegend) {
+                    mapLegend.addEventListener('click', e => {
+                      console.log(document.getElementById('map-legend-body').classList.toggle('hidden'));
+                    })
                 }
-
-                mapObjectsGroup.addLayer(L.geoJSON(objects, {
-                    onEachFeature: onEachFeature
-                }))
-                mapObjectsGroup.addTo(map)
-
-                let customIcon = L.icon({
-                    iconUrl: "{{ asset('assets/leaflet/water-pipeline.svg') }}",
-                    iconSize: [25, 25],
-                    iconAnchor: [12, 12],
-                })
-                const iconMarker = L.marker([51.505, -0.115], { icon: customIcon })
-
-                for (const waterPipeline of objects.waterPipelines) {
-                    waterPipelinesGroup.addLayer(L.polyline(waterPipeline.polyline).bringToBack())
-                }
-
-                waterPipelinesGroup.addTo(map)
-
-                mapObjectsLegends['Jalur Pipa Air'] = iconMarker
-
-                L.control.featureLegend(mapObjectsLegends, {
-                    position: "bottomleft",
-                    title: "Legenda",
-                    symbolContainerSize: 50,
-                    symbolScaling: "clamped",
-                    maxSymbolSize: 50,
-                    minSymbolSize: 2,
-                    collapsed: true,
-                    drawShadows: true,
-                }).addTo(map);
-
-                const legendTitle = document.querySelector('.leaflet-control-feature-legend-title')
-                const legendContents = document.querySelectorAll('.leaflet-control-feature-legend-contents div')
-                legendTitle.classList.add("font-bold", "mb-3")
-                legendContents.forEach((item) => {
-                    item.classList.add("legend-spacing")
-                })
             }
 
             if (map) {
