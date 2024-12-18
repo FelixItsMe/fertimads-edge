@@ -157,8 +157,33 @@
                     return false
                 }
 
-                // mapObjectsGroup.clearLayers()
-                // waterPipelinesGroup.clearLayers()
+                mapObjectsGroup.clearLayers()
+                waterPipelinesGroup.clearLayers()
+
+                let customIcon = L.icon({
+                    iconUrl: "{{ asset('assets/leaflet/water-pipeline.svg') }}",
+                    iconSize: [25, 25],
+                    iconAnchor: [12, 12],
+                })
+
+                for (const waterPipeline of objects.waterPipelines) {
+                    waterPipelinesGroup.addLayer(L.polyline(waterPipeline.polyline).bringToBack())
+                }
+                for (const feature of objects.features) {
+                    const [lng, lat] = feature.geometry.coordinates
+
+                    mapObjectsGroup.addLayer(L.marker([lat, lng], {
+                        icon: L.icon({
+                            iconUrl: feature.properties.icon,
+                            iconSize: [50, 50],
+                            iconAnchor: [12, 12],
+                        })
+                    }))
+                }
+
+                mapObjectsGroup.addTo(map);
+
+                waterPipelinesGroup.addTo(map)
 
                 // const onEachFeature = (feature, layer) => {
                 //     if (feature.properties && feature.properties.name) {
@@ -269,7 +294,8 @@
 
                 if (mapLegend) {
                     mapLegend.addEventListener('click', e => {
-                      console.log(document.getElementById('map-legend-body').classList.toggle('hidden'));
+                        document.getElementById('map-legend-body').classList.toggle(
+                            'hidden')
                     })
                 }
             }
