@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\UserRoleEnums;
+use App\Http\Controllers\Edge\FixStationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\v1\Care\ActivityScheduleController;
 use App\Http\Controllers\v1\Care\DashboardController;
@@ -68,6 +69,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['roleAccess:' . UserRoleEnums::MANAGEMENT->value])
         ->prefix('management')
         ->group(function () {
+            Route::get('/fix-station', [FixStationController::class, 'index'])->name('fix-station.index');
+            Route::get('/fix-station/get-telemetries', [FixStationController::class, 'getTelemetries'])->name('fix-station.get-telemetries');
 
             // Land Route
             Route::resource('land', \App\Http\Controllers\v1\LandController::class);
