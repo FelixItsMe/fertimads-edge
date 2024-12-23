@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
         switch (auth()->user()->role) {
             case UserRoleEnums::MANAGEMENT->value:
                 $routeName = 'dashboard.index';
-                if (config('app.type') === 'edge') {
+                if (config('edge.status') === true) {
                     $routeName = 'fix-station.index';
                 }
                 break;

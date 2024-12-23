@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('fix_stations', function (Blueprint $table) {
             $table->id();
+            $table->unsignedTinyInteger('is_last_exported')->default(0);
             $table->string('garden_id')->nullable();
             $table->json('samples')->nullable();
             $table->timestamps();

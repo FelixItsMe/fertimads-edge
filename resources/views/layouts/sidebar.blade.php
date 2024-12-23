@@ -20,7 +20,7 @@
                 @endswitch
             </a>
         </div>
-        @if (config('app.type') === 'edge')
+        @if (config('edge.status'))
             <ul id="menu-inner"
                 class="flex flex-col flex-auto items-center justify-start m-0 p-0 pt-6 relative overflow-hidden touch-auto pb-6">
                 @include('layouts.edge-links')

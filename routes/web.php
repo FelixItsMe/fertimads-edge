@@ -71,6 +71,7 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
             Route::get('/fix-station', [FixStationController::class, 'index'])->name('fix-station.index');
             Route::get('/fix-station/get-telemetries', [FixStationController::class, 'getTelemetries'])->name('fix-station.get-telemetries');
+            Route::post('/fix-station/export-cloud', [FixStationController::class, 'storeTelemetries'])->name('fix-station.store-cloud');
 
             // Land Route
             Route::resource('land', \App\Http\Controllers\v1\LandController::class);

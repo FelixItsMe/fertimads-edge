@@ -39,6 +39,18 @@
         </h2>
     </x-slot>
 
+    @if (session()->has('success'))
+        <div class="bg-sky-500 text-white w-full p-6 sm:rounded-lg flex items-center mb-4">
+            <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;{{ session()->get('success') }}
+        </div>
+    @endif
+
+    @if (session()->has('failed'))
+        <div class="bg-red-400 text-white w-full p-6 sm:rounded-lg flex items-center mb-4">
+            <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;{{ session()->get('failed') }}
+        </div>
+    @endif
+
     <div class="py-12">
         <div class="sm:max-w-7x xl:max-w-full mx-auto sm:px-6 lg:px-8 flex flex-col gap-4">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -50,6 +62,10 @@
                         <div class=" flex justify-between">
                             <h1 class="text-3xl font-extrabold">Tabel Data Telemetri Fix Station</h1>
                             <div>
+                                <form action="{{ route('fix-station.store-cloud') }}" method="post">
+                                    @csrf
+                                    <x-primary-button>{{ __('Export Data to Cloud') }}</x-primary-button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -886,17 +902,17 @@
             }
 
             const initTelemetries = async () => {
-              const tbody = document.getElementById('fix-station-tbody')
-              tbody.innerHTML = `<tr class="text-center">
+                const tbody = document.getElementById('fix-station-tbody')
+                tbody.innerHTML = `<tr class="text-center">
                                     <td colspan="9">Loading</td>
                                 </tr>`
 
-              const telemetries = await getFixStationTelemetries()
+                const telemetries = await getFixStationTelemetries()
 
-              let trData = ``
+                let trData = ``
 
-              telemetries.forEach(telemetry => {
-                trData += `<tr class="text-center">
+                telemetries.forEach(telemetry => {
+                    trData += `<tr class="text-center">
                                     <td>${telemetry.created_at ?? ''}</td>
                                     <td>${telemetry.garden_id}</td>
                                     <td>${telemetry.samples.Nitrogen}&nbsp;mg/kg</td>
@@ -907,9 +923,9 @@
                                     <td>${telemetry.samples.Temperature.toFixed(2)}<sup>o</sup>C</td>
                                     <td>${telemetry.samples.Humidity.toFixed(2)}%</td>
                                 </tr>`
-              });
+                });
 
-              tbody.innerHTML = trData
+                tbody.innerHTML = trData
             }
 
             window.onload = () => {
@@ -918,7 +934,7 @@
                 initTelemetries()
 
                 setInterval(() => {
-                  initTelemetries()
+                    initTelemetries()
                 }, 5000);
 
                 initLandPolygon(1, map)
