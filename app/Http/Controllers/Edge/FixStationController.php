@@ -43,7 +43,7 @@ class FixStationController extends Controller
         $fixStationTelemetries = [];
         DB::table('fix_stations')
             ->select(['garden_id', 'samples', 'created_at'])
-            ->when($fixStationLastExported->created_at, function($query)use($fixStationLastExported){
+            ->when($fixStationLastExported?->created_at ?? null, function($query)use($fixStationLastExported){
                 $query->where('created_at', '>', $fixStationLastExported->created_at);
             })
             ->latest()
