@@ -43,9 +43,11 @@ class FixStationController extends Controller
         $fixStationTelemetries = [];
         DB::table('fix_stations')
             ->select(['garden_id', 'samples', 'created_at'])
-            ->where('created_at', '>', $fixStationLastExported->created_at)
+            ->when($fixStationLastExported->created_at, function($query)use($fixStationLastExported){
+                $query->where('created_at', '>', $fixStationLastExported->created_at);
+            })
             ->latest()
-            ->chunk(10, function(Collection $fix_stations)use(&$fixStationTelemetries){
+            ->chunk(100, function(Collection $fix_stations)use(&$fixStationTelemetries){
                 $fixStationTelemetries[] = $fix_stations->map(function($fixStation){
                     return [
                         'garden_id' => $fixStation->garden_id,
@@ -76,8 +78,11 @@ class FixStationController extends Controller
             ->latest()
             ->first();
 
-        $fixStation->is_last_exported = 1;
-        $fixStation->save();
+        if ($fixStation) {
+            $fixStation->is_last_exported = 1;
+            $fixStation->save();
+        }
+
 
         return back()
             ->with('success', 'Export sedang diproses');
