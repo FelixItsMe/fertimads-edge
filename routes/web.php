@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\UserRoleEnums;
+use App\Http\Controllers\Edge\CloudSettingController;
 use App\Http\Controllers\Edge\FixStationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\v1\Care\ActivityScheduleController;
@@ -175,6 +176,9 @@ Route::middleware('auth')->group(function () {
             Route::get('region-code/create', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'create'])->name('region-code.create');
             // Route::post('region-code', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'store'])->name('region-code.store');
             Route::get('region-code/{regionCode}', [\App\Http\Controllers\v1\Setting\RegionCodeController::class, 'show'])->name('region-code.show');
+
+            Route::get('cloud', [CloudSettingController::class, 'index'])->name('cloud.index');
+            Route::put('cloud', [CloudSettingController::class, 'update'])->name('cloud.update');
         });
 
     // extra to get data

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\CloudSetting;
 use App\Models\FixStation;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -54,13 +55,21 @@ class StoreFixStationJob implements ShouldQueue
 
         try {
             if (count($fixStationTelemetries) > 0) {
-                $response = Http::timeout(60)->withHeaders([
+                $cloudSetting = CloudSetting::first();
+
+                $settingHeader = (array) $cloudSetting->headers;
+
+                $headers = [
                     'Accept' => "application/json",
                     'Content-Type' => "application/json",
-                    'X-Fertimads-Edge' => config('edge.token'),
-                ])->post(config('edge.cloud_url'), [
-                    'data' => collect($fixStationTelemetries)->flatten(1)->toArray(),
-                ]);
+                    ...$settingHeader
+                ];
+
+                $response = Http::timeout(60)
+                    ->withHeaders($headers)
+                    ->post($cloudSetting->url, [
+                        'data' => collect($fixStationTelemetries)->flatten(1)->toArray(),
+                    ]);
 
                 $response->throw();
 

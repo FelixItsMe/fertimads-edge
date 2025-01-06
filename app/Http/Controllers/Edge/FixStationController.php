@@ -39,6 +39,6 @@ class FixStationController extends Controller
         StoreFixStationJob::dispatch()->onQueue('fix-station');
 
         return back()
-            ->with('success', 'Export sedang diproses');
+            ->with('success', 'Export sedang diproses. Cek Log laravel jika data tidak terkirim ke cloud!');
     }
 }
