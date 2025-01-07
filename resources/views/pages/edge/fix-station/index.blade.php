@@ -56,6 +56,21 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div id="map" class="h-screen z-50"></div>
             </div>
+            <div class="bg-sky-500 text-white w-full p-6 sm:rounded-lg flex items-center mb-4 hidden" id="success-port">
+                <i class="fa-solid fa-circle-info text-3xl mr-3"></i>&nbsp;<span id="success-port-message"></span>
+            </div>
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                  <div class="flex flex-row space-x-2 items-end">
+                      <x-primary-button type="button" id="open-port">
+                          {{ __('Buka Port') }}
+                      </x-primary-button>
+                      <x-primary-button type="button" id="close-port">
+                          {{ __('Tutup Port') }}
+                      </x-primary-button>
+                  </div>
+                </div>
+            </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <div class="flex flex-col space-y-2">
@@ -85,7 +100,7 @@
                                 <th>Kelembapan Tanah</th>
                             </tr>
                         </thead>
-                        <tbody class="table-border-bottom-0" id="fix-station-tbody">
+                        <tbody class="table-border-bottom-0 h-[500px]" id="fix-station-tbody">
                         </tbody>
                     </table>
                 </div>
@@ -358,6 +373,79 @@
                         },
                     }
                 );
+
+                return data
+            }
+
+            const getPorts = async () => {
+                const data = await fetchData(
+                    "http://localhost:7979/ports", {
+                        method: "GET",
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                    }
+                );
+
+                return data
+            }
+
+            let controlTimeout
+
+            function alerPort(message) {
+                if (controlTimeout) clearTimeout(controlTimeout)
+
+                document.querySelector('#success-port').classList.remove('hidden')
+                document.querySelector('#success-port-message').textContent = message
+
+                controlTimeout = setTimeout(() => {
+                    document.querySelector('#success-port').classList.add('hidden')
+                }, 5000);
+            }
+
+            let prevPortController
+
+            const postControlPort = async (action) => {
+                let url
+                let message
+                switch (action) {
+                    case 'open':
+                        url = "http://localhost:7979/open"
+                        message = 'Port berhasil dibuka'
+                        break;
+                    case 'close':
+                        url = "http://localhost:7979/close"
+                        message = 'Port berhasil ditutup'
+                        break;
+
+                    default:
+                        return
+                        break;
+                }
+
+                const controller = new AbortController();
+
+                if (prevPortController) {
+                  prevPortController.abort();
+                }
+
+                prevPortController = controller
+
+                const data = await fetchData(
+                    url,
+                    {
+                        method: "POST",
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        signal: controller.signal,
+                    }
+                );
+
+                if (data) {
+                    alerPort(message)
+                }
 
                 return data
             }
@@ -903,9 +991,9 @@
 
             const initTelemetries = async () => {
                 const tbody = document.getElementById('fix-station-tbody')
-                tbody.innerHTML = `<tr class="text-center">
-                                    <td colspan="9">Loading</td>
-                                </tr>`
+                // tbody.innerHTML = `<tr class="text-center">
+        //                     <td colspan="9">Loading</td>
+        //                 </tr>`
 
                 const telemetries = await getFixStationTelemetries()
 
@@ -928,8 +1016,25 @@
                 tbody.innerHTML = trData
             }
 
+            function renderPortsToSelect(ports, eSelectId) {
+                eOptions = `<option value="">Pilih Port</option>`
+
+                ports.forEach(port => {
+                    eOptions += `<option value="${port.path}">${port.path}</option>`
+                });
+
+                document.getElementById(eSelectId).innerHTML = eOptions
+            }
+
+            async function initialPorts() {
+                const ports = await getPorts()
+
+                renderPortsToSelect(ports, 'ports')
+            }
+
             window.onload = () => {
                 console.log('Hello world');
+                // initialPorts()
 
                 initTelemetries()
 
@@ -963,6 +1068,18 @@
                 } else if (weatherWidgetMode != null) {
                     awsWether(weatherWidgetMode, weatherElements)
                 }
+
+                document.getElementById('open-port').addEventListener('click', e => {
+                    // const portPath = document.getElementById('ports').value
+                    postControlPort('open')
+                })
+
+                document.getElementById('close-port').addEventListener('click', e => {
+                    console.log('close');
+
+                    // const portPath = document.getElementById('ports').value
+                    postControlPort('close')
+                })
             }
         </script>
     @endpush
