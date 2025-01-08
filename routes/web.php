@@ -51,6 +51,9 @@ Route::get('/dashboard', function () {
             $routeName = 'profile.edit';
             break;
     }
+    if (config('edge.status') === true) {
+        $routeName = 'fix-station.index';
+    }
     return redirect()->route($routeName);
 })->middleware(['auth', 'verified'])->name('dashboard');
 

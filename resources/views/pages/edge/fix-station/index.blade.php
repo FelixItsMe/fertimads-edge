@@ -61,14 +61,24 @@
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                  <div class="flex flex-row space-x-2 items-end">
-                      <x-primary-button type="button" id="open-port">
-                          {{ __('Buka Port') }}
-                      </x-primary-button>
-                      <x-primary-button type="button" id="close-port">
-                          {{ __('Tutup Port') }}
-                      </x-primary-button>
-                  </div>
+                    <div class="flex flex-row justify-between items-center">
+                        <div>
+                            <span>
+                                Port Status:
+                                <span class="text-white px-4 py-2 rounded-md uppercase" id="port-status">
+                                    -
+                                </span>
+                            </span>
+                        </div>
+                        <div class="flex flex-row space-x-2 items-center">
+                            <x-primary-button type="button" id="open-port">
+                                {{ __('Buka Port') }}
+                            </x-primary-button>
+                            <x-primary-button type="button" id="close-port">
+                                {{ __('Tutup Port') }}
+                            </x-primary-button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -390,6 +400,19 @@
                 return data
             }
 
+            const getPortStatus = async () => {
+                const data = await fetchData(
+                    "http://localhost:7979/port-status", {
+                        method: "GET",
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                    }
+                );
+
+                return data?.is_open
+            }
+
             let controlTimeout
 
             function alerPort(message) {
@@ -408,14 +431,17 @@
             const postControlPort = async (action) => {
                 let url
                 let message
+                let status
                 switch (action) {
                     case 'open':
                         url = "http://localhost:7979/open"
                         message = 'Port berhasil dibuka'
+                        status = true
                         break;
                     case 'close':
                         url = "http://localhost:7979/close"
                         message = 'Port berhasil ditutup'
+                        status = false
                         break;
 
                     default:
@@ -426,14 +452,13 @@
                 const controller = new AbortController();
 
                 if (prevPortController) {
-                  prevPortController.abort();
+                    prevPortController.abort();
                 }
 
                 prevPortController = controller
 
                 const data = await fetchData(
-                    url,
-                    {
+                    url, {
                         method: "POST",
                         headers: {
                             'Accept': 'application/json',
@@ -443,9 +468,11 @@
                     }
                 );
 
-                if (data) {
-                    alerPort(message)
-                }
+                if (!data) return
+
+                alerPort(message)
+
+                renderPortStatus(status)
 
                 return data
             }
@@ -1032,9 +1059,36 @@
                 renderPortsToSelect(ports, 'ports')
             }
 
+            function renderPortStatus(portIsOpen) {
+                const ePortStatus = document.getElementById('port-status')
+
+                switch (portIsOpen) {
+                    case true:
+                        ePortStatus.classList.add("bg-blue-500")
+                        ePortStatus.classList.remove("bg-red-500")
+                        break;
+                    case false:
+                        ePortStatus.classList.add("bg-red-500")
+                        ePortStatus.classList.remove("bg-blue-500")
+                        break;
+
+                    default:
+                        break;
+                }
+
+                ePortStatus.textContent = portIsOpen ? 'open' : 'close'
+            }
+
+            async function initialPortStatus() {
+                const isOpen = await getPortStatus()
+
+                renderPortStatus(isOpen)
+            }
+
             window.onload = () => {
                 console.log('Hello world');
                 // initialPorts()
+                initialPortStatus()
 
                 initTelemetries()
 
