@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\UserRoleEnums;
+use App\Http\Controllers\Edge\CloudExportLogController;
 use App\Http\Controllers\Edge\CloudSettingController;
 use App\Http\Controllers\Edge\FixStationController;
 use App\Http\Controllers\ProfileController;
@@ -75,7 +76,10 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
             Route::get('/fix-station', [FixStationController::class, 'index'])->name('fix-station.index');
             Route::get('/fix-station/get-telemetries', [FixStationController::class, 'getTelemetries'])->name('fix-station.get-telemetries');
+            Route::get('/fix-station/get-last-exported-telemetry', [FixStationController::class, 'getLastExportTelemetry'])->name('fix-station.get-last-exported');
             Route::post('/fix-station/export-cloud', [FixStationController::class, 'storeTelemetries'])->name('fix-station.store-cloud');
+
+            Route::get('/cloud-export-log', [CloudExportLogController::class, 'index'])->name('cloud-export-log.index');
 
             // Land Route
             Route::resource('land', \App\Http\Controllers\v1\LandController::class);

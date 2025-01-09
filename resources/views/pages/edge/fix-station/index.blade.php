@@ -86,7 +86,8 @@
                     <div class="flex flex-col space-y-2">
                         <div class=" flex justify-between">
                             <h1 class="text-3xl font-extrabold">Tabel Data Telemetri Fix Station</h1>
-                            <div>
+                            <div class="flex flex-row space-x-2 items-center">
+                                <span>Terakhir diexport: <span id="last-export">{{ $lastExported?->created_at ?? '-' }}</span></span>
                                 <form action="{{ route('fix-station.store-cloud') }}" method="post">
                                     @csrf
                                     <x-primary-button>{{ __('Export Data to Cloud') }}</x-primary-button>
@@ -375,6 +376,21 @@
             const getFixStationTelemetries = async () => {
                 const data = await fetchData(
                     "{{ route('fix-station.get-telemetries') }}", {
+                        method: "GET",
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
+                                .nodeValue,
+                            'Accept': 'application/json',
+                        },
+                    }
+                );
+
+                return data
+            }
+
+            const getLastExportTelemetry = async () => {
+                const data = await fetchData(
+                    "{{ route('fix-station.get-last-exported') }}", {
                         method: "GET",
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').attributes.content
@@ -1085,6 +1101,12 @@
                 renderPortStatus(isOpen)
             }
 
+            const updateLastExported = async () => {
+              const lastExport = await getLastExportTelemetry()
+
+              document.getElementById('last-export').textContent = lastExport?.created_at
+            }
+
             window.onload = () => {
                 console.log('Hello world');
                 // initialPorts()
@@ -1095,6 +1117,10 @@
                 setInterval(() => {
                     initTelemetries()
                 }, 5000);
+
+                setInterval(() => {
+                    updateLastExported()
+                }, 1000 * 30);
 
                 initLandPolygon(1, map)
 

@@ -15,17 +15,21 @@ use Illuminate\Support\Facades\Http;
 
 class FixStationController extends Controller
 {
-    public function index() : View {
+    public function index(): View
+    {
         abort_if((!config('edge.status')), 403, 'Tidak dapat mengakses konten ini!');
 
         $fixStations = FixStation::query()
             ->latest()
             ->paginate(10);
 
-        return view('pages.edge.fix-station.index', compact('fixStations'));
+        $lastExported = $this->lastExported();
+
+        return view('pages.edge.fix-station.index', compact('fixStations', 'lastExported'));
     }
 
-    public function getTelemetries() : JsonResponse {
+    public function getTelemetries(): JsonResponse
+    {
         $fixStations = FixStation::query()
             ->latest()
             ->limit(10)
@@ -35,10 +39,27 @@ class FixStationController extends Controller
             ->json($fixStations);
     }
 
-    public function storeTelemetries(StoreFixStationTelemetriesRequest $request) {
+    public function getLastExportTelemetry(): JsonResponse
+    {
+        $fixStationLastExported = $this->lastExported();
+
+        return response()
+            ->json($fixStationLastExported);
+    }
+
+    public function storeTelemetries(StoreFixStationTelemetriesRequest $request)
+    {
         StoreFixStationJob::dispatch()->onQueue('fix-station');
 
         return back()
             ->with('success', 'Export sedang diproses. Cek Log laravel jika data tidak terkirim ke cloud!');
+    }
+
+    private function lastExported()
+    {
+        return FixStation::query()
+            ->where('is_last_exported', 1)
+            ->latest()
+            ->first();
     }
 }

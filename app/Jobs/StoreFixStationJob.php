@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Enums\CloudExportLogEnums;
+use App\Models\CloudExportLog;
 use App\Models\CloudSetting;
 use App\Models\FixStation;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -81,9 +83,24 @@ class StoreFixStationJob implements ShouldQueue
                     $fixStation->is_last_exported = 1;
                     $fixStation->save();
                 }
+
+                CloudExportLog::create([
+                    'status' => CloudExportLogEnums::SUCCESS,
+                    'message' => 'Data berhasil dikirim ke cloud!',
+                ]);
+            } else {
+                CloudExportLog::create([
+                    'status' => CloudExportLogEnums::FAILED,
+                    'message' => 'Tidak ada data terbaru untuk dikirim!',
+                ]);
             }
         } catch (\Exception $ex) {
             Log::error($ex->getMessage());
+
+            CloudExportLog::create([
+                'status' => CloudExportLogEnums::FAILED,
+                'message' => $ex->getMessage(),
+            ]);
         }
     }
 }
