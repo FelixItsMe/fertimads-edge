@@ -84,22 +84,25 @@ class StoreFixStationJob implements ShouldQueue
                     $fixStation->save();
                 }
 
-                CloudExportLog::create([
+                CloudExportLog::insert([
                     'status' => CloudExportLogEnums::SUCCESS,
                     'message' => 'Data berhasil dikirim ke cloud!',
+                    'created_at' => now('Asia/Jakarta'),
                 ]);
             } else {
-                CloudExportLog::create([
+                CloudExportLog::insert([
                     'status' => CloudExportLogEnums::FAILED,
                     'message' => 'Tidak ada data terbaru untuk dikirim!',
+                    'created_at' => now('Asia/Jakarta'),
                 ]);
             }
         } catch (\Exception $ex) {
             Log::error($ex->getMessage());
 
-            CloudExportLog::create([
+            CloudExportLog::insert([
                 'status' => CloudExportLogEnums::FAILED,
                 'message' => $ex->getMessage(),
+                'created_at' => now('Asia/Jakarta'),
             ]);
         }
     }
