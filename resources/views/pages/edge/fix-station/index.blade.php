@@ -94,6 +94,9 @@
                                 </form>
                             </div>
                         </div>
+                        <div>
+                          <h3>Data Updated: <span id="datetime-newest-data"></span></h3>
+                        </div>
                     </div>
                 </div>
                 <div class="overflow-x-scroll">
@@ -590,7 +593,7 @@
 
                 document.querySelector('#nama-kebun').textContent = data.garden.name
                 document.querySelector('#luasKebun').textContent = data.garden.area + " m²"
-                document.querySelector('#komoditi').textContent = data.garden.commodity.name
+                document.querySelector('#komoditi').textContent = data.garden.commodity?.name ?? '-'
                 document.querySelector('#totalBlok').textContent = data.garden.count_block
                 document.querySelector('#populasi').textContent = data.garden.population
                 document.querySelector('#penyakit').textContent = data.garden.latest_pest?.disease_name || "-"
@@ -1039,6 +1042,10 @@
         //                 </tr>`
 
                 const telemetries = await getFixStationTelemetries()
+
+                if (telemetries.length > 0) {
+                  document.getElementById('datetime-newest-data').textContent = telemetries[0].created_at
+                }
 
                 let trData = ``
 

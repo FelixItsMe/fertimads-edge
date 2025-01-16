@@ -167,18 +167,55 @@
                 })
 
                 for (const waterPipeline of objects.waterPipelines) {
-                    waterPipelinesGroup.addLayer(L.polyline(waterPipeline.polyline).bringToBack())
+
+                    const popupContent = `
+                      <h6 class="font-bold text-lg mb-3 font-sans">Informasi Marker</h6>
+                      <div class="font-sans">
+                          <div class="mb-2">
+                            <div class="font-bold">Nama</div>
+                            <div class="col-sm-8">${waterPipeline.name}</div>
+                          </div>
+                          <div class="mb-2">
+                            <div class="font-bold">Tipe</div>
+                            <div class="col-sm-8">Jalur Pipa Air</div>
+                          </div>
+                      </div>
+                    `
+                    waterPipelinesGroup.addLayer(
+                        L.polyline(waterPipeline.polyline).bringToBack().bindPopup(popupContent)
+                    )
                 }
                 for (const feature of objects.features) {
                     const [lng, lat] = feature.geometry.coordinates
 
-                    mapObjectsGroup.addLayer(L.marker([lat, lng], {
-                        icon: L.icon({
-                            iconUrl: feature.properties.icon,
-                            iconSize: [50, 50],
-                            iconAnchor: [12, 12],
+                    const popupContent = `
+                      <h6 class="font-bold text-lg mb-3 font-sans">Informasi Marker</h6>
+                      <div class="font-sans">
+                          <div class="mb-2">
+                            <div class="font-bold">Nama</div>
+                            <div class="col-sm-8">${feature.properties.name}</div>
+                          </div>
+                          <div class="mb-2">
+                            <div class="font-bold">Tipe</div>
+                            <div class="col-sm-8">${feature.properties.type}</div>
+                          </div>
+                          <div class="mb-2">
+                            <div class="font-bold">Deskripsi</div>
+                            <div class="col-sm-8">${feature.properties.description}</div>
+                          </div>
+                      </div>
+                    `
+
+                    mapObjectsGroup.addLayer(
+                        L.marker([lat, lng], {
+                            icon: L.icon({
+                                iconUrl: feature.properties.icon,
+                                iconSize: [50, 50],
+                                iconAnchor: [12, 12],
+                            })
                         })
-                    }))
+                        .bindPopup(popupContent)
+                    )
                 }
 
                 mapObjectsGroup.addTo(map);
