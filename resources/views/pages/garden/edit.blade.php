@@ -70,26 +70,6 @@
                 <x-input-error :messages="$errors->get('area')" class="mt-2" />
               </div>
               <div class="w-full">
-                <x-input-label for="commodity_id">{{ __('Pilih Komoditi') }}</x-input-label>
-                <x-select-input id="commodity_id" class="block mt-1 w-full rounded-xl" name="commodity_id">
-                  <option value="">Pilih Komoditi</option>
-                  @foreach ($commodities as $id => $commodity)
-                  <option value="{{ $id }}" @selected($id==$garden->commodity_id)>{{ $commodity }}</option>
-                  @endforeach
-                </x-select-input>
-                <x-input-error :messages="$errors->get('commodity_id')" class="mt-2" />
-              </div>
-              <div class="w-full">
-                <x-input-label for="device_id">{{ __('Pilih Perangkat') }}</x-input-label>
-                <x-select-input id="device_id" class="block mt-1 w-full rounded-xl" name="device_id">
-                  <option value="">Pilih Perangkat</option>
-                  @foreach ($devices as $id => $device)
-                  <option value="{{ $id }}" @selected($id==$garden->deviceSelenoid?->device_id)>{{ $device }}</option>
-                  @endforeach
-                </x-select-input>
-                <x-input-error :messages="$errors->get('device_id')" class="mt-2" />
-              </div>
-              <div class="w-full">
                 <x-input-label for="color">{{ __('Warna') }}</x-input-label>
                 <x-text-input id="color" class="block mt-1 w-full p-1" type="color" name="color" :value="'#' . $garden->color" required autofocus autocomplete="color" />
                 <x-input-error :messages="$errors->get('altitude')" class="mt-2" />

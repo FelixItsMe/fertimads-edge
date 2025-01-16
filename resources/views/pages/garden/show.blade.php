@@ -51,11 +51,6 @@
                             </div>
                             <div class="w-full">
                                 <x-input-label class="text-slate-400"
-                                    for="name">{{ __('Nama Komoditi') }}</x-input-label>
-                                <span>{{ $garden->commodity->name }}</span>
-                            </div>
-                            <div class="w-full">
-                                <x-input-label class="text-slate-400"
                                     for="name">{{ __('Blok') }}</x-input-label>
                                 <span>{{ $garden->count_block }}</span>
                             </div>

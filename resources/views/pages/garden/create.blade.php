@@ -73,26 +73,6 @@
                 <x-text-input id="area" class="block mt-1 w-full rounded-xl" type="number" min="0" step=".01" name="area" :value="old('area')" required autofocus autocomplete="area" />
                 <x-input-error :messages="$errors->get('area')" class="mt-2" />
               </div>
-              <div class="w-full">
-                <x-input-label for="commodity_id">{{ __('Pilih Komoditi') }}</x-input-label>
-                <x-select-input id="commodity_id" class="block mt-1 w-full rounded-xl" name="commodity_id">
-                  <option value="">Pilih Komoditi</option>
-                  @foreach ($commodities as $id => $commodity)
-                  <option value="{{ $id }}">{{ $commodity }}</option>
-                  @endforeach
-                </x-select-input>
-                <x-input-error :messages="$errors->get('commodity_id')" class="mt-2" />
-              </div>
-              <div class="w-full">
-                <x-input-label for="device_id">{{ __('Pilih Perangkat') }}</x-input-label>
-                <x-select-input id="device_id" class="block mt-1 w-full rounded-xl" name="device_id">
-                  <option value="">Pilih Perangkat</option>
-                  @foreach ($devices as $id => $device)
-                  <option value="{{ $id }}">{{ $device }}</option>
-                  @endforeach
-                </x-select-input>
-                <x-input-error :messages="$errors->get('device_id')" class="mt-2" />
-              </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <div class="w-full">
                   <x-input-label for="count_block">{{ __('Blok') }}</x-input-label>

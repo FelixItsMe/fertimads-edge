@@ -68,7 +68,6 @@
                             <tr>
                                 <th>Nama Kebun</th>
                                 <th>Luas Kebun (m²)</th>
-                                <th>Nama Komoditi</th>
                                 <th>Koordinat Kebun</th>
                                 <th>Altitude (mdpl)</th>
                                 <th>Total Blok</th>
@@ -80,7 +79,6 @@
                                 <tr>
                                     <td>{{ $garden->name }}</td>
                                     <td>{{ $garden->area }}&nbsp;m²</td>
-                                    <td>{{ $garden->commodity->name }}</td>
                                     <td>{{ $garden->latitude }},&nbsp;{{ $garden->longitude }}</td>
                                     <td>{{ $garden->altitude }}&nbsp;mdpl</td>
                                     <td>{{ $garden->count_block }} Blok</td>

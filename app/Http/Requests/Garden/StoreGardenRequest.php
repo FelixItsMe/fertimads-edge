@@ -49,7 +49,7 @@ class StoreGardenRequest extends FormRequest
             'polygon'       => 'required|array',
             'polygon.*'     => 'required|array',
             'polygon.*.*'   => 'required|regex:/^(-?\d+(\.\d+)?)$/',
-            'commodity_id'  => 'required|exists:commodities,id',
+            'commodity_id'  => 'nullable|exists:commodities,id',
             'land_id'       => 'required|exists:lands,id',
             'device_id'     => ['nullable', 'exists:devices,id', new GardenDeviceAvailability],
             'color'         => ['required', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
