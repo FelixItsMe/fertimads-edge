@@ -4,20 +4,26 @@
         id="sidebar">
         <div id="app-brand" class="w-full h-16 mt-3 px-8">
             <a href="#" class="flex items-center">
-                @switch(Auth::user()->role)
-                    @case('management')
-                        <img src="{{ asset('assets/logos/logo-kasamak.png') }}" alt="" srcset="" class="object-cover">
-                    @break
+                @if (config('edge.status'))
+                    <img src="{{ asset('assets/logos/logo-cassmatech-edge.png') }}" alt="" srcset=""
+                        class="object-cover">
+                @else
+                    @switch(Auth::user()->role)
+                        @case('management')
+                            <img src="{{ asset('assets/logos/logo-kasamak.png') }}" alt="" srcset=""
+                                class="object-cover">
+                        @break
 
-                    @case('control')
-                        <img src="{{ asset('assets/logos/logo-kasamak.png') }}" alt="" srcset=""
-                            class="object-cover">
-                    @break
+                        @case('control')
+                            <img src="{{ asset('assets/logos/logo-kasamak.png') }}" alt="" srcset=""
+                                class="object-cover">
+                        @break
 
-                    @default
-                        <img src="{{ asset('assets/logos/logo-kasamak.png') }}" alt="" srcset=""
-                            class="object-cover">
-                @endswitch
+                        @default
+                            <img src="{{ asset('assets/logos/logo-kasamak.png') }}" alt="" srcset=""
+                                class="object-cover">
+                    @endswitch
+                @endif
             </a>
         </div>
         @if (config('edge.status'))
